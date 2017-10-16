@@ -8,20 +8,6 @@ import { LocalStrategyInfo } from "passport-local";
 import { WriteError } from "mongodb";
 const request = require("express-validator");
 
-
-/**
- * GET /login
- * Login page.
- */
-export let getLogin = (req: Request, res: Response) => {
-  if (req.user) {
-    return res.redirect("/");
-  }
-  res.render("account/login", {
-    title: "Login"
-  });
-};
-
 /**
  * POST /login
  * Sign in using email and password.
@@ -47,7 +33,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
     req.logIn(user, (err) => {
       if (err) { return next(err); }
       req.flash("success", { msg: "Success! You are logged in." });
-      res.redirect(req.session.returnTo || "/");
+      res.redirect(req.session!.returnTo || "/");
     });
   })(req, res, next);
 };
@@ -59,19 +45,6 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
 export let logout = (req: Request, res: Response) => {
   req.logout();
   res.redirect("/");
-};
-
-/**
- * GET /signup
- * Signup page.
- */
-export let getSignup = (req: Request, res: Response) => {
-  if (req.user) {
-    return res.redirect("/");
-  }
-  res.render("account/signup", {
-    title: "Create Account"
-  });
 };
 
 /**
@@ -114,51 +87,6 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-/**
- * GET /account
- * Profile page.
- */
-export let getAccount = (req: Request, res: Response) => {
-  res.render("account/profile", {
-    title: "Account Management"
-  });
-};
-
-/**
- * POST /account/profile
- * Update profile information.
- */
-export let postUpdateProfile = (req: Request, res: Response, next: NextFunction) => {
-  req.assert("email", "Please enter a valid email address.").isEmail();
-  req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
-
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash("errors", errors);
-    return res.redirect("/account");
-  }
-
-  User.findById(req.user.id, (err, user: UserModel) => {
-    if (err) { return next(err); }
-    user.email = req.body.email || "";
-    user.profile.name = req.body.name || "";
-    user.profile.gender = req.body.gender || "";
-    user.profile.location = req.body.location || "";
-    user.profile.website = req.body.website || "";
-    user.save((err: WriteError) => {
-      if (err) {
-        if (err.code === 11000) {
-          req.flash("errors", { msg: "The email address you have entered is already associated with an account." });
-          return res.redirect("/account");
-        }
-        return next(err);
-      }
-      req.flash("success", { msg: "Profile information has been updated." });
-      res.redirect("/account");
-    });
-  });
-};
 
 /**
  * POST /account/password
@@ -184,60 +112,6 @@ export let postUpdatePassword = (req: Request, res: Response, next: NextFunction
       res.redirect("/account");
     });
   });
-};
-
-/**
- * POST /account/delete
- * Delete user account.
- */
-export let postDeleteAccount = (req: Request, res: Response, next: NextFunction) => {
-  User.remove({ _id: req.user.id }, (err) => {
-    if (err) { return next(err); }
-    req.logout();
-    req.flash("info", { msg: "Your account has been deleted." });
-    res.redirect("/");
-  });
-};
-
-/**
- * GET /account/unlink/:provider
- * Unlink OAuth provider.
- */
-export let getOauthUnlink = (req: Request, res: Response, next: NextFunction) => {
-  const provider = req.params.provider;
-  User.findById(req.user.id, (err, user: any) => {
-    if (err) { return next(err); }
-    user[provider] = undefined;
-    user.tokens = user.tokens.filter((token: AuthToken) => token.kind !== provider);
-    user.save((err: WriteError) => {
-      if (err) { return next(err); }
-      req.flash("info", { msg: `${provider} account has been unlinked.` });
-      res.redirect("/account");
-    });
-  });
-};
-
-/**
- * GET /reset/:token
- * Reset Password page.
- */
-export let getReset = (req: Request, res: Response, next: NextFunction) => {
-  if (req.isAuthenticated()) {
-    return res.redirect("/");
-  }
-  User
-    .findOne({ passwordResetToken: req.params.token })
-    .where("passwordResetExpires").gt(Date.now())
-    .exec((err, user) => {
-      if (err) { return next(err); }
-      if (!user) {
-        req.flash("errors", { msg: "Password reset token is invalid or has expired." });
-        return res.redirect("/forgot");
-      }
-      res.render("account/reset", {
-        title: "Password Reset"
-      });
-    });
 };
 
 /**
@@ -303,19 +177,6 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
- * GET /forgot
- * Forgot Password page.
- */
-export let getForgot = (req: Request, res: Response) => {
-  if (req.isAuthenticated()) {
-    return res.redirect("/");
-  }
-  res.render("account/forgot", {
-    title: "Forgot Password"
-  });
-};
-
-/**
  * POST /forgot
  * Create a random token, then the send user an email with a reset link.
  */
@@ -361,7 +222,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       });
       const mailOptions = {
         to: user.email,
-        from: "hackathon@starter.com",
+        from: "hackathon@starter.com", // TODO change to something reasonable
         subject: "Reset your password on Hackathon Starter",
         text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
           Please click on the following link, or paste this into your browser to complete the process:\n\n

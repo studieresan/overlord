@@ -15,7 +15,7 @@ export type UserModel = mongoose.Document & {
     gender: string,
     location: string,
     website: string,
-    picture: string
+    picture: string,
   },
 
   comparePassword: (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void,
@@ -27,7 +27,7 @@ export type AuthToken = {
   kind: string
 };
 
-const userSchema = new mongoose.Schema({
+const userSchema: mongoose.Schema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   passwordResetToken: String,
@@ -47,12 +47,12 @@ const userSchema = new mongoose.Schema({
 /**
  * Password hash middleware.
  */
-userSchema.pre("save", function save(next) {
-  const user = this;
+userSchema.pre("save", function save(this: UserModel, next) {
+  const user: UserModel = this;
   if (!user.isModified("password")) { return next(); }
   bcrypt.genSalt(10, (err, salt) => {
     if (err) { return next(err); }
-    bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {
+    bcrypt.hash(user.password, salt, undefined!, (err: mongoose.Error, hash: any) => {
       if (err) { return next(err); }
       user.password = hash;
       next();

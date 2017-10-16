@@ -1,7 +1,6 @@
 import * as passport from "passport";
 import * as request from "request";
 import * as passportLocal from "passport-local";
-import * as _ from "lodash";
 
 // import { User, UserType } from '../models/User';
 import { default as User } from "../models/User";
@@ -15,7 +14,7 @@ passport.serializeUser<any, any>((user, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
-    done(err, user);
+    done(err, user!);
   });
 });
 
@@ -70,8 +69,7 @@ export let isAuthenticated = (req: Request, res: Response, next: NextFunction) =
  */
 export let isAuthorized = (req: Request, res: Response, next: NextFunction) => {
   const provider = req.path.split("/").slice(-1)[0];
-
-  if (_.find(req.user.tokens, { kind: provider })) {
+  if (req.user.tokens.find((t: any) => t.kind === provider)) {
     next();
   } else {
     res.redirect(`/auth/${provider}`);

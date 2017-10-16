@@ -10,11 +10,18 @@ import * as errorHandler from "errorhandler";
 import * as lusca from "lusca";
 import * as dotenv from "dotenv";
 import * as mongo from "connect-mongo";
-import * as flash from "express-flash";
 import * as path from "path";
 import * as mongoose from "mongoose";
 import * as passport from "passport";
 import expressValidator = require("express-validator");
+import {
+  graphql,
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLString
+} from "graphql";
+
+import * as graphqlHTTP from "express-graphql";
 
 
 const MongoStore = mongo(session);
@@ -25,13 +32,42 @@ const MongoStore = mongo(session);
 dotenv.config({ path: ".env.example" });
 
 
+// TODO remove placeholder
+let state = "something";
+
+const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: "RootQueryType",
+    fields: {
+      state: {
+        type: GraphQLString,
+        resolve() {
+          return state;
+        }
+      }
+    }
+  }),
+  mutation: new GraphQLObjectType({
+    name: "RootMutationType",
+    fields: {
+      setState: {
+        type: GraphQLString,
+        args: {
+          newState: { type: GraphQLString }
+        },
+        resolve(value, { newState }) {
+          state = newState;
+          return state;
+        }
+      }
+    }
+  })
+});
+
 /**
  * Controllers (route handlers).
  */
-import * as homeController from "./controllers/home";
 import * as userController from "./controllers/user";
-import * as apiController from "./controllers/api";
-import * as contactController from "./controllers/contact";
 
 /**
  * API keys and Passport configuration.
@@ -76,7 +112,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.use((req, res, next) => {
@@ -90,10 +125,10 @@ app.use((req, res, next) => {
       req.path !== "/signup" &&
       !req.path.match(/^\/auth/) &&
       !req.path.match(/\./)) {
-    req.session.returnTo = req.path;
+    req.session!.returnTo = req.path;
   } else if (req.user &&
       req.path == "/account") {
-    req.session.returnTo = req.path;
+    req.session!.returnTo = req.path;
   }
   next();
 });
@@ -101,33 +136,22 @@ app.use((req, res, next) => {
 /**
  * Primary app routes.
  */
-app.get("/", homeController.index);
-app.get("/login", userController.getLogin);
 app.post("/login", userController.postLogin);
 app.get("/logout", userController.logout);
-app.get("/forgot", userController.getForgot);
 app.post("/forgot", userController.postForgot);
-app.get("/reset/:token", userController.getReset);
 app.post("/reset/:token", userController.postReset);
-app.get("/signup", userController.getSignup);
 app.post("/signup", userController.postSignup);
-app.get("/contact", contactController.getContact);
-app.post("/contact", contactController.postContact);
-app.get("/account", passportConfig.isAuthenticated, userController.getAccount);
-app.post("/account/profile", passportConfig.isAuthenticated, userController.postUpdateProfile);
 app.post("/account/password", passportConfig.isAuthenticated, userController.postUpdatePassword);
-app.post("/account/delete", passportConfig.isAuthenticated, userController.postDeleteAccount);
-app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userController.getOauthUnlink);
-
-/**
- * API examples routes.
- */
-app.get("/api", apiController.getApi);
 
 /**
  * Error Handler. Provides full stack - remove for production
  */
 app.use(errorHandler());
+
+app.use("/graphql", graphqlHTTP({
+  schema: schema,
+  graphiql: true,
+}));
 
 /**
  * Start Express server.
