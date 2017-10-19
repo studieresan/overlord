@@ -1,5 +1,5 @@
 
-/// <reference types="express" />
+/// <reference types='express' />
 
 // Add RequestValidation Interface on to Express's Request Interface.
 declare namespace Express {
@@ -7,8 +7,8 @@ declare namespace Express {
 }
 
 interface Flash {
-    flash(type: string, message: any): void;
+    flash(type: string, message: any): void
 }
 
-declare module "express-flash";
+declare module 'express-flash'
 
