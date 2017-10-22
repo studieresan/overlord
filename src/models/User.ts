@@ -2,6 +2,11 @@ import * as bcrypt from 'bcrypt-nodejs'
 import * as crypto from 'crypto'
 import * as mongoose from 'mongoose'
 
+import {
+  GraphQLObjectType,
+  GraphQLString
+} from 'graphql'
+
 export type UserModel = mongoose.Document & {
   email: string,
   password: string,
@@ -12,8 +17,6 @@ export type UserModel = mongoose.Document & {
 
   profile: {
     name: string,
-    gender: string,
-    location: string,
     website: string,
     picture: string,
   },
@@ -21,6 +24,16 @@ export type UserModel = mongoose.Document & {
   comparePassword: (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void,
   gravatar: (size: number) => string
 }
+
+export const UserType = new GraphQLObjectType({
+  name : 'User',
+  fields : {
+    name:  { type: GraphQLString },
+    email:  { type: GraphQLString },
+    website:  { type: GraphQLString },
+    picture:  { type: GraphQLString },
+  }
+})
 
 export type AuthToken = {
   accessToken: string,
@@ -37,8 +50,6 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
 
   profile: {
     name: String,
-    gender: String,
-    location: String,
     website: String,
     picture: String
   }

@@ -8,6 +8,19 @@ import { LocalStrategyInfo } from 'passport-local'
 import { WriteError } from 'mongodb'
 
 /**
+ * Get an authenticated user's profile
+ */
+export function getUser(req: Request): any {
+  if (req.isAuthenticated()) {
+    return {
+      email: req.user.email,
+      ...req.user.profile
+    }
+  }
+  return {}
+}
+
+/**
  * POST /login
  * Sign in using email and password.
  */
@@ -37,8 +50,12 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
     }
     req.logIn(user, (err) => {
       if (err) { return next(err) }
-      console.log('the user logged in')
       res.status(200)
+      res.json({
+        id: user.id,
+        name: user.profile.name,
+        email: user.email,
+      })
       res.end()
     })
   })(req, res, next)
