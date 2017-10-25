@@ -8,21 +8,15 @@ import * as bodyParser from 'body-parser'
 import * as logger from 'morgan'
 import * as errorHandler from 'errorhandler'
 import * as lusca from 'lusca'
-
 import * as dotenv from 'dotenv'
 import * as mongo from 'connect-mongo'
 import * as mongoose from 'mongoose'
 import * as passport from 'passport'
-import { UserType } from './models/User'
-import expressValidator = require('express-validator')
-import {
-  GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLString
-} from 'graphql'
-
 import * as graphqlHTTP from 'express-graphql'
 
+import expressValidator = require('express-validator')
+
+import graphQLSchema from './graphl/schema'
 
 const MongoStore = mongo(session)
 
@@ -32,51 +26,6 @@ const MongoStore = mongo(session)
  */
 
 dotenv.config({ path: '.env.example' })
-
-// TODO remove placeholder, and move graphql into another file
-let state = 'something'
-
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-      state: {
-        type: GraphQLString,
-        resolve() {
-          return state
-        },
-      },
-      open: {
-        type: GraphQLString,
-        resolve() {
-          return 'Hello everyone!'
-        },
-      },
-      user: {
-        // Return information about the user, assuming they are logged in
-        type: UserType,
-        resolve(a, b, { req }) {
-          return userController.getUser(req)
-        },
-      },
-    },
-  }),
-  mutation: new GraphQLObjectType({
-    name: 'RootMutationType',
-    fields: {
-      setState: {
-        type: GraphQLString,
-        args: {
-          newState: { type: GraphQLString },
-        },
-        resolve(value, { newState }) {
-          state = newState
-          return state
-        },
-      },
-    },
-  }),
-})
 
 /**
  * Controllers (route handlers).
@@ -160,7 +109,7 @@ app.use((req, res, next) => {
  */
 app.post('/login', userController.postLogin)
 app.get('/logout', userController.logout)
-app.post('/forgot', userController.postForgot)
+// app.post('/forgot', userController.postForgot) TODO
 app.post('/reset/:token', userController.postReset)
 app.post('/signup', userController.postSignup)
 app.post(
@@ -176,7 +125,7 @@ app.use(errorHandler())
 
 app.use('/graphql', (req, res) =>
   graphqlHTTP({
-     schema: schema,
+     schema: graphQLSchema,
      context: { req: req },
      graphiql: true,
   })(req, res)

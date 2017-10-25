@@ -1,31 +1,17 @@
 import * as async from 'async'
-import * as crypto from 'crypto'
 import * as nodemailer from 'nodemailer'
 import * as passport from 'passport'
-import { default as User, UserModel, AuthToken } from '../models/User'
+import { default as User, UserModel } from '../mongodb/User'
+import { MemberType } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { WriteError } from 'mongodb'
-
-/**
- * Get an authenticated user's profile
- */
-export function getUser(req: Request): any {
-  if (req.isAuthenticated()) {
-    return {
-      email: req.user.email,
-      ...req.user.profile
-    }
-  }
-  return {}
-}
 
 /**
  * POST /login
  * Sign in using email and password.
  */
 export let postLogin = (req: Request, res: Response, next: NextFunction) => {
-  console.log('handling login')
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('password', 'Password cannot be blank').notEmpty()
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
@@ -40,7 +26,8 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
     return res.redirect('/login')
   }
 
-  passport.authenticate('local', (err: Error, user: UserModel, info: LocalStrategyInfo) => {
+  passport.authenticate( 'local',
+    (err: Error, user: any, info: LocalStrategyInfo) => {
     if (err) { return next(err) }
     if (!user) {
       // req.flash('errors', info.message)
@@ -53,7 +40,6 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
       res.status(200)
       res.json({
         id: user.id,
-        name: user.profile.name,
         email: user.email,
       })
       res.end()
@@ -76,27 +62,48 @@ export let logout = (req: Request, res: Response) => {
  */
 export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   req.assert('email', 'Email is not valid').isEmail()
-  req.assert('password', 'Password must be at least 4 characters long').len({ min: 4 })
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password)
+  req.assert(
+    'password',
+    'Password must be at least 4 characters long'
+  ).len({ min: 4 })
+  req.assert(
+    'confirmPassword',
+    'Passwords do not match'
+  ).equals(req.body.password)
+  req.assert(
+    'memberType',
+    'memberType was invalid'
+  ).isIn([MemberType.StudsMember, MemberType.CompanyMember])
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
 
   const errors = req.validationErrors()
 
   if (errors) {
-    // req.flash('errors', errors)
-    return res.redirect('/signup')
+    res.json(errors).end()
+    return
   }
 
   const user = new User({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    profile: {
+      email: req.body.email,
+      firstName: req.body.firstName || '',
+      lastName: req.body.lastName || '',
+      memberType: req.body.memberType,
+    },
   })
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err) }
     if (existingUser) {
-      // req.flash('errors', { msg: 'Account with that email address already exists.' })
-      return res.redirect('/signup')
+      // req.flash(
+      //   'errors',
+      //   { msg: 'Account with that email address already exists.'
+      // })
+      res.json( { error: 'Account with that email address already exists.' })
+      res.end()
+      return
     }
     user.save((err) => {
       if (err) { return next(err) }
@@ -110,31 +117,38 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   })
 }
 
-
 /**
  * POST /account/password
  * Update current password.
  */
-export let postUpdatePassword = (req: Request, res: Response, next: NextFunction) => {
-  req.assert('password', 'Password must be at least 4 characters long').len({ min: 4 })
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password)
+export let postUpdatePassword =
+  (req: Request, res: Response, next: NextFunction) => {
 
-  const errors = req.validationErrors()
+    req.assert(
+      'password',
+      'Password must be at least 4 characters long'
+    ).len({ min: 4 })
+    req.assert(
+      'confirmPassword',
+      'Passwords do not match'
+    ).equals(req.body.password)
 
-  if (errors) {
-    // req.flash('errors', errors)
-    return res.redirect('/account')
-  }
+    const errors = req.validationErrors()
 
-  User.findById(req.user.id, (err, user: UserModel) => {
-    if (err) { return next(err) }
-    user.password = req.body.password
-    user.save((err: WriteError) => {
+    if (errors) {
+      // req.flash('errors', errors)
+      return res.redirect('/account')
+    }
+
+    User.findById(req.user.id, (err, user: UserModel) => {
       if (err) { return next(err) }
-      // req.flash('success', { msg: 'Password has been changed.' })
-      res.redirect('/account')
+      user.password = req.body.password
+      user.save((err: WriteError) => {
+        if (err) { return next(err) }
+        // req.flash('success', { msg: 'Password has been changed.' })
+        res.redirect('/account')
+      })
     })
-  })
 }
 
 /**
@@ -142,7 +156,10 @@ export let postUpdatePassword = (req: Request, res: Response, next: NextFunction
  * Process the reset password request.
  */
 export let postReset = (req: Request, res: Response, next: NextFunction) => {
-  req.assert('password', 'Password must be at least 4 characters long.').len({ min: 4 })
+  req.assert(
+    'password',
+    'Password must be at least 4 characters long.'
+  ).len({ min: 4 })
   req.assert('confirm', 'Passwords must match.').equals(req.body.password)
 
   const errors = req.validationErrors()
@@ -160,7 +177,10 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
         .exec((err, user: any) => {
           if (err) { return next(err) }
           if (!user) {
-            // req.flash('errors', { msg: 'Password reset token is invalid or has expired.' })
+            // req.flash(
+            //   'errors',
+            //   { msg: 'Password reset token is invalid or has expired.'
+            // })
             return res.redirect('back')
           }
           user.password = req.body.password
@@ -179,20 +199,25 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
         service: 'SendGrid',
         auth: {
           user: process.env.SENDGRID_USER,
-          pass: process.env.SENDGRID_PASSWORD
-        }
+          pass: process.env.SENDGRID_PASSWORD,
+        },
       })
       const mailOptions = {
         to: user.email,
         from: 'express-ts@starter.com',
         subject: 'Your password has been changed',
-        text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
+        text: `Hello,
+        \n\nThis is a confirmation that the password for your
+        account ${user.email} has just been changed.\n`,
       }
       transporter.sendMail(mailOptions, (err) => {
-        // req.flash('success', { msg: 'Success! Your password has been changed.' })
+        // req.flash(
+        //   'success',
+        //   { msg: 'Success! Your password has been changed.'
+        // })
         done(err)
       })
-    }
+    },
   ], (err) => {
     if (err) { return next(err) }
     res.redirect('/')
@@ -203,6 +228,7 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
  * POST /forgot
  * Create a random token, then the send user an email with a reset link.
  */
+/* TODO
 export let postForgot = (req: Request, res: Response, next: NextFunction) => {
   req.assert('email', 'Please enter a valid email address.').isEmail()
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
@@ -225,7 +251,10 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       User.findOne({ email: req.body.email }, (err, user: any) => {
         if (err) { return done(err) }
         if (!user) {
-          // req.flash('errors', { msg: 'Account with that email address does not exist.' })
+          // req.flash(
+          //   'errors',
+          //   { msg: 'Account with that email address does not exist.'
+          // })
           return res.redirect('/forgot')
         }
         user.passwordResetToken = token
@@ -235,25 +264,34 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         })
       })
     },
-    function sendForgotPasswordEmail(token: AuthToken, user: UserModel, done: Function) {
+    function sendForgotPasswordEmail(
+      token: AuthToken, user: UserModel, done: Function) {
       const transporter = nodemailer.createTransport({
         service: 'SendGrid',
         auth: {
           user: process.env.SENDGRID_USER,
-          pass: process.env.SENDGRID_PASSWORD
-        }
+          pass: process.env.SENDGRID_PASSWORD,
+        },
       })
       const mailOptions = {
         to: user.email,
         from: 'hackathon@starter.com', // TODO change to something reasonable
         subject: 'Reset your password on Hackathon Starter',
-        text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-          Please click on the following link, or paste this into your browser to complete the process:\n\n
+        text:
+        `You are receiving this email because you (or someone else) has
+        requested the reset of the password for your account.\n\n
+        Please click on the following link, or paste this into your browser
+        to complete the process:\n\n
           http://${req.headers.host}/reset/${token}\n\n
-          If you did not request this, please ignore this email and your password will remain unchanged.\n`
+          If you did not request this, please ignore this email and your
+          password will remain unchanged.\n`,
       }
       transporter.sendMail(mailOptions, (err) => {
-        // req.flash('info', { msg: `An e-mail has been sent to ${user.email} with further instructions.` })
+        // req.flash(
+        //   'info',
+        //   { msg: `An e-mail has been
+        //   sent to ${user.email} with further instructions.`
+        // })
         done(err)
       })
     },
@@ -262,3 +300,4 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
     res.redirect('/forgot')
   })
 }
+*/
