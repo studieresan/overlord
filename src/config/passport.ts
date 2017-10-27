@@ -2,7 +2,7 @@ import * as passport from 'passport'
 import * as passportLocal from 'passport-local'
 
 // import { User, UserType } from '../models/User'
-import { default as User } from '../models/User'
+import { default as User } from '../mongodb/User'
 import { Request, Response, NextFunction } from 'express'
 
 const LocalStrategy = passportLocal.Strategy
@@ -21,7 +21,8 @@ passport.deserializeUser((id, done) => {
 /**
  * Sign in using Email and Password.
  */
-passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+passport.use(
+  new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
   User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
     if (err) { return done(err) }
     if (!user) {
@@ -56,11 +57,12 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 /**
  * Login Required middleware.
  */
-export let isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-  res.redirect('/login')
+export let isAuthenticated =
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.isAuthenticated()) {
+      return next()
+    }
+    res.redirect('/login')
 }
 
 /**
