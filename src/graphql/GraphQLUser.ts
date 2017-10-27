@@ -14,11 +14,12 @@ export const GraphQLUser = new GraphQLObjectType({
     lastName:  { type: GraphQLString },
     phone: { type: GraphQLString },
     picture: { type: GraphQLString },
-    alergies: { type: GraphQLString },
+    allergies: { type: GraphQLString },
     master: { type: GraphQLString },
   },
 })
 
+// This type represents the  fields that a user can change about themselves
 export const GraphQLUserInput = new GraphQLInputObjectType({
   name : 'UserInput',
   fields : {
@@ -26,7 +27,7 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     lastName: { type: GraphQLString },
     phone: { type: GraphQLString },
     picture: { type: GraphQLString },
-    alergies: { type: GraphQLString },
+    allergies: { type: GraphQLString },
     master: { type: GraphQLString },
   },
 })

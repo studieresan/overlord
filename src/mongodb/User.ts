@@ -20,7 +20,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     lastName: String,
     phone: String,
     picture: String,
-    alergies: String,
+    allergies: String,
     master: String,
     memberType: String,
   },

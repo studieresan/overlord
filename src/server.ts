@@ -16,7 +16,7 @@ import * as graphqlHTTP from 'express-graphql'
 
 import expressValidator = require('express-validator')
 
-import graphQLSchema from './graphl/schema'
+import graphQLSchema from './graphql/schema'
 
 const MongoStore = mongo(session)
 

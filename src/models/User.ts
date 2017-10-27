@@ -5,7 +5,7 @@ export interface User {
   readonly lastName: string
   readonly phone?: string
   readonly picture?: string
-  readonly alergies?: string
+  readonly allergies?: string
   readonly master?: string
   readonly memberType: MemberType
 }
