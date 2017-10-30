@@ -45,8 +45,11 @@ const app = express()
 /**
  * Connect to MongoDB.
  */
-// mongoose.Promise = global.Promise
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI)
+const options = {
+  promiseLibrary: global.Promise,
+}
+
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, options)
 
 mongoose.connection.on('error', () => {
   console.log('MongoDB connection error. Please make sure MongoDB is running.')

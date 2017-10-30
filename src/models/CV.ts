@@ -1,10 +1,16 @@
 export interface CV {
-  userId: number
+  readonly userId: string
+  readonly text: string
   readonly sections: [CVSection]
 }
 
 export interface CVSection {
-  readonly id: number
+  readonly title: string
+  readonly description: string
+  readonly items: [CVItem]
+}
+
+export interface CVItem {
   readonly title: string
   readonly description: string
   readonly start: Date
