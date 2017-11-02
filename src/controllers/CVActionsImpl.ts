@@ -6,7 +6,8 @@ import { cast } from './util'
 export class CVActionsImpl implements CVActions {
 
   getCV(userId: string): Promise<CV> {
-    return DB.findOne({ userId }).then(cast<CV>())
+    return DB.findOne({ userId })
+      .then(cast<CV>())
   }
 
   setCV(userId: string, fields: Partial<CV>): Promise<CV> {
@@ -16,4 +17,5 @@ export class CVActionsImpl implements CVActions {
       { upsert: true, new: true }
     ).then(cast<CV>())
   }
+
 }

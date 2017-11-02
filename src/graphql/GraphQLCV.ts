@@ -1,6 +1,5 @@
 import {
   GraphQLInputObjectType,
-  GraphQLInt,
   GraphQLList,
   GraphQLObjectType,
   GraphQLString,
@@ -9,8 +8,9 @@ import {
 const MutableItemFields = {
   title: { type: GraphQLString },
   description: { type: GraphQLString },
-  start: { type: GraphQLInt },
-  end: { type: GraphQLInt },
+  when: { type: GraphQLString },
+  organization: { type: GraphQLString },
+  city: { type: GraphQLString },
 }
 
 export const GraphQLCVItem = new GraphQLObjectType({
@@ -29,7 +29,6 @@ export const GraphQLCVItemInput = new GraphQLInputObjectType ({
 
 const MutableCVSectionFields = {
   title: { type: GraphQLString },
-  description: { type: GraphQLString },
 }
 
 export const GraphQLCVSection = new GraphQLObjectType({
@@ -60,7 +59,6 @@ export const GraphQLCV = new GraphQLObjectType({
 export const GraphQLCVInput = new GraphQLInputObjectType({
   name: 'CVInput',
   fields:  {
-    text: { type: GraphQLString },
     sections: { type: new GraphQLList(GraphQLCVSectionInput) },
   },
 })
