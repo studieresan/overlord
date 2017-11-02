@@ -30,13 +30,13 @@ export const GraphQLCVItemInput = new GraphQLInputObjectType ({
 const MutableCVSectionFields = {
   title: { type: GraphQLString },
   description: { type: GraphQLString },
-  items: { type: new GraphQLList(GraphQLCVItem) },
 }
 
 export const GraphQLCVSection = new GraphQLObjectType({
   name: 'CVSection',
   fields: {
     ...MutableCVSectionFields,
+    items: { type: new GraphQLList(GraphQLCVItem) },
   },
 })
 
@@ -44,25 +44,23 @@ export const GraphQLCVSectionInput = new GraphQLInputObjectType({
   name: 'CVSectionInput',
   fields: {
     ...MutableCVSectionFields,
+    items: { type: new GraphQLList(GraphQLCVItemInput) },
   },
 })
-
-const MutableCVFields = {
-  text: { type: GraphQLString },
-  sections: { type: new GraphQLList(GraphQLCVSection) },
-}
 
 export const GraphQLCV = new GraphQLObjectType({
   name: 'CV',
   fields: {
     userId: { type: GraphQLString },
-    ...MutableCVFields,
+    text: { type: GraphQLString },
+    sections: { type: new GraphQLList(GraphQLCVSection) },
   },
 })
 
 export const GraphQLCVInput = new GraphQLInputObjectType({
   name: 'CVInput',
   fields:  {
-    ...MutableCVFields,
+    text: { type: GraphQLString },
+    sections: { type: new GraphQLList(GraphQLCVSectionInput) },
   },
 })
