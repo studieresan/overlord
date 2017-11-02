@@ -51,7 +51,6 @@ export const GraphQLCV = new GraphQLObjectType({
   name: 'CV',
   fields: {
     userId: { type: GraphQLString },
-    text: { type: GraphQLString },
     sections: { type: new GraphQLList(GraphQLCVSection) },
   },
 })
