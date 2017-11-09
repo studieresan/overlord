@@ -18,6 +18,8 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     email: String,
     firstName: String,
     lastName: String,
+    profile: String,
+    position: String,
     phone: String,
     picture: String,
     allergies: String,

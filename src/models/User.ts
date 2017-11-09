@@ -3,6 +3,7 @@ export interface User {
   readonly email: string
   readonly firstName: string
   readonly lastName: string
+  readonly position?: string
   readonly phone?: string
   readonly picture?: string
   readonly allergies?: string

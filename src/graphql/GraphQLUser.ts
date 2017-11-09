@@ -9,8 +9,8 @@ import { MemberType } from './../models'
 const MutableUserFields = {
   firstName: { type: GraphQLString },
   lastName: { type: GraphQLString },
+  position: { type: GraphQLString },
   phone: { type: GraphQLString },
-  picture: { type: GraphQLString },
   allergies: { type: GraphQLString },
   master: { type: GraphQLString },
 }
@@ -28,6 +28,7 @@ export const GraphQLUser = new GraphQLObjectType({
   fields : {
     email:  { type: GraphQLString },
     memberType:  { type: GraphQLMemberType },
+    picture:  { type: GraphQLString },
     ...MutableUserFields,
   },
 })
