@@ -104,16 +104,17 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
       res.json( { error: 'Account with that email address already exists.' })
       res.end()
       return
-    }
-    user.save((err) => {
-      if (err) { return next(err) }
-      req.logIn(user, (err) => {
-        if (err) {
-          return next(err)
-        }
-        res.redirect('/')
+    } else {
+      user.save((err) => {
+        if (err) { return next(err) }
+        req.logIn(user, (err) => {
+          if (err) {
+            return next(err)
+          }
+          res.redirect('/')
+        })
       })
-    })
+    }
   })
 }
 

@@ -35,7 +35,7 @@ import * as userController from './controllers/user'
 /**
  * API keys and Passport configuration.
  */
-// import * as passportConfig from './config/passport'
+import * as passportConfig from './config/passport'
 
 /**
  * Create Express server.
@@ -125,6 +125,9 @@ app.post('/signup', (req, res, next) => {
     res.end()
   }
 })
+// TODO remove this once the /account/password enpoint is fixed
+console.log(passportConfig)
+
 // app.post(
 //   '/account/password',
 //   passportConfig.isAuthenticated,
