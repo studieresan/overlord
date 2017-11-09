@@ -118,7 +118,7 @@ app.get('/logout', userController.logout)
 // app.post('/forgot', userController.postForgot) TODO
 // app.post('/reset/:token', userController.postReset)
 app.post('/signup', (req, res, next) => {
-  if (req.body.token === process.env.SIGNUP_TOKEN) {
+  if (process.env.SIGNUP_TOKEN && req.body.token === process.env.SIGNUP_TOKEN) {
     return userController.postSignup(req, res, next)
   } else {
     res.status(403)
