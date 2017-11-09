@@ -35,7 +35,7 @@ import * as userController from './controllers/user'
 /**
  * API keys and Passport configuration.
  */
-import * as passportConfig from './config/passport'
+// import * as passportConfig from './config/passport'
 
 /**
  * Create Express server.
@@ -57,7 +57,10 @@ mongoose.connection.on('error', () => {
 })
 
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.header(
+    'Access-Control-Allow-Origin',
+    process.env.ALLOWED_ORIGIN || 'http://localhost:3000'
+  )
   res.header('Access-Control-Allow-Credentials', 'true')
   res.header(
     'Access-Control-Allow-Headers',
@@ -114,9 +117,14 @@ app.post('/login', userController.postLogin)
 app.get('/logout', userController.logout)
 // app.post('/forgot', userController.postForgot) TODO
 // app.post('/reset/:token', userController.postReset)
-if (process.env.SIGNUP_ENABLED) {
-  app.post('/signup', userController.postSignup)
-}
+app.post('/signup', (req, res, next) => {
+  if (req.body.token === process.env.SIGNUP_TOKEN) {
+    return userController.postSignup(req, res, next)
+  } else {
+    res.status(403)
+    res.end()
+  }
+})
 // app.post(
 //   '/account/password',
 //   passportConfig.isAuthenticated,
