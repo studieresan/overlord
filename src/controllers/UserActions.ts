@@ -9,6 +9,6 @@ export interface UserActions {
   getUsers(type: MemberType): Promise<User[]>
 
   // Update the specified fields of a User, returning the modified user
-  updateUser(id: string, fields: Partial<User>): Promise<User>
+  setUser(id: string, fields: Partial<User>): Promise<User>
 
 }

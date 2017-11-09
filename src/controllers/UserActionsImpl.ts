@@ -1,8 +1,8 @@
 import DB from '../mongodb/User'
-import { UserActions, } from './UserActions'
-import { User, MemberType, } from '../models'
+import { UserActions } from './UserActions'
+import { User, MemberType } from '../models'
 import { merge } from 'ramda'
-
+import { cast } from './util'
 interface Doc {
   profile: User
 }
@@ -10,45 +10,30 @@ interface Doc {
 export class UserActionsImpl implements UserActions {
 
   getUser(id: string): Promise<User> {
-    return new Promise((resolve, reject) => {
-      DB.findById(id, { profile: 1 }, promise<Doc>(resolve, reject))
-    }).then(({ profile }: Doc) => profile)
+    return DB.findById(id, { profile: 1 })
+    .then(cast<Doc>())
+    .then((doc: Doc) => doc.profile)
   }
 
   getUsers(memberType: MemberType): Promise<User[]> {
-    return new Promise((resolve, reject) => {
-      DB.find(
-        { 'profile.memberType': memberType },
-        { profile: 1, _id: 0 },
-        promise<Doc[]>(resolve, reject)
-      )
-    }).then((docs: Doc[]) => docs.map(d => d.profile))
+    return DB.find(
+      { 'profile.memberType': memberType },
+      { profile: 1, _id: 0 })
+    .then(cast<Doc[]>())
+    .then((docs: Doc[]) => docs.map(d => d.profile))
   }
 
-  updateUser(id: string, newFields: Partial<User>): Promise<User> {
-    return new Promise((resolve, reject) => {
-      DB.findById(id, (err, doc: any) => {
-        if (doc === null || !doc.profile || err) {
-          reject(undefined)
+  setUser(id: string, newFields: Partial<User>): Promise<User> {
+    return DB.findById(id)
+      .then((doc: any) => {
+        if (doc === null || !doc.profile) {
+          return Promise.reject('NULL')
         } else {
           const user: User = merge(doc.profile, newFields)
           doc.profile = user
           doc.save()
-          resolve(user)
+          return Promise.resolve(user)
         }
       })
-    })
   }
 }
-
-function promise<T>(resolve: (t: T) => void, reject: (a: any) => any ) {
-  return (err: any, doc: any) => {
-    if (err || doc === null) {
-      reject(undefined)
-    } else {
-      console.log(doc)
-      resolve(doc)
-    }
-  }
-}
-
