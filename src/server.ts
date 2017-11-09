@@ -25,7 +25,7 @@ const MongoStore = mongo(session)
  * keys and passwords are configured.
  */
 
-dotenv.config({ path: '.env.example' })
+dotenv.config()
 
 /**
  * Controllers (route handlers).
@@ -113,13 +113,15 @@ app.use((req, res, next) => {
 app.post('/login', userController.postLogin)
 app.get('/logout', userController.logout)
 // app.post('/forgot', userController.postForgot) TODO
-app.post('/reset/:token', userController.postReset)
-app.post('/signup', userController.postSignup)
-app.post(
-  '/account/password',
-  passportConfig.isAuthenticated,
-  userController.postUpdatePassword
-)
+// app.post('/reset/:token', userController.postReset)
+if (process.env.SIGNUP_ENABLED) {
+  app.post('/signup', userController.postSignup)
+}
+// app.post(
+//   '/account/password',
+//   passportConfig.isAuthenticated,
+//   userController.postUpdatePassword
+// )
 
 /**
  * Error Handler. Provides full stack - remove for production
