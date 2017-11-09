@@ -35,7 +35,7 @@ import * as userController from './controllers/user'
 /**
  * API keys and Passport configuration.
  */
-import * as passportConfig from './config/passport'
+// import * as passportConfig from './config/passport'
 
 /**
  * Create Express server.
