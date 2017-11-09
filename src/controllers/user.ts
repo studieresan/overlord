@@ -70,6 +70,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
     'confirmPassword',
     'Passwords do not match'
   ).equals(req.body.password)
+  req.assert('firstName', 'First name is required').notEmpty()
   req.assert(
     'memberType',
     'memberType was invalid'
@@ -88,7 +89,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
     password: req.body.password,
     profile: {
       email: req.body.email,
-      firstName: req.body.firstName || '',
+      firstName: req.body.firstName,
       lastName: req.body.lastName || '',
       memberType: req.body.memberType,
     },
