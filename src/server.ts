@@ -125,14 +125,12 @@ app.post('/signup', (req, res, next) => {
     res.end()
   }
 })
-// TODO remove this once the /account/password enpoint is fixed
-console.log(passportConfig)
 
-// app.post(
-//   '/account/password',
-//   passportConfig.isAuthenticated,
-//   userController.postUpdatePassword
-// )
+app.post(
+  '/account/password',
+  passportConfig.isAuthenticated,
+  userController.postUpdatePassword
+)
 
 /**
  * Error Handler. Provides full stack - remove for production

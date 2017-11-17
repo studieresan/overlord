@@ -123,7 +123,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
  * POST /account/password
  * Update current password.
  */
-export let postUpdatePassword =
+export const postUpdatePassword =
   (req: Request, res: Response, next: NextFunction) => {
 
     req.assert(
@@ -138,8 +138,8 @@ export let postUpdatePassword =
     const errors = req.validationErrors()
 
     if (errors) {
-      // req.flash('errors', errors)
-      return res.redirect('/account')
+      res.status(400)
+      return res.json(errors).end()
     }
 
     User.findById(req.user.id, (err, user: UserModel) => {
@@ -147,8 +147,8 @@ export let postUpdatePassword =
       user.password = req.body.password
       user.save((err: WriteError) => {
         if (err) { return next(err) }
-        // req.flash('success', { msg: 'Password has been changed.' })
-        res.redirect('/account')
+        res.status(200)
+        res.json({}).end()
       })
     })
 }
