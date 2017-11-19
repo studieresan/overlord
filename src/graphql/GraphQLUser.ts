@@ -1,3 +1,8 @@
+import { GraphQLCV } from './GraphQLCV'
+import {
+  CVActions,
+  CVActionsImpl,
+} from './../controllers'
 import {
   GraphQLObjectType,
   GraphQLInputObjectType,
@@ -5,6 +10,8 @@ import {
   GraphQLString,
 } from 'graphql'
 import { MemberType } from './../models'
+
+const cvCtrl: CVActions = new CVActionsImpl()
 
 const MutableUserFields = {
   firstName: { type: GraphQLString },
@@ -29,6 +36,14 @@ export const GraphQLUser = new GraphQLObjectType({
     email:  { type: GraphQLString },
     memberType:  { type: GraphQLMemberType },
     picture:  { type: GraphQLString },
+    cv: {
+      type: GraphQLCV,
+      resolve({ id }, b, { req }) {
+        return req.isAuthenticated()
+          ? cvCtrl.getCV(id)
+          : {}
+      },
+    },
     ...MutableUserFields,
   },
 })
