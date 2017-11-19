@@ -57,15 +57,19 @@ mongoose.connection.on('error', () => {
 })
 
 app.use(function(req, res, next) {
-  res.header(
-    'Access-Control-Allow-Origin',
-    process.env.ALLOWED_ORIGIN || 'http://localhost:3000'
-  )
-  res.header('Access-Control-Allow-Credentials', 'true')
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  )
+  const allowedOrigins = [
+    process.env.FRONTEND_ORIGIN || 'http://localhost:3000',
+    process.env.HEROKU_ORIGIN || 'http://localhost:3000',
+  ]
+  const origin = allowedOrigins.find(origin => origin == req.headers.origin)
+  if (origin) {
+    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept'
+    )
+  }
   next()
 })
 
