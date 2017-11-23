@@ -52,10 +52,10 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
  * Log out.
  */
 export let logout = (req: Request, res: Response) => {
-  req.logout()
   if (req.session) {
+    req.logout()
     req.session.destroy(() => {
-      res.redirect('/')
+      res.json({'loggedOut': true}).end()
     })
   }
 }
