@@ -21,7 +21,11 @@ Start the server
 
 ## Create local account
 
-Create user (using httpie):
+With curl:
 
-`http POST localhost:5040/signup email=some@email.com firstName=Alex lastName=DeLarge memberType=studs_member password=asdf confirmPassword=asdf token=asdf`
+`curl -H "Content-Type: application/json" -X POST -d '{"email":"some@email.com","password":"asdf","confirmPassword":"asdf","firstName":"Alex","lastName":"DeLarge","memberType":"studs_member","token":"asdf"}' http://localhost:5040/signup`
+
+With httpie:
+
+`http POST localhost:5040/signup email=some@email.com password=asdf confirmPassword=asdf firstName=Alex lastName=DeLarge memberType=studs_member token=asdf`
 
