@@ -208,7 +208,9 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
       console.log(err)
       return res.sendStatus(500)
     } else {
-      return res.sendStatus(200)
+      res.status(200)
+      res.json({})
+      return res.end()
     }
   })
 }
@@ -269,7 +271,9 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       console.log(err)
       return res.sendStatus(500)
     } else {
-      return res.sendStatus(200)
+      res.status(200)
+      res.json({})
+      return res.end()
     }
   })
 }
