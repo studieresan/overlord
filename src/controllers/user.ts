@@ -163,7 +163,10 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
     'password',
     'Password must be at least 4 characters long.'
   ).len({ min: 4 })
-  req.assert('confirm', 'Passwords must match.').equals(req.body.password)
+  req.assert(
+    'confirmPassword',
+    'Passwords must match.'
+  ).equals(req.body.password)
 
   const errors = req.validationErrors()
 
@@ -260,7 +263,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         + `requested the reset of the password for your account.\n\n`
         + `Please click on the following link, or paste this into your browser `
         + `to complete the process:\n\n`
-        + `http://${req.headers.host}/reset/${token}\n\n`
+        + `https://studieresan.se/password-reset/${token}\n\n`
         + `If you did not request this, please ignore this email and your `
         + `password will remain unchanged.\n`,
       }
