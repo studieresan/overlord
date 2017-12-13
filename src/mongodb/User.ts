@@ -5,6 +5,8 @@ import { User } from '../models'
 export type UserModel = mongoose.Document & User & {
   email: string,
   password: string,
+  passwordResetToken: string | undefined,
+  passwordResetExpires: number | undefined,
 
   comparePassword:
     (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void,
@@ -13,6 +15,8 @@ export type UserModel = mongoose.Document & User & {
 const userSchema: mongoose.Schema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
+  passwordResetToken: String,
+  passwordResetExpires: Number,
 
   profile: {
     email: String,
