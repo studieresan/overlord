@@ -1,4 +1,4 @@
-interface Feedback {
+export interface Feedback {
   companyId: string
   // eventId: string? ?
   questions: Question[]
