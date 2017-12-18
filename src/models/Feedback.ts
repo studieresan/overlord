@@ -1,33 +1,32 @@
 export interface Feedback {
   companyId: string
-  // eventId: string? ?
+  eventId?: string
   questions: Question[]
 }
 
 type Question = MultipleChoice | Scale | OpenEnded
 
-interface MultipleChoice {
-  id: string
+export interface MultipleChoice {
+  type: 'multipleChoice'
   question: string
   alternatives: Alternative[]
 }
 
-interface Scale {
-  id: string
+export interface Scale {
+  type: 'scale'
   question: string
   from: string
   to: string
-  steps: Alternative[]
+  alternatives: Alternative[]
 }
 
-interface OpenEnded {
-  id: string
+export interface OpenEnded {
+  type: 'openEnded'
   question: string
-  feedback: string[]
+  answers: string[]
 }
 
 interface Alternative {
-  id: string
-  text: string
+  alternative: string
   amount: number
 }
