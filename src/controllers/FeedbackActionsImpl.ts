@@ -1,7 +1,6 @@
 import { FeedbackActions } from './FeedbackActions'
 import * as models from '../models'
 import * as mongodb from '../mongodb/Feedback'
-import { merge } from 'ramda'
 import { cast } from './util'
 
 export class FeedbackActionsImpl implements FeedbackActions {

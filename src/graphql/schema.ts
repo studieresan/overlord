@@ -16,7 +16,8 @@ import {
   GraphQLCVInput,
 } from './GraphQLCV'
 import {
-  FeedbackType
+  FeedbackType,
+  FeedbackInputType,
 } from './GraphQLFeedback'
 import {
   GraphQLList,
@@ -25,7 +26,6 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
-import { createDefaultFeedback } from '../models'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
@@ -121,6 +121,19 @@ const schema = new GraphQLSchema({
         resolve(a, { companyId }, { req }) {
           return req.isAuthenticated()
             ? feedbackCtrl.createFeedback(companyId)
+            : {}
+        },
+      },
+      updateFeedback: {
+        description: 'Update the feedback tied to a company ID',
+        type: FeedbackType,
+        args: {
+          companyId: { type: new GraphQLNonNull(GraphQLString) },
+          fields: { type: FeedbackInputType },
+        },
+        resolve(a, { companyId, fields }, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.updateFeedback(companyId, fields)
             : {}
         },
       },
