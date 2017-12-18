@@ -14,11 +14,15 @@ import {
   GraphQLCVInput,
 } from './GraphQLCV'
 import {
+  FeedbackType
+} from './GraphQLFeedback'
+import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
 } from 'graphql'
+import { createDefaultFeedback } from '../models'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
@@ -54,6 +58,12 @@ const schema = new GraphQLSchema({
           return req.isAuthenticated()
             ? cvCtrl.getCV(req.user.id)
             : {}
+        },
+      },
+      feedback: {
+        type: FeedbackType,
+        resolve(a, b, { req }) {
+          return createDefaultFeedback('companyId')
         },
       },
     },
