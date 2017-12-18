@@ -112,6 +112,18 @@ const schema = new GraphQLSchema({
             : {}
         },
       },
+      createFeedback: {
+        description: 'Create new feedback tied to a company ID',
+        type: FeedbackType,
+        args: {
+          companyId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        resolve(a, { companyId }, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.createFeedback(companyId)
+            : {}
+        },
+      },
     },
   }),
 })
