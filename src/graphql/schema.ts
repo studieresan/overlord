@@ -1,8 +1,10 @@
-import { UserActions } from './../controllers/UserActions'
-import { UserActionsImpl } from './../controllers/UserActionsImpl'
 import {
+  UserActions,
+  UserActionsImpl,
   CVActions,
   CVActionsImpl,
+  FeedbackActions,
+  FeedbackActionsImpl,
 } from './../controllers'
 import {
   GraphQLUser,
@@ -21,11 +23,13 @@ import {
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
+  GraphQLString,
 } from 'graphql'
 import { createDefaultFeedback } from '../models'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
+const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -61,9 +65,24 @@ const schema = new GraphQLSchema({
         },
       },
       feedback: {
+        description: 'Get feedback for a company ID',
         type: FeedbackType,
+        args: {
+          companyId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        resolve(a, { companyId }, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.getFeedback(companyId)
+            : {}
+        },
+      },
+      allFeedback: {
+        description: 'Get all feedback as a list',
+        type: new GraphQLList(FeedbackType),
         resolve(a, b, { req }) {
-          return createDefaultFeedback('companyId')
+          return req.isAuthenticated()
+            ? feedbackCtrl.getAllFeedback()
+            : {}
         },
       },
     },
