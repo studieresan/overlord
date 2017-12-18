@@ -45,4 +45,11 @@ export class FeedbackActionsImpl implements FeedbackActions {
     ).then(cast<models.Feedback>())
   }
 
+  removeFeedback(companyId: string): Promise<boolean> {
+    return mongodb.Feedback.findOneAndRemove({ companyId })
+      .then(feedback => {
+        return Promise.resolve(feedback != undefined)
+      })
+  }
+
 }

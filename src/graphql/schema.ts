@@ -25,6 +25,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  GraphQLBoolean,
 } from 'graphql'
 
 const userCtrl: UserActions = new UserActionsImpl()
@@ -134,6 +135,19 @@ const schema = new GraphQLSchema({
         resolve(a, { companyId, fields }, { req }) {
           return req.isAuthenticated()
             ? feedbackCtrl.updateFeedback(companyId, fields)
+            : {}
+        },
+      },
+      removeFeedback: {
+        description: 'Remove the feedback tied to a company ID, '
+          + 'returns true if feedback was successfully removed',
+        type: GraphQLBoolean,
+        args: {
+          companyId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        resolve(a, { companyId }, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.removeFeedback(companyId)
             : {}
         },
       },

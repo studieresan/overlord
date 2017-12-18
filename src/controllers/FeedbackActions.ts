@@ -15,4 +15,7 @@ export interface FeedbackActions {
   updateFeedback(companyId: string, fields: Partial<Feedback>):
     Promise<Feedback>
 
+  // Removes the feedback for a company, returns a boolean indicating success
+  removeFeedback(companyId: string): Promise<boolean>
+
 }
