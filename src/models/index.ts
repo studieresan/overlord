@@ -1,6 +1,6 @@
 import { CV, CVSection, createDefaultCV } from './CV'
 import { User, MemberType } from './User'
-import { Feedback } from './Feedback'
+import { Feedback, createDefaultFeedback } from './Feedback'
 
 export {
   CV,
@@ -9,4 +9,5 @@ export {
   User,
   MemberType,
   Feedback,
+  createDefaultFeedback,
 }
