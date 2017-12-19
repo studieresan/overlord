@@ -1,7 +1,7 @@
 import { FeedbackActions } from './FeedbackActions'
 import * as models from '../models'
 import * as mongodb from '../mongodb/Feedback'
-import { cast } from './util'
+import { rejectIfNull } from './util'
 
 export class FeedbackActionsImpl implements FeedbackActions {
 
@@ -13,27 +13,18 @@ export class FeedbackActionsImpl implements FeedbackActions {
         } else {
           const defaultFeedback = models.createDefaultFeedback(companyId)
           const feedback = new mongodb.Feedback(defaultFeedback)
-          feedback.save()
-          return feedback
+          return feedback.save()
         }
       })
-      .then(cast<models.Feedback>())
   }
 
   getFeedback(companyId: string): Promise<models.Feedback> {
     return mongodb.Feedback.findOne({ companyId })
-    .then(feedback => {
-      if (feedback) {
-        return Promise.resolve(feedback as models.Feedback)
-      } else {
-        return Promise.reject('No feedback for given companyId found.')
-      }
-    })
+      .then(rejectIfNull('No feedback exists for specified companyId'))
   }
 
   getAllFeedback(): Promise<models.Feedback[]> {
-    return mongodb.Feedback.find()
-      .then(cast<models.Feedback[]>())
+    return mongodb.Feedback.find().exec()
   }
 
   updateFeedback(companyId: string, fields: Partial<models.Feedback>):
@@ -42,13 +33,13 @@ export class FeedbackActionsImpl implements FeedbackActions {
       { companyId },
       { ...fields, companyId },
       { upsert: true, new: true }
-    ).then(cast<models.Feedback>())
+    ).then(rejectIfNull('No feedback exists for specified companyId'))
   }
 
   removeFeedback(companyId: string): Promise<boolean> {
     return mongodb.Feedback.findOneAndRemove({ companyId })
       .then(feedback => {
-        return Promise.resolve(feedback != undefined)
+        return (feedback != undefined)
       })
   }
 
