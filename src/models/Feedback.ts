@@ -1,34 +1,34 @@
 export interface Feedback {
-  companyId: string
-  eventId?: string
-  questions: Question[]
+  readonly companyId: string
+  readonly eventId?: string
+  readonly questions: Question[]
 }
 
-type Question = MultipleChoice | Scale | OpenEnded
+export type Question = MultipleChoice | Scale | OpenEnded
 
 export interface MultipleChoice {
-  type: 'multipleChoice'
-  question: string
-  alternatives: Alternative[]
+  readonly type: 'multipleChoice'
+  readonly question: string
+  readonly alternatives: Alternative[]
 }
 
 export interface Scale {
-  type: 'scale'
-  question: string
-  from: string
-  to: string
-  alternatives: Alternative[]
+  readonly type: 'scale'
+  readonly question: string
+  readonly from: string
+  readonly to: string
+  readonly alternatives: Alternative[]
 }
 
 export interface OpenEnded {
-  type: 'openEnded'
-  question: string
-  answers: string[]
+  readonly type: 'openEnded'
+  readonly question: string
+  readonly answers: string[]
 }
 
 interface Alternative {
-  alternative: string
-  amount: number
+  readonly alternative: string
+  readonly amount: number
 }
 
 export function createDefaultFeedback(companyId: string): Feedback {
