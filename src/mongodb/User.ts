@@ -1,13 +1,12 @@
 import * as bcrypt from 'bcrypt-nodejs'
 import * as mongoose from 'mongoose'
-import { UserProfile } from '../models'
+import * as models from '../models'
 
-export type UserDocument = mongoose.Document & {
+export type UserDocument = mongoose.Document & models.User & {
   email: string,
   password: string,
   passwordResetToken: string | undefined,
   passwordResetExpires: number | undefined,
-  profile: UserProfile,
 
   comparePassword:
     (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void,

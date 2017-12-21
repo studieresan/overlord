@@ -48,13 +48,13 @@ const schema = new GraphQLSchema({
       },
       users: {
         description: 'Get a list of users of the given member type',
-        type: new GraphQLList(UserProfileType),
+        type: new GraphQLList(UserType),
         args: {
           memberType: { type: new GraphQLNonNull(MemberType) },
         },
         resolve(a, { memberType }, { req }) {
           return req.isAuthenticated()
-            ? userCtrl.getUserProfiles(memberType)
+            ? userCtrl.getUsers(memberType)
             : {}
         },
       },

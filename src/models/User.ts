@@ -1,3 +1,8 @@
+export interface User {
+  readonly id: string
+  profile: UserProfile
+}
+
 export interface UserProfile {
   readonly email: string
   readonly firstName: string

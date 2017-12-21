@@ -1,6 +1,6 @@
 import * as mongodb from '../mongodb/User'
 import { UserActions } from './UserActions'
-import { UserProfile, MemberType } from '../models'
+import { User, UserProfile, MemberType } from '../models'
 import { merge } from 'ramda'
 import { rejectIfNull } from './util'
 
@@ -10,13 +10,6 @@ export class UserActionsImpl implements UserActions {
     return mongodb.User.findById(id, { profile: 1 })
       .then(rejectIfNull('No user matches id'))
       .then(user => user.profile)
-  }
-
-  getUserProfiles(memberType: MemberType): Promise<UserProfile[]> {
-    return mongodb.User.find(
-      { 'profile.memberType': memberType },
-      { profile: 1, _id: 1 }).exec()
-      .then(users => users.map(user => user.profile))
   }
 
   setUserProfile(id: string, newFields: Partial<UserProfile>):
@@ -30,4 +23,10 @@ export class UserActionsImpl implements UserActions {
           .then(user => user.profile)
       })
   }
+
+  getUsers(memberType: MemberType): Promise<User[]> {
+    return mongodb.User.find(
+      { 'profile.memberType': memberType }, {}).exec()
+  }
+
 }
