@@ -22,6 +22,7 @@ import {
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
+const UNAUTHORIZED_ERROR = Promise.reject('not authorized')
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -33,7 +34,7 @@ const schema = new GraphQLSchema({
         resolve(a, b, { req }) {
           return req.isAuthenticated()
             ? userCtrl.getUser(req.user.id)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       users: {
@@ -45,7 +46,7 @@ const schema = new GraphQLSchema({
         resolve(a, { memberType }, { req }) {
           return req.isAuthenticated()
             ? userCtrl.getUsers(memberType)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       cv: {
@@ -53,7 +54,7 @@ const schema = new GraphQLSchema({
         resolve(a, b, { req }) {
           return req.isAuthenticated()
             ? cvCtrl.getCV(req.user.id)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
     },
@@ -69,7 +70,7 @@ const schema = new GraphQLSchema({
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
             ? userCtrl.setUser(req.user.id, fields)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       setCv: {
@@ -80,7 +81,7 @@ const schema = new GraphQLSchema({
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
             ? cvCtrl.setCV(req.user.id, fields)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
     },
