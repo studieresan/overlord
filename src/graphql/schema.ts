@@ -58,14 +58,6 @@ const schema = new GraphQLSchema({
             : {}
         },
       },
-      cv: {
-        type: GraphQLCV,
-        resolve(a, b, { req }) {
-          return req.isAuthenticated()
-            ? cvCtrl.getCV(req.user.id)
-            : {}
-        },
-      },
       feedback: {
         description: 'Get feedback for a company ID',
         type: FeedbackType,
@@ -92,7 +84,8 @@ const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'RootMutationType',
     fields: {
-      setUser: {
+      updateProfile: {
+        description: 'Update the profile of the currently logged in user',
         type: UserProfileType,
         args: {
           fields: { type: UserProfileInputType },
@@ -103,7 +96,8 @@ const schema = new GraphQLSchema({
             : {}
         },
       },
-      setCv: {
+      updateCV: {
+        description: 'Update the CV of the currently logged in user',
         type: GraphQLCV,
         args: {
           fields: { type: GraphQLCVInput },
