@@ -6,7 +6,6 @@ import {
 } from 'graphql'
 import * as models from './../models'
 
-
 const MutableProfileFields = {
   firstName: { type: GraphQLString },
   lastName: { type: GraphQLString },

@@ -13,14 +13,14 @@ const MutableItemFields = {
   city: { type: GraphQLString },
 }
 
-export const GraphQLCVItem = new GraphQLObjectType({
+export const CVItemType = new GraphQLObjectType({
   name: 'CVItem',
   fields: {
     ...MutableItemFields,
   },
 })
 
-export const GraphQLCVItemInput = new GraphQLInputObjectType ({
+export const CVItemInputType = new GraphQLInputObjectType ({
   name: 'CVItemInput',
   fields: {
     ...MutableItemFields,
@@ -31,32 +31,32 @@ const MutableCVSectionFields = {
   title: { type: GraphQLString },
 }
 
-export const GraphQLCVSection = new GraphQLObjectType({
+export const CVSectionType = new GraphQLObjectType({
   name: 'CVSection',
   fields: {
     ...MutableCVSectionFields,
-    items: { type: new GraphQLList(GraphQLCVItem) },
+    items: { type: new GraphQLList(CVItemType) },
   },
 })
 
-export const GraphQLCVSectionInput = new GraphQLInputObjectType({
+export const CVSectionInputType = new GraphQLInputObjectType({
   name: 'CVSectionInput',
   fields: {
     ...MutableCVSectionFields,
-    items: { type: new GraphQLList(GraphQLCVItemInput) },
+    items: { type: new GraphQLList(CVItemInputType) },
   },
 })
 
-export const GraphQLCV = new GraphQLObjectType({
+export const CVType = new GraphQLObjectType({
   name: 'CV',
   fields: {
-    sections: { type: new GraphQLList(GraphQLCVSection) },
+    sections: { type: new GraphQLList(CVSectionType) },
   },
 })
 
-export const GraphQLCVInput = new GraphQLInputObjectType({
+export const CVInputType = new GraphQLInputObjectType({
   name: 'CVInput',
   fields:  {
-    sections: { type: new GraphQLList(GraphQLCVSectionInput) },
+    sections: { type: new GraphQLList(CVSectionInputType) },
   },
 })

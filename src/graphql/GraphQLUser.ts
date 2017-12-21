@@ -1,14 +1,11 @@
 import {
   UserProfileType,
-  UserProfileInputType,
 } from './GraphQLUserProfile'
 import {
-  GraphQLCV,
-  GraphQLCVInput,
+  CVType,
 } from './GraphQLCV'
 import {
   GraphQLObjectType,
-  GraphQLInputObjectType,
 } from 'graphql'
 import {
   CVActions,
@@ -22,19 +19,11 @@ export const UserType = new GraphQLObjectType({
   fields : {
     profile: { type: UserProfileType },
     cv: {
-      type: GraphQLCV,
+      type: CVType,
       resolve(user, b, { req }) {
         return cvCtrl.getCV(user.id)
       },
     },
-  },
-})
-
-export const UserInputType = new GraphQLInputObjectType({
-  name : 'UserInput',
-  fields : {
-    profile: { type: UserProfileInputType },
-    cv: { type: GraphQLCVInput },
   },
 })
 

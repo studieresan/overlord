@@ -15,8 +15,8 @@ import {
   MemberType,
 } from './GraphQLUserProfile'
 import {
-  GraphQLCV,
-  GraphQLCVInput,
+  CVType,
+  CVInputType,
 } from './GraphQLCV'
 import {
   FeedbackType,
@@ -98,9 +98,9 @@ const schema = new GraphQLSchema({
       },
       updateCV: {
         description: 'Update the CV of the currently logged in user',
-        type: GraphQLCV,
+        type: CVType,
         args: {
-          fields: { type: GraphQLCVInput },
+          fields: { type: CVInputType },
         },
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
