@@ -7,10 +7,10 @@ import {
   FeedbackActionsImpl,
 } from './../controllers'
 import {
-  GraphQLUser,
-  GraphQLUserInput,
-  GraphQLMemberType,
-} from './GraphQLUser'
+  UserProfileType,
+  UserProfileInputType,
+  MemberType,
+} from './GraphQLUserProfile'
 import {
   GraphQLCV,
   GraphQLCVInput,
@@ -38,7 +38,7 @@ const schema = new GraphQLSchema({
     fields: {
       user: {
         // Return information about the user, assuming they are logged in
-        type: GraphQLUser,
+        type: UserProfileType,
         resolve(a, b, { req }) {
           return req.isAuthenticated()
             ? userCtrl.getUserProfile(req.user.id)
@@ -47,9 +47,9 @@ const schema = new GraphQLSchema({
       },
       users: {
         // Return all the users of a given type
-        type: new GraphQLList(GraphQLUser),
+        type: new GraphQLList(UserProfileType),
         args: {
-          memberType: { type: new GraphQLNonNull(GraphQLMemberType) },
+          memberType: { type: new GraphQLNonNull(MemberType) },
         },
         resolve(a, { memberType }, { req }) {
           return req.isAuthenticated()
@@ -92,9 +92,9 @@ const schema = new GraphQLSchema({
     name: 'RootMutationType',
     fields: {
       setUser: {
-        type: GraphQLUser,
+        type: UserProfileType,
         args: {
-          fields: { type: GraphQLUserInput },
+          fields: { type: UserProfileInputType },
         },
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
