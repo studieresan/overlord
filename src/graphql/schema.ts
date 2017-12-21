@@ -1,8 +1,10 @@
-import { UserActions } from './../controllers/UserActions'
-import { UserActionsImpl } from './../controllers/UserActionsImpl'
 import {
+  UserActions,
+  UserActionsImpl,
   CVActions,
   CVActionsImpl,
+  FeedbackActions,
+  FeedbackActionsImpl,
 } from './../controllers'
 import {
   GraphQLUser,
@@ -14,15 +16,22 @@ import {
   GraphQLCVInput,
 } from './GraphQLCV'
 import {
+  FeedbackType,
+  FeedbackInputType,
+} from './GraphQLFeedback'
+import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
+  GraphQLString,
+  GraphQLBoolean,
 } from 'graphql'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
 const UNAUTHORIZED_ERROR = Promise.reject('not authorized')
+const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -57,6 +66,27 @@ const schema = new GraphQLSchema({
             : UNAUTHORIZED_ERROR
         },
       },
+      feedback: {
+        description: 'Get feedback for a company ID',
+        type: FeedbackType,
+        args: {
+          companyId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        resolve(a, { companyId }, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.getFeedback(companyId)
+            : UNAUTHORIZED_ERROR
+        },
+      },
+      allFeedback: {
+        description: 'Get all feedback as a list',
+        type: new GraphQLList(FeedbackType),
+        resolve(a, b, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.getAllFeedback()
+            : UNAUTHORIZED_ERROR
+        },
+      },
     },
   }),
   mutation: new GraphQLObjectType({
@@ -81,6 +111,44 @@ const schema = new GraphQLSchema({
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
             ? cvCtrl.setCV(req.user.id, fields)
+            : UNAUTHORIZED_ERROR
+        },
+      },
+      createFeedback: {
+        description: 'Create new feedback tied to a company ID',
+        type: FeedbackType,
+        args: {
+          companyId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        resolve(a, { companyId }, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.createFeedback(companyId)
+            : UNAUTHORIZED_ERROR
+        },
+      },
+      updateFeedback: {
+        description: 'Update the feedback tied to a company ID',
+        type: FeedbackType,
+        args: {
+          companyId: { type: new GraphQLNonNull(GraphQLString) },
+          fields: { type: FeedbackInputType },
+        },
+        resolve(a, { companyId, fields }, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.updateFeedback(companyId, fields)
+            : UNAUTHORIZED_ERROR
+        },
+      },
+      removeFeedback: {
+        description: 'Remove the feedback tied to a company ID, '
+          + 'returns true if feedback was successfully removed',
+        type: GraphQLBoolean,
+        args: {
+          companyId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        resolve(a, { companyId }, { req }) {
+          return req.isAuthenticated()
+            ? feedbackCtrl.removeFeedback(companyId)
             : UNAUTHORIZED_ERROR
         },
       },
