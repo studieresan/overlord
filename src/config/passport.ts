@@ -1,8 +1,7 @@
 import * as passport from 'passport'
 import * as passportLocal from 'passport-local'
 
-// import { User, UserType } from '../models/User'
-import { default as User } from '../mongodb/User'
+import { User } from '../mongodb/User'
 import { Request, Response, NextFunction } from 'express'
 
 const LocalStrategy = passportLocal.Strategy

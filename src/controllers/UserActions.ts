@@ -1,14 +1,14 @@
-import { User, MemberType } from '../models'
+import { UserProfile, MemberType } from '../models'
 
 export interface UserActions {
+  // Gets the profile of the user with the specified id
+  getUserProfile(id: string): Promise<UserProfile>
 
-  // Get the user with the specified id
-  getUser(id: string): Promise<User>
+  // Gets the profiles of all users with the specified membertype
+  getUserProfiles(type: MemberType): Promise<UserProfile[]>
 
-  // Get all users of the specified type
-  getUsers(type: MemberType): Promise<User[]>
-
-  // Update the specified fields of a User, returning the modified user
-  setUser(id: string, fields: Partial<User>): Promise<User>
+  // Update the specified fields of a user profile,
+  // returning the modified profile
+  setUserProfile(id: string, fields: Partial<UserProfile>): Promise<UserProfile>
 
 }

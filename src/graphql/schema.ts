@@ -41,7 +41,7 @@ const schema = new GraphQLSchema({
         type: GraphQLUser,
         resolve(a, b, { req }) {
           return req.isAuthenticated()
-            ? userCtrl.getUser(req.user.id)
+            ? userCtrl.getUserProfile(req.user.id)
             : {}
         },
       },
@@ -53,7 +53,7 @@ const schema = new GraphQLSchema({
         },
         resolve(a, { memberType }, { req }) {
           return req.isAuthenticated()
-            ? userCtrl.getUsers(memberType)
+            ? userCtrl.getUserProfiles(memberType)
             : {}
         },
       },
@@ -98,7 +98,7 @@ const schema = new GraphQLSchema({
         },
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
-            ? userCtrl.setUser(req.user.id, fields)
+            ? userCtrl.setUserProfile(req.user.id, fields)
             : {}
         },
       },

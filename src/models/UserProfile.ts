@@ -1,5 +1,4 @@
-export interface User {
-  readonly id: string
+export interface UserProfile {
   readonly email: string
   readonly firstName: string
   readonly lastName: string
