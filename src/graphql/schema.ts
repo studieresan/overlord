@@ -7,6 +7,9 @@ import {
   FeedbackActionsImpl,
 } from './../controllers'
 import {
+  UserType
+} from './GraphQLUser'
+import {
   UserProfileType,
   UserProfileInputType,
   MemberType,
@@ -37,16 +40,14 @@ const schema = new GraphQLSchema({
     name: 'RootQueryType',
     fields: {
       user: {
-        // Return information about the user, assuming they are logged in
-        type: UserProfileType,
+        description: 'Get the currently logged in user',
+        type: UserType,
         resolve(a, b, { req }) {
-          return req.isAuthenticated()
-            ? userCtrl.getUserProfile(req.user.id)
-            : {}
+          return req.user
         },
       },
       users: {
-        // Return all the users of a given type
+        description: 'Get a list of users of the given member type',
         type: new GraphQLList(UserProfileType),
         args: {
           memberType: { type: new GraphQLNonNull(MemberType) },

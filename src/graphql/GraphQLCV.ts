@@ -50,7 +50,6 @@ export const GraphQLCVSectionInput = new GraphQLInputObjectType({
 export const GraphQLCV = new GraphQLObjectType({
   name: 'CV',
   fields: {
-    userId: { type: GraphQLString },
     sections: { type: new GraphQLList(GraphQLCVSection) },
   },
 })
