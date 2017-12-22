@@ -1,26 +1,25 @@
-import DB from '../mongodb/CV'
+import * as mongodb from '../mongodb/CV'
 import { CVActions } from './CVActions'
 import { CV, createDefaultCV } from '../models'
-import { cast } from './util'
+import { rejectIfNull } from './util'
 
 export class CVActionsImpl implements CVActions {
 
   getCV(userId: string): Promise<CV> {
-    return DB.findOne({ userId })
-      .then(doc => {
-        return doc === null
+    return mongodb.CV.findOne({ userId })
+      .then(cv => {
+        return cv === null
           ? createDefaultCV(userId)
-          : doc
+          : cv
       })
-      .then(cast<CV>())
   }
 
-  setCV(userId: string, fields: Partial<CV>): Promise<CV> {
-    return DB.findOneAndUpdate(
+  updateCV(userId: string, fields: Partial<CV>): Promise<CV> {
+    return mongodb.CV.findOneAndUpdate(
       { userId },
       { userId, ...fields },
       { upsert: true, new: true }
-    ).then(cast<CV>())
+    ).then(rejectIfNull('No CV exists for given id'))
   }
 
 }

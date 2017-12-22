@@ -1,7 +1,7 @@
 import * as async from 'async'
 import * as crypto from 'crypto'
 import * as passport from 'passport'
-import { default as User, UserModel } from '../mongodb/User'
+import { User, UserDocument } from '../mongodb/User'
 import { MemberType } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
@@ -143,7 +143,7 @@ export const postUpdatePassword =
       return res.json(errors).end()
     }
 
-    User.findById(req.user.id, (err, user: UserModel) => {
+    User.findById(req.user.id, (err, user: UserDocument) => {
       if (err) { return next(err) }
       user.password = req.body.password
       user.save((err: WriteError) => {
@@ -179,7 +179,7 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
       User
         .findOne({ passwordResetToken: req.params.token })
         .where('passwordResetExpires').gt(Date.now())
-        .exec((err, user: UserModel) => {
+        .exec((err, user: UserDocument) => {
           if (err) { return next(err) }
           if (!user) {
             return res.sendStatus(400)
@@ -195,7 +195,7 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
           })
         })
     },
-    function sendResetPasswordEmail(user: UserModel, done: Function) {
+    function sendResetPasswordEmail(user: UserDocument, done: Function) {
       const mailOptions = {
         to: user.email,
         from: 'studs-kommunikation@d.kth.se',
@@ -240,7 +240,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       })
     },
     function setRandomToken(token: string, done: Function) {
-      User.findOne({ email: req.body.email }, (err, user: UserModel) => {
+      User.findOne({ email: req.body.email }, (err, user: UserDocument) => {
         if (err) { return done(err) }
         if (!user) {
           return res.sendStatus(400)
@@ -253,7 +253,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       })
     },
     function sendForgotPasswordEmail(
-      token: string, user: UserModel, done: Function) {
+      token: string, user: UserDocument, done: Function) {
       const mailOptions = {
         to: user.email,
         from: 'studs-kommunikation@d.kth.se',

@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt-nodejs'
 import * as mongoose from 'mongoose'
-import { User } from '../models'
+import * as models from '../models'
 
-export type UserModel = mongoose.Document & User & {
+export type UserDocument = mongoose.Document & models.User & {
   email: string,
   password: string,
   passwordResetToken: string | undefined,
@@ -35,8 +35,8 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
 /**
  * Password hash middleware.
  */
-userSchema.pre('save', function save(this: UserModel, next) {
-  const user: UserModel = this
+userSchema.pre('save', function save(this: UserDocument, next) {
+  const user: UserDocument = this
   if (!user.isModified('password')) { return next() }
   bcrypt.genSalt(10, (err, salt) => {
     if (err) { return next(err) }
@@ -62,6 +62,4 @@ userSchema.methods.comparePassword =
     })
   }
 
-// export const User: UserType = mongoose.model<UserType>('User', userSchema)
-const User = mongoose.model('User', userSchema)
-export default User
+export const User = mongoose.model<UserDocument>('User', userSchema)

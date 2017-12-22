@@ -7,13 +7,16 @@ import {
   FeedbackActionsImpl,
 } from './../controllers'
 import {
-  GraphQLUser,
-  GraphQLUserInput,
-  GraphQLMemberType,
+  UserType
 } from './GraphQLUser'
 import {
-  GraphQLCV,
-  GraphQLCVInput,
+  UserProfileType,
+  UserProfileInputType,
+  MemberType,
+} from './GraphQLUserProfile'
+import {
+  CVType,
+  CVInputType,
 } from './GraphQLCV'
 import {
   FeedbackType,
@@ -38,31 +41,23 @@ const schema = new GraphQLSchema({
     name: 'RootQueryType',
     fields: {
       user: {
-        // Return information about the user, assuming they are logged in
-        type: GraphQLUser,
+        description: 'Get the currently logged in user',
+        type: UserType,
         resolve(a, b, { req }) {
           return req.isAuthenticated()
-            ? userCtrl.getUser(req.user.id)
+            ? req.user
             : UNAUTHORIZED_ERROR
         },
       },
       users: {
-        // Return all the users of a given type
-        type: new GraphQLList(GraphQLUser),
+        description: 'Get a list of users of the given member type',
+        type: new GraphQLList(UserType),
         args: {
-          memberType: { type: new GraphQLNonNull(GraphQLMemberType) },
+          memberType: { type: new GraphQLNonNull(MemberType) },
         },
         resolve(a, { memberType }, { req }) {
           return req.isAuthenticated()
             ? userCtrl.getUsers(memberType)
-            : UNAUTHORIZED_ERROR
-        },
-      },
-      cv: {
-        type: GraphQLCV,
-        resolve(a, b, { req }) {
-          return req.isAuthenticated()
-            ? cvCtrl.getCV(req.user.id)
             : UNAUTHORIZED_ERROR
         },
       },
@@ -92,25 +87,27 @@ const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'RootMutationType',
     fields: {
-      setUser: {
-        type: GraphQLUser,
+      updateProfile: {
+        description: 'Update the profile of the currently logged in user',
+        type: UserProfileType,
         args: {
-          fields: { type: GraphQLUserInput },
+          fields: { type: UserProfileInputType },
         },
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
-            ? userCtrl.setUser(req.user.id, fields)
+            ? userCtrl.updateUserProfile(req.user.id, fields)
             : UNAUTHORIZED_ERROR
         },
       },
-      setCv: {
-        type: GraphQLCV,
+      updateCV: {
+        description: 'Update the CV of the currently logged in user',
+        type: CVType,
         args: {
-          fields: { type: GraphQLCVInput },
+          fields: { type: CVInputType },
         },
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
-            ? cvCtrl.setCV(req.user.id, fields)
+            ? cvCtrl.updateCV(req.user.id, fields)
             : UNAUTHORIZED_ERROR
         },
       },

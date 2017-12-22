@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose'
-import {
-  CV,
-} from '../models'
+import * as models from '../models'
+
+export type CVDocument = mongoose.Document & models.CV
 
 const cvSchema: mongoose.Schema = new mongoose.Schema({
   userId: { type: String, unique: true },
@@ -9,5 +9,4 @@ const cvSchema: mongoose.Schema = new mongoose.Schema({
   sections: { type: [] },
 }, { timestamps: true })
 
-const CV = mongoose.model('CV', cvSchema)
-export default CV
+export const CV = mongoose.model<CVDocument>('CV', cvSchema)
