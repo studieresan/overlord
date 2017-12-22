@@ -49,7 +49,7 @@ const options = {
   promiseLibrary: global.Promise,
 }
 
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, options)
+mongoose.connect(process.env.MONGODB_URI, options)
 
 mongoose.connection.on('error', () => {
   console.log('MongoDB connection error. Please make sure MongoDB is running.')
@@ -85,9 +85,12 @@ app.use(expressValidator())
 app.use(session({
   resave: false,
   saveUninitialized: false,
+  cookie : {
+    maxAge: 24 * 60 * 60 * 1000 * 14, // two weeks
+  },
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({
-    url: process.env.MONGODB_URI || process.env.MONGOLAB_URI,
+    url: process.env.MONGODB_URI,
     autoReconnect: true,
   }),
 }))

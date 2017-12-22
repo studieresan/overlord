@@ -33,6 +33,7 @@ import {
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
+const UNAUTHORIZED_ERROR = Promise.reject('not authorized')
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 
 const schema = new GraphQLSchema({
@@ -43,7 +44,9 @@ const schema = new GraphQLSchema({
         description: 'Get the currently logged in user',
         type: UserType,
         resolve(a, b, { req }) {
-          return req.user
+          return req.isAuthenticated()
+            ? req.user
+            : UNAUTHORIZED_ERROR
         },
       },
       users: {
@@ -55,7 +58,7 @@ const schema = new GraphQLSchema({
         resolve(a, { memberType }, { req }) {
           return req.isAuthenticated()
             ? userCtrl.getUsers(memberType)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       feedback: {
@@ -67,7 +70,7 @@ const schema = new GraphQLSchema({
         resolve(a, { companyId }, { req }) {
           return req.isAuthenticated()
             ? feedbackCtrl.getFeedback(companyId)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       allFeedback: {
@@ -76,7 +79,7 @@ const schema = new GraphQLSchema({
         resolve(a, b, { req }) {
           return req.isAuthenticated()
             ? feedbackCtrl.getAllFeedback()
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
     },
@@ -93,7 +96,7 @@ const schema = new GraphQLSchema({
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
             ? userCtrl.updateUserProfile(req.user.id, fields)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       updateCV: {
@@ -105,7 +108,7 @@ const schema = new GraphQLSchema({
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
             ? cvCtrl.updateCV(req.user.id, fields)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       createFeedback: {
@@ -117,7 +120,7 @@ const schema = new GraphQLSchema({
         resolve(a, { companyId }, { req }) {
           return req.isAuthenticated()
             ? feedbackCtrl.createFeedback(companyId)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       updateFeedback: {
@@ -130,7 +133,7 @@ const schema = new GraphQLSchema({
         resolve(a, { companyId, fields }, { req }) {
           return req.isAuthenticated()
             ? feedbackCtrl.updateFeedback(companyId, fields)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
       removeFeedback: {
@@ -143,7 +146,7 @@ const schema = new GraphQLSchema({
         resolve(a, { companyId }, { req }) {
           return req.isAuthenticated()
             ? feedbackCtrl.removeFeedback(companyId)
-            : {}
+            : UNAUTHORIZED_ERROR
         },
       },
     },
