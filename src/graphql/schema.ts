@@ -92,7 +92,7 @@ const schema = new GraphQLSchema({
         },
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
-            ? userCtrl.setUserProfile(req.user.id, fields)
+            ? userCtrl.updateUserProfile(req.user.id, fields)
             : {}
         },
       },
@@ -104,7 +104,7 @@ const schema = new GraphQLSchema({
         },
         resolve(a, { fields }, { req }) {
           return req.isAuthenticated()
-            ? cvCtrl.setCV(req.user.id, fields)
+            ? cvCtrl.updateCV(req.user.id, fields)
             : {}
         },
       },

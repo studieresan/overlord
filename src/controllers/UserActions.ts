@@ -6,7 +6,8 @@ export interface UserActions {
 
   // Update the specified fields of a user profile,
   // returning the modified profile
-  setUserProfile(id: string, fields: Partial<UserProfile>): Promise<UserProfile>
+  updateUserProfile(id: string, fields: Partial<UserProfile>):
+    Promise<UserProfile>
 
   // Gets all users with the specified membertype
   getUsers(type: MemberType): Promise<User[]>

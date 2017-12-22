@@ -12,7 +12,7 @@ export class UserActionsImpl implements UserActions {
       .then(user => user.profile)
   }
 
-  setUserProfile(id: string, newFields: Partial<UserProfile>):
+  updateUserProfile(id: string, newFields: Partial<UserProfile>):
     Promise<UserProfile> {
     return mongodb.User.findById(id)
       .then(rejectIfNull('No user matches id'))
