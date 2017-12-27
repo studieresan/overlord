@@ -152,7 +152,7 @@ app.use('/graphql', (req, res) =>
   graphqlHTTP({
      schema: graphQLSchema,
      context: { req: req },
-     graphiql: true,
+     graphiql: process.env.DEV,
   })(req, res)
 )
 
