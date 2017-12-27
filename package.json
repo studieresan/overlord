@@ -12,7 +12,7 @@
     "start": "npm run build && npm run watch",
     "build": "npm run build-ts && npm run tslint",
     "postinstall": "npm run build",
-    "serve": "nodemon dist/server.js",
+    "serve": "nodemon dist/server.js --delay 0.1",
     "serve-prod": "node dist/server.js",
     "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve\"",
     "test": "jest --forceExit",
@@ -87,7 +87,7 @@
     "typescript": "^2.4.0"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.14.3"
   },
   "false": {}
 }
