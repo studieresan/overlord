@@ -24,9 +24,23 @@ export class UserActionsImpl implements UserActions {
       })
   }
 
-  getUsers(memberType: MemberType): Promise<User[]> {
-    return mongodb.User.find(
-      { 'profile.memberType': memberType }, {}).exec()
+  getUsers(auth: User, memberType: MemberType): Promise<User[]> {
+    if (auth) {
+      // All fields
+      return mongodb.User.find(
+        { 'profile.memberType': memberType }, {}
+      ).exec()
+    } else {
+      // Public profile
+      return mongodb.User.find(
+        { 'profile.memberType': memberType },
+        {
+          'profile.firstName': true,
+          'profile.lastName': true,
+          'profile.picture': true,
+          'profile.position': true,
+          'profile.memberType': true,
+        }).exec()
+    }
   }
-
 }
