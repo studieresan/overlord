@@ -24,7 +24,6 @@ const MongoStore = mongo(session)
  * Load environment variables from .env file, where API
  * keys and passwords are configured.
  */
-
 dotenv.config()
 
 /**
@@ -47,6 +46,7 @@ const app = express()
  */
 const options = {
   promiseLibrary: global.Promise,
+  useMongoClient: true,
 }
 
 mongoose.connect(process.env.MONGODB_URI, options)
