@@ -1,12 +1,12 @@
 {
-  "name": "express-typescript-starter",
+  "name": "Overlord",
   "version": "0.1.0",
-  "description": "A starting point for Node.js express apps with TypeScript",
+  "description": "Studs18 backend",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/studieresan/overlord"
   },
-  "author": "Bowden Kelly",
+  "author": "Studieresan",
   "license": "MIT",
   "scripts": {
     "start": "npm run build && npm run watch",
@@ -15,7 +15,6 @@
     "serve": "nodemon dist/server.js",
     "serve-prod": "node dist/server.js",
     "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve\"",
-    "test": "jest --forceExit",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
@@ -50,17 +49,14 @@
     "@types/errorhandler": "0.0.30",
     "@types/express": "^4.0.35",
     "@types/express-graphql": "^0.0.34",
-    "@types/express-session": "0.0.32",
     "@types/graphql": "^0.11.5",
     "@types/mongodb": "^2.1.43",
     "@types/mongoose": "^4.7.9",
     "@types/morgan": "^1.7.32",
     "@types/node": "^7.0.12",
-    "@types/nodemailer": "^1.3.32",
     "@types/passport": "^0.3.3",
     "@types/ramda": "^0.24.17",
     "@types/request": "0.0.45",
-    "@types/supertest": "^2.0.0",
     "async": "^2.1.2",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.15.2",
@@ -82,7 +78,6 @@
     "passport-local": "^1.0.0",
     "ramda": "^0.25.0",
     "request": "^2.78.0",
-    "shelljs": "^0.7.7",
     "tslint": "^5.0.0",
     "typescript": "^2.4.0"
   },
