@@ -70,6 +70,9 @@ app.use(function(req, res, next) {
       'Origin, X-Requested-With, Content-Type, Accept'
     )
   }
+  // Allow preflight
+  if (req.method === 'OPTIONS')
+    return res.end()
   next()
 })
 
@@ -81,6 +84,7 @@ app.use(compression())
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.text({ type: 'application/graphql' }))
 app.use(expressValidator())
 app.use(session({
   resave: false,
