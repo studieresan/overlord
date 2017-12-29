@@ -21,7 +21,9 @@ export const UserType = new GraphQLObjectType({
     cv: {
       type: CVType,
       resolve(user, b, { req }) {
-        return cvCtrl.getCV(user.id)
+        return req.isAuthenticated()
+          ? cvCtrl.getCV(user.id)
+          : undefined
       },
     },
   },
