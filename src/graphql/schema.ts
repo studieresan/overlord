@@ -56,9 +56,7 @@ const schema = new GraphQLSchema({
           memberType: { type: new GraphQLNonNull(MemberType) },
         },
         resolve(a, { memberType }, { req }) {
-          return req.isAuthenticated()
-            ? userCtrl.getUsers(memberType)
-            : Promise.reject(UNAUTHORIZED_ERROR)
+          return userCtrl.getUsers(req.user, memberType)
         },
       },
       feedback: {
