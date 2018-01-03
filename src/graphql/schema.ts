@@ -36,6 +36,15 @@ const cvCtrl: CVActions = new CVActionsImpl()
 const UNAUTHORIZED_ERROR = 'not authorized'
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 
+function requireAuth<A>(req: any, res: any, body: () => A) {
+  if (req.isAuthenticated())  {
+    return body()
+  } else {
+    res.status(403)
+    return Promise.reject(UNAUTHORIZED_ERROR)
+  }
+}
+
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
@@ -43,10 +52,8 @@ const schema = new GraphQLSchema({
       user: {
         description: 'Get the currently logged in user',
         type: UserType,
-        resolve(a, b, { req }) {
-          return req.isAuthenticated()
-            ? req.user
-            : Promise.reject(UNAUTHORIZED_ERROR)
+        resolve(a, b, { req, res }) {
+          return requireAuth(req, res, () => req.user)
         },
       },
       users: {
@@ -65,19 +72,16 @@ const schema = new GraphQLSchema({
         args: {
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
-        resolve(a, { companyId }, { req }) {
-          return req.isAuthenticated()
-            ? feedbackCtrl.getFeedback(companyId)
-            : Promise.reject(UNAUTHORIZED_ERROR)
+        resolve(a, { companyId }, { req, res }) {
+          return requireAuth(req, res,
+            () => feedbackCtrl.getFeedback(companyId))
         },
       },
       allFeedback: {
         description: 'Get all feedback as a list',
         type: new GraphQLList(FeedbackType),
-        resolve(a, b, { req }) {
-          return req.isAuthenticated()
-            ? feedbackCtrl.getAllFeedback()
-            : Promise.reject(UNAUTHORIZED_ERROR)
+        resolve(a, b, { req, res }) {
+          return requireAuth(req, res, () => feedbackCtrl.getAllFeedback())
         },
       },
     },
@@ -91,10 +95,9 @@ const schema = new GraphQLSchema({
         args: {
           fields: { type: UserProfileInputType },
         },
-        resolve(a, { fields }, { req }) {
-          return req.isAuthenticated()
-            ? userCtrl.updateUserProfile(req.user.id, fields)
-            : Promise.reject(UNAUTHORIZED_ERROR)
+        resolve(a, { fields }, { req, res }) {
+          return requireAuth(req, res,
+            () => userCtrl.updateUserProfile(req.user.id, fields))
         },
       },
       updateCV: {
@@ -103,10 +106,9 @@ const schema = new GraphQLSchema({
         args: {
           fields: { type: CVInputType },
         },
-        resolve(a, { fields }, { req }) {
-          return req.isAuthenticated()
-            ? cvCtrl.updateCV(req.user.id, fields)
-            : Promise.reject(UNAUTHORIZED_ERROR)
+        resolve(a, { fields }, { req, res }) {
+          return requireAuth(req, res,
+            () => cvCtrl.updateCV(req.user.id, fields))
         },
       },
       createFeedback: {
@@ -115,10 +117,9 @@ const schema = new GraphQLSchema({
         args: {
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
-        resolve(a, { companyId }, { req }) {
-          return req.isAuthenticated()
-            ? feedbackCtrl.createFeedback(companyId)
-            : Promise.reject(UNAUTHORIZED_ERROR)
+        resolve(a, { companyId }, { req, res }) {
+          return requireAuth(req, res,
+            () => feedbackCtrl.createFeedback(companyId))
         },
       },
       updateFeedback: {
@@ -128,10 +129,9 @@ const schema = new GraphQLSchema({
           companyId: { type: new GraphQLNonNull(GraphQLString) },
           fields: { type: FeedbackInputType },
         },
-        resolve(a, { companyId, fields }, { req }) {
-          return req.isAuthenticated()
-            ? feedbackCtrl.updateFeedback(companyId, fields)
-            : Promise.reject(UNAUTHORIZED_ERROR)
+        resolve(a, { companyId, fields }, { req, res }) {
+          return requireAuth(req, res,
+            () => feedbackCtrl.updateFeedback(companyId, fields))
         },
       },
       removeFeedback: {
@@ -141,10 +141,9 @@ const schema = new GraphQLSchema({
         args: {
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
-        resolve(a, { companyId }, { req }) {
-          return req.isAuthenticated()
-            ? feedbackCtrl.removeFeedback(companyId)
-            : Promise.reject(UNAUTHORIZED_ERROR)
+        resolve(a, { companyId }, { req, res }) {
+          return requireAuth(req, res,
+            () => feedbackCtrl.removeFeedback(companyId))
         },
       },
     },

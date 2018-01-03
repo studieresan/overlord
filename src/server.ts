@@ -151,7 +151,7 @@ app.use(errorHandler())
 app.use('/graphql', (req, res) =>
   graphqlHTTP({
      schema: graphQLSchema,
-     context: { req: req },
+     context: { req: req, res: res },
      graphiql: true,
   })(req, res)
 )
