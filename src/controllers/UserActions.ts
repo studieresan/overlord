@@ -10,6 +10,6 @@ export interface UserActions {
     Promise<UserProfile>
 
   // Gets all users with the specified membertype
-  getUsers(type: MemberType): Promise<User[]>
+  getUsers(auth: User, type: MemberType): Promise<User[]>
 
 }

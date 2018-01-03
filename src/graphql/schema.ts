@@ -62,8 +62,8 @@ const schema = new GraphQLSchema({
         args: {
           memberType: { type: new GraphQLNonNull(MemberType) },
         },
-        resolve(a, { memberType }, { req, res }) {
-          return requireAuth(req, res, () => userCtrl.getUsers(memberType))
+        resolve(a, { memberType }, { req }) {
+          return userCtrl.getUsers(req.user, memberType)
         },
       },
       feedback: {
