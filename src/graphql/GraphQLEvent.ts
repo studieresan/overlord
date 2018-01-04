@@ -2,10 +2,8 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLInputObjectType,
-  GraphQLEnumType,
   GraphQLString,
 } from 'graphql'
-import * as models from './../models'
 
 const MutableEventFields = {
   schedule: { type: GraphQLString },
@@ -27,6 +25,6 @@ export const EventType = new GraphQLObjectType({
 })
 
 export const EventInputType = new GraphQLInputObjectType({
-  name : 'UserProfileInput',
+  name : 'EventInput',
   fields : MutableEventFields,
 })
