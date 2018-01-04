@@ -20,6 +20,7 @@ const MutableEventFields = {
 export const EventType = new GraphQLObjectType({
   name : 'Event',
   fields : {
+    id: { type: GraphQLString },
     companyName: { type: GraphQLString },
     ...MutableEventFields,
   },
