@@ -3,6 +3,8 @@ import {
   UserActionsImpl,
   CVActions,
   CVActionsImpl,
+  EventActions,
+  EventActionsImpl,
   FeedbackActions,
   FeedbackActionsImpl,
 } from './../controllers'
@@ -19,6 +21,9 @@ import {
   CVInputType,
 } from './GraphQLCV'
 import {
+  EventType,
+} from './GraphQLEvent'
+import {
   FeedbackType,
   FeedbackInputType,
 } from './GraphQLFeedback'
@@ -33,8 +38,10 @@ import {
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
-const UNAUTHORIZED_ERROR = 'not authorized'
+const eventCtrl: EventActions = new EventActionsImpl()
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
+
+const UNAUTHORIZED_ERROR = 'not authorized'
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   if (req.isAuthenticated())  {
@@ -75,6 +82,13 @@ const schema = new GraphQLSchema({
         resolve(a, { companyId }, { req, res }) {
           return requireAuth(req, res,
             () => feedbackCtrl.getFeedback(companyId))
+        },
+      },
+      allEvents: {
+        description: 'Get all events as a list',
+        type: new GraphQLList(EventType),
+        resolve(a, b, { req }) {
+          return eventCtrl.getEvents(req.user)
         },
       },
       allFeedback: {
