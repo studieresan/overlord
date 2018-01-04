@@ -27,7 +27,10 @@ export class EventActionsImpl implements EventActions {
         if (event) {
           return event
         } else {
-          const event = new mongodb.Event(fields)
+          const event = new mongodb.Event({
+            companyName,
+            ...fields,
+          })
           return event.save()
         }
       })
@@ -35,9 +38,9 @@ export class EventActionsImpl implements EventActions {
 
   updateEvent(id: string, fields: Partial<Event>): Promise<Event> {
     return mongodb.Event.findOneAndUpdate(
-      { id },
-      { id, ...fields },
-      { upsert: true, new: true }
+      { _id: id },
+      { ...fields },
+      { new: true }
     ).then(rejectIfNull('No event exists for given id'))
   }
 

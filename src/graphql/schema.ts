@@ -22,6 +22,7 @@ import {
 } from './GraphQLCV'
 import {
   EventType,
+  EventInputType
 } from './GraphQLEvent'
 import {
   FeedbackType,
@@ -123,6 +124,30 @@ const schema = new GraphQLSchema({
         resolve(a, { fields }, { req, res }) {
           return requireAuth(req, res,
             () => cvCtrl.updateCV(req.user.id, fields))
+        },
+      },
+      createEvent: {
+        description: 'Create new event tied to company name',
+        type: EventType,
+        args: {
+          companyName: { type: GraphQLString },
+          fields: { type: EventInputType },
+        },
+        resolve(a, { companyName, fields }, { req, res }) {
+          return requireAuth(req, res,
+            () => eventCtrl.createEvent(companyName, fields))
+        },
+      },
+      updateEvent: {
+        description: 'Update the event with given event ID',
+        type: EventType,
+        args: {
+          eventId: { type: GraphQLString },
+          fields: { type: EventInputType },
+        },
+        resolve(a, { eventId, fields }, { req, res }) {
+          return requireAuth(req, res,
+            () => eventCtrl.updateEvent(eventId, fields))
         },
       },
       createFeedback: {
