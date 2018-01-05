@@ -120,7 +120,12 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
           if (err) {
             return next(err)
           }
-          res.redirect('/')
+          res.status(200)
+          res.json({
+            id: user.id,
+            email: user.email,
+          })
+          res.end()
         })
       })
     }
