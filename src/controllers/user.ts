@@ -80,6 +80,12 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
     'memberType',
     'memberType was invalid'
   ).isIn([MemberType.StudsMember, MemberType.CompanyMember])
+  if (req.body.memberType !== MemberType.StudsMember) {
+    req.assert(
+      'companyName',
+      'Company name is needed for company members'
+    ).notEmpty()
+  }
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
 
   const errors = req.validationErrors()
@@ -97,6 +103,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName || '',
       memberType: req.body.memberType,
+      companyName: req.body.companyName,
     },
   })
 
