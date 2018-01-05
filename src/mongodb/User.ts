@@ -29,6 +29,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     allergies: String,
     master: String,
     memberType: String,
+    companyName: String,
   },
 }, { timestamps: true })
 

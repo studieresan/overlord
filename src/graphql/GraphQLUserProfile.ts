@@ -29,6 +29,7 @@ export const UserProfileType = new GraphQLObjectType({
     email:  { type: GraphQLString },
     memberType:  { type: MemberType },
     picture:  { type: GraphQLString },
+    companyName: { type: GraphQLString },
     ...MutableProfileFields,
   },
 })

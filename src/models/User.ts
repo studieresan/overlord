@@ -3,7 +3,10 @@ export interface User {
   profile: UserProfile
 }
 
-export interface UserProfile {
+export type UserProfile = StudsProfile | CompanyProfile
+
+export interface StudsProfile {
+  readonly memberType: MemberType.StudsMember
   readonly email: string
   readonly firstName: string
   readonly lastName: string
@@ -12,7 +15,14 @@ export interface UserProfile {
   readonly picture?: string
   readonly allergies?: string
   readonly master?: string
-  readonly memberType: MemberType
+}
+
+export interface CompanyProfile {
+  readonly memberType: MemberType.CompanyMember
+  readonly email: string
+  readonly firstName: string
+  readonly lastName: string
+  readonly companyName: string
 }
 
 export enum MemberType {
