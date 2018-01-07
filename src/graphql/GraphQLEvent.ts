@@ -6,7 +6,9 @@ import {
 } from 'graphql'
 
 const MutableEventFields = {
+  companyName: { type: GraphQLString },
   schedule: { type: GraphQLString },
+  location: { type: GraphQLString },
   privateDescription: { type: GraphQLString },
   publicDescription: { type: GraphQLString },
   date: { type: GraphQLString },
@@ -19,7 +21,6 @@ export const EventType = new GraphQLObjectType({
   name : 'Event',
   fields : {
     id: { type: GraphQLString },
-    companyName: { type: GraphQLString },
     ...MutableEventFields,
   },
 })

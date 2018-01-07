@@ -22,18 +22,11 @@ export class EventActionsImpl implements EventActions {
   }
 
   createEvent(companyName: string, fields: Partial<Event>): Promise<Event> {
-    return mongodb.Event.findOne({ companyName })
-      .then(event => {
-        if (event) {
-          return event
-        } else {
-          const event = new mongodb.Event({
-            companyName,
-            ...fields,
-          })
-          return event.save()
-        }
-      })
+    const event = new mongodb.Event({
+      companyName,
+      ...fields,
+    })
+    return event.save()
   }
 
   updateEvent(id: string, fields: Partial<Event>): Promise<Event> {
