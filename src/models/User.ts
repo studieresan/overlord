@@ -1,6 +1,7 @@
 export interface User {
   readonly id: string
   profile: UserProfile
+  permissions: Permission[]
 }
 
 export type UserProfile = StudsProfile | CompanyProfile
@@ -28,4 +29,8 @@ export interface CompanyProfile {
 export enum MemberType {
   StudsMember = 'studs_member',
   CompanyMember = 'company_member',
+}
+
+export enum Permission {
+  Events = 'events_permission',
 }

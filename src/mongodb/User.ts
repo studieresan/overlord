@@ -18,6 +18,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetExpires: Number,
 
+  permissions: [String],
   profile: {
     email: String,
     firstName: String,
