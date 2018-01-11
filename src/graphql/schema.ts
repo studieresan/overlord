@@ -42,7 +42,7 @@ const cvCtrl: CVActions = new CVActionsImpl()
 const eventCtrl: EventActions = new EventActionsImpl()
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 
-const UNAUTHORIZED_ERROR = 'not authorized'
+const UNAUTHORIZED_ERROR = 'Not authorized'
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   if (req.isAuthenticated())  {
@@ -135,7 +135,7 @@ const schema = new GraphQLSchema({
         },
         resolve(a, { companyName, fields }, { req, res }) {
           return requireAuth(req, res,
-            () => eventCtrl.createEvent(companyName, fields))
+            () => eventCtrl.createEvent(req.user, companyName, fields))
         },
       },
       updateEvent: {
@@ -147,7 +147,7 @@ const schema = new GraphQLSchema({
         },
         resolve(a, { eventId, fields }, { req, res }) {
           return requireAuth(req, res,
-            () => eventCtrl.updateEvent(eventId, fields))
+            () => eventCtrl.updateEvent(req.user, eventId, fields))
         },
       },
       createFeedback: {
