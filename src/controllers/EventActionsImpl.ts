@@ -37,4 +37,10 @@ export class EventActionsImpl implements EventActions {
     ).then(rejectIfNull('No event exists for given id'))
   }
 
+  deleteEvent(id: string): Promise<void> {
+    return mongodb.Event.remove(
+      { _id: id }
+    ).exec()
+  }
+
 }
