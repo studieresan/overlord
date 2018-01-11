@@ -2,7 +2,7 @@ import * as async from 'async'
 import * as crypto from 'crypto'
 import * as passport from 'passport'
 import { User, UserDocument } from '../mongodb/User'
-import { MemberType } from '../models'
+import { MemberType, Permission } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { WriteError } from 'mongodb'
@@ -88,8 +88,14 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   }
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
 
-  const errors = req.validationErrors()
+  const validPermissions =
+    Object.keys(Permission).map(k => Permission[k as any])
+  req.assert(
+    'permissions',
+    `Invalid permissions specified. Valid permissions: ${validPermissions}`
+  ).optional().isIn(validPermissions)
 
+  const errors = req.validationErrors()
   if (errors) {
     res.json(errors).end()
     return
@@ -98,6 +104,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   const user = new User({
     email: req.body.email,
     password: req.body.password,
+    permissions: req.body.permissions || [],
     profile: {
       email: req.body.email,
       firstName: req.body.firstName,
