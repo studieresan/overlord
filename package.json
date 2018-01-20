@@ -58,6 +58,7 @@
     "@types/ramda": "^0.24.17",
     "@types/request": "0.0.45",
     "async": "^2.1.2",
+    "aws-sdk": "^2.179.0",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.15.2",
     "compression": "^1.6.2",
