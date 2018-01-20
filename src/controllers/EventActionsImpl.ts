@@ -37,10 +37,11 @@ export class EventActionsImpl implements EventActions {
     ).then(rejectIfNull('No event exists for given id'))
   }
 
-  deleteEvent(id: string): Promise<void> {
-    return mongodb.Event.remove(
-      { _id: id }
-    ).exec()
+  removeEvent(id: string): Promise<boolean> {
+    return mongodb.Event.findOneAndRemove({ _id: id })
+      .then(event => {
+        return (event != undefined)
+      })
   }
 
 }

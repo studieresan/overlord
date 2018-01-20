@@ -11,7 +11,7 @@ export interface EventActions {
   // Update the event with given id
   updateEvent(id: string, fields: Partial<Event>): Promise<Event>
 
-  // Delete an event with the given id
-  deleteEvent(id: string): Promise<void>
+  // Remove an event with the given id
+  removeEvent(id: string): Promise<boolean>
 
 }
