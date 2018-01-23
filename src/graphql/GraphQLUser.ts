@@ -6,6 +6,8 @@ import {
 } from './GraphQLCV'
 import {
   GraphQLObjectType,
+  GraphQLList,
+  GraphQLString,
 } from 'graphql'
 import {
   CVActions,
@@ -18,6 +20,7 @@ export const UserType = new GraphQLObjectType({
   name : 'User',
   fields : {
     profile: { type: UserProfileType },
+    permissions: { type: new GraphQLList(GraphQLString) },
     cv: {
       type: CVType,
       resolve(user, b, { req }) {
