@@ -12,4 +12,7 @@ export interface EventActions {
   // Update the event with given id
   updateEvent(auth: User, id: string, fields: Partial<Event>): Promise<Event>
 
+  // Remove an event with the given id
+  removeEvent(id: string): Promise<boolean>
+
 }

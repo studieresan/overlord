@@ -150,6 +150,17 @@ const schema = new GraphQLSchema({
             () => eventCtrl.updateEvent(req.user, eventId, fields))
         },
       },
+      removeEvent: {
+        description: 'Remove an event with the given ID',
+        type: GraphQLBoolean,
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        resolve(a, { eventId }, { req, res }) {
+          return requireAuth(req, res,
+            () => eventCtrl.removeEvent(eventId))
+        },
+      },
       createFeedback: {
         description: 'Create new feedback tied to a company ID',
         type: FeedbackType,
