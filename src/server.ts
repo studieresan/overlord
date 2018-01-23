@@ -1,6 +1,10 @@
+import * as dotenv from 'dotenv'
 /**
- * Module dependencies.
+ * Load environment variables from .env file, where API
+ * keys and passwords are configured.
  */
+dotenv.config()
+
 import * as express from 'express'
 import * as compression from 'compression'  // compresses requests
 import * as session from 'express-session'
@@ -8,23 +12,17 @@ import * as bodyParser from 'body-parser'
 import * as logger from 'morgan'
 import * as errorHandler from 'errorhandler'
 import * as lusca from 'lusca'
-import * as dotenv from 'dotenv'
 import * as mongo from 'connect-mongo'
 import * as mongoose from 'mongoose'
 import * as passport from 'passport'
 import * as graphqlHTTP from 'express-graphql'
+import { signedUploadRequest } from './imageUpload'
 
 import expressValidator = require('express-validator')
 
 import graphQLSchema from './graphql/schema'
 
 const MongoStore = mongo(session)
-
-/**
- * Load environment variables from .env file, where API
- * keys and passwords are configured.
- */
-dotenv.config()
 
 /**
  * Controllers (route handlers).
@@ -144,6 +142,12 @@ app.post(
 )
 
 /**
+ * Return a signed S3 url that a client will be able to
+ * upload files to
+ */
+app.get('/signed-upload', passportConfig.isAuthenticated, signedUploadRequest)
+
+/**
  * Error Handler. Provides full stack - remove for production
  */
 app.use(errorHandler())
@@ -169,3 +173,4 @@ app.listen(app.get('port'), () => {
 })
 
 module.exports = app
+
