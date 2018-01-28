@@ -17,6 +17,7 @@ export class EventActionsImpl implements EventActions {
         'publicDescription': true,
         'date': true,
         'pictures': true,
+        'published': true,
       }).exec()
     }
   }
