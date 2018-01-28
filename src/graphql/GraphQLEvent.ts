@@ -3,6 +3,8 @@ import {
   GraphQLList,
   GraphQLInputObjectType,
   GraphQLString,
+  GraphQLBoolean,
+  GraphQLNonNull,
 } from 'graphql'
 
 const MutableEventFields = {
@@ -15,6 +17,7 @@ const MutableEventFields = {
   beforeSurveys: { type: new GraphQLList(GraphQLString) },
   afterSurveys: { type: new GraphQLList(GraphQLString) },
   pictures: { type: new GraphQLList(GraphQLString) },
+  published: { type: new GraphQLNonNull(GraphQLBoolean) },
 }
 
 export const EventType = new GraphQLObjectType({
