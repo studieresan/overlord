@@ -13,6 +13,10 @@ const eventSchema: mongoose.Schema = new mongoose.Schema({
   beforeSurveys: [String],
   afterSurveys: [String],
   pictures: [String],
+  published: {
+    type: Boolean,
+    default: false,
+  },
 }, { timestamps: true })
 
 export const Event =
