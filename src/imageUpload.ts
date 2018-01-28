@@ -1,6 +1,7 @@
 import * as aws from 'aws-sdk'
 
 aws.config.region = process.env.AWS_REGION
+aws.config.signatureVersion = 'v4'
 
 export function signedUploadRequest(req: any, res: any) {
   const s3 = new aws.S3()
