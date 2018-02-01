@@ -1,7 +1,7 @@
 import { CV, CVSection, createDefaultCV } from './CV'
 import { User, UserProfile, MemberType, Permission } from './User'
 import { Feedback, createDefaultFeedback } from './Feedback'
-import { Event } from './Event'
+import { Event, EventCheckIn } from './Event'
 
 export {
   CV,
@@ -14,4 +14,5 @@ export {
   Feedback,
   createDefaultFeedback,
   Event,
+  EventCheckIn,
 }

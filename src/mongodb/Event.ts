@@ -17,6 +17,7 @@ const eventSchema: mongoose.Schema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  checkins: [],
 }, { timestamps: true })
 
 export const Event =

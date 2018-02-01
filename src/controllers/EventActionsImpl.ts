@@ -1,5 +1,5 @@
 import { EventActions } from './EventActions'
-import { Event, User, Permission } from '../models'
+import { Event, EventCheckIn, User, Permission, MemberType } from '../models'
 import { rejectIfNull } from './util'
 import * as mongodb from '../mongodb/Event'
 
@@ -48,6 +48,60 @@ export class EventActionsImpl implements EventActions {
       .then(event => {
         return (event != undefined)
       })
+  }
+
+  getCheckIns(auth: User, eventId: string):
+  Promise<EventCheckIn[]> {
+    if (auth && auth.profile.memberType !== MemberType.StudsMember)
+      return Promise.reject('Insufficient permissions')
+    return mongodb.Event.findOne({ id: eventId })
+    .then(rejectIfNull('No event exists for given event id'))
+    .then(event => event.checkins)
+  }
+
+  addCheckIn(auth: User, eventId: string, userId: string):
+    Promise<EventCheckIn> {
+    if (auth && auth.profile.memberType !== MemberType.StudsMember)
+      return Promise.reject('Insufficient permissions')
+    return mongodb.Event.findOne({ _id: eventId })
+    .then(rejectIfNull('No event exists for given event id'))
+    .then(event => {
+      const existingCheckin = event.checkins.find(c => c.userId === userId)
+      if (existingCheckin) {
+        return existingCheckin
+      } else {
+        const newCheckin = {
+          'userId': userId,
+          'checkedInAt': new Date(),
+          'checkedInById': auth.id,
+        }
+        event.checkins = [...event.checkins, newCheckin]
+        event.save()
+        return newCheckin
+      }
+    })
+  }
+
+  removeCheckIn(auth: User, eventId: string, userId: string):
+  Promise<EventCheckIn> {
+    if (auth && auth.profile.memberType !== MemberType.StudsMember)
+      return Promise.reject('Insufficient permissions')
+    return mongodb.Event.findOne({ _id: eventId })
+    .then(rejectIfNull('No event exists for given event id'))
+    .then(event => {
+      const existingCheckin = event.checkins.find(c => c.userId === userId)
+      if (!existingCheckin) {
+        throw('No check-in exists for user')
+      } else {
+        if (existingCheckin.userId != auth.id &&
+          existingCheckin.checkedInById != auth.id) {
+          throw('You can only remove your own check-ins')
+        }
+        event.checkins = event.checkins.filter(c => c !== existingCheckin)
+        event.save()
+        return existingCheckin
+      }
+    })
   }
 
 }
