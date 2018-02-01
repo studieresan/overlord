@@ -10,4 +10,11 @@ export interface Event {
   readonly afterSurveys: string[]
   readonly pictures: string[]
   readonly published: boolean
+  checkins: EventCheckIn[]
+}
+
+export interface EventCheckIn {
+  readonly userId: string
+  readonly checkedInAt: Date
+  readonly checkedInById: string
 }
