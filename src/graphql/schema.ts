@@ -25,6 +25,9 @@ import {
   EventInputType
 } from './GraphQLEvent'
 import {
+  EventCheckInType,
+} from './GraphQLEventCheckIn'
+import {
   FeedbackType,
   FeedbackInputType,
 } from './GraphQLFeedback'
@@ -97,6 +100,17 @@ const schema = new GraphQLSchema({
         type: new GraphQLList(FeedbackType),
         resolve(a, b, { req, res }) {
           return requireAuth(req, res, () => feedbackCtrl.getAllFeedback())
+        },
+      },
+      eventCheckIns: {
+        description: 'Get all check-ins for an event',
+        type: new GraphQLList(EventCheckInType),
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        resolve(a, { eventId }, { req, res }) {
+          return requireAuth(req, res, () =>
+            eventCtrl.getCheckIns(req.user, eventId))
         },
       },
     },
@@ -194,6 +208,30 @@ const schema = new GraphQLSchema({
         resolve(a, { companyId }, { req, res }) {
           return requireAuth(req, res,
             () => feedbackCtrl.removeFeedback(companyId))
+        },
+      },
+      addEventCheckIn: {
+        description: 'Checks in a user at an event',
+        type: EventCheckInType,
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+          userId: { type: GraphQLString },
+        },
+        resolve(a, { userId, eventId }, { req, res }) {
+          return requireAuth(req, res, () =>
+            eventCtrl.addCheckIn(req.user, eventId, (userId || req.user.id)))
+        },
+      },
+      removeEventCheckIn: {
+        description: 'Removes a checked in user from an event',
+        type: EventCheckInType,
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+          userId: { type: GraphQLString },
+        },
+        resolve(a, { userId, eventId }, { req, res }) {
+          return requireAuth(req, res, () =>
+            eventCtrl.removeCheckIn(req.user, eventId, (userId || req.user.id)))
         },
       },
     },

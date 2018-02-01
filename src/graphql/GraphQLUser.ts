@@ -19,6 +19,7 @@ const cvCtrl: CVActions = new CVActionsImpl()
 export const UserType = new GraphQLObjectType({
   name : 'User',
   fields : {
+    id: { type: GraphQLString },
     profile: { type: UserProfileType },
     permissions: { type: new GraphQLList(GraphQLString) },
     cv: {
