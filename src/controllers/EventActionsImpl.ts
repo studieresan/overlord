@@ -1,12 +1,12 @@
 import { EventActions } from './EventActions'
-import { Event, User, Permission } from '../models'
+import { Event, User, Permission, MemberType } from '../models'
 import { rejectIfNull } from './util'
 import * as mongodb from '../mongodb/Event'
 
 export class EventActionsImpl implements EventActions {
 
   getEvents(auth: User): Promise<Event[]> {
-    if (auth) {
+    if (auth && auth.profile.memberType === MemberType.StudsMember) {
       // All fields
       return mongodb.Event.find().exec()
     } else {
