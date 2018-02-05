@@ -22,19 +22,15 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
   const errors = req.validationErrors()
 
   if (errors) {
-    console.log('errors')
-    console.log(errors)
-    console.log(req.body)
-    return res.redirect('/login')
+    return res.status(400).json(errors).end()
   }
 
   passport.authenticate( 'local',
     (err: Error, user: any, info: LocalStrategyInfo) => {
     if (err) { return next(err) }
     if (!user) {
-      console.log('errors')
-      console.log(errors)
-      return res.redirect('/login')
+      console.log(`Invalid login attempt for ${req.body.email}.`)
+      return res.status(401).json({ error: 'Wrong email or password.' })
     }
     req.logIn(user, (err) => {
       if (err) { return next(err) }
