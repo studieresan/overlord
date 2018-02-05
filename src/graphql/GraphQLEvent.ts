@@ -6,6 +6,7 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
 } from 'graphql'
+import { GraphQLDateTime } from './GraphQLDateTime'
 
 const MutableEventFields = {
   companyName: { type: GraphQLString },
@@ -13,7 +14,7 @@ const MutableEventFields = {
   location: { type: GraphQLString },
   privateDescription: { type: GraphQLString },
   publicDescription: { type: GraphQLString },
-  date: { type: GraphQLString },
+  date: { type: GraphQLDateTime },
   beforeSurveys: { type: new GraphQLList(GraphQLString) },
   afterSurveys: { type: new GraphQLList(GraphQLString) },
   pictures: { type: new GraphQLList(GraphQLString) },
