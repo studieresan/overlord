@@ -34,3 +34,6 @@ Thumbs.db
 
 # Ignore built ts files
 dist/**/*
+
+# Google Cloud
+app.yaml
