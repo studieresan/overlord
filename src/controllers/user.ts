@@ -10,6 +10,11 @@ import { WriteError } from 'mongodb'
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
+const generateRandomPassword = async () => {
+  const buf = await crypto.randomBytes(16)
+  return buf.toString('hex')
+}
+
 /**
  * POST /login
  * Sign in using email and password.
@@ -25,23 +30,23 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
     return res.status(400).json(errors).end()
   }
 
-  passport.authenticate( 'local',
+  passport.authenticate('local',
     (err: Error, user: any, info: LocalStrategyInfo) => {
-    if (err) { return next(err) }
-    if (!user) {
-      console.log(`Invalid login attempt for ${req.body.email}.`)
-      return res.status(401).json({ error: 'Wrong email or password.' })
-    }
-    req.logIn(user, (err) => {
       if (err) { return next(err) }
-      res.status(200)
-      res.json({
-        id: user.id,
-        email: user.email,
+      if (!user) {
+        console.log(`Invalid login attempt for ${req.body.email}.`)
+        return res.status(401).json({ error: 'Wrong email or password.' })
+      }
+      req.logIn(user, (err) => {
+        if (err) { return next(err) }
+        res.status(200)
+        res.json({
+          id: user.id,
+          email: user.email,
+        })
+        res.end()
       })
-      res.end()
-    })
-  })(req, res, next)
+    })(req, res, next)
 }
 
 /**
@@ -52,7 +57,7 @@ export let logout = (req: Request, res: Response) => {
   if (req.session) {
     req.logout()
     req.session.destroy(() => {
-      res.json({'loggedOut': true}).end()
+      res.json({ 'loggedOut': true }).end()
     })
   }
 }
@@ -61,16 +66,8 @@ export let logout = (req: Request, res: Response) => {
  * POST /signup
  * Create a new local account.
  */
-export let postSignup = (req: Request, res: Response, next: NextFunction) => {
+export let postSignup = async(req: Request, res: Response, next: NextFunction) => {
   req.assert('email', 'Email is not valid').isEmail()
-  req.assert(
-    'password',
-    'Password must be at least 4 characters long'
-  ).len({ min: 4 })
-  req.assert(
-    'confirmPassword',
-    'Passwords do not match'
-  ).equals(req.body.password)
   req.assert('firstName', 'First name is required').notEmpty()
   req.assert(
     'memberType',
@@ -99,7 +96,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
 
   const user = new User({
     email: req.body.email,
-    password: req.body.password,
+    password: await generateRandomPassword(),
     permissions: req.body.permissions || [],
     profile: {
       email: req.body.email,
@@ -114,7 +111,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
     if (err) { return next(err) }
     if (existingUser) {
       res.status(400)
-      res.json( { error: 'Account with that email address already exists.' })
+      res.json({ error: 'Account with that email address already exists.' })
       res.end()
       return
     } else {
@@ -168,7 +165,7 @@ export const putUpdatePassword =
         res.json({}).end()
       })
     })
-}
+  }
 
 /**
  * POST /reset/:token
@@ -217,8 +214,8 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
         from: 'studs-kommunikation@d.kth.se',
         subject: 'Your password has been changed',
         text: `Hello,`
-        + `\n\nThis is a confirmation that the password for your `
-        + `account ${user.email} has just been changed.\n`,
+          + `\n\nThis is a confirmation that the password for your `
+          + `account ${user.email} has just been changed.\n`,
       }
       sgMail.send(mailOptions).then(() => done()).catch(done)
     },
@@ -275,13 +272,13 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         from: 'studs-kommunikation@d.kth.se',
         subject: 'Reset your password on Studieresan.se',
         text:
-        `You are receiving this email because you (or someone else) has `
-        + `requested the reset of the password for your account.\n\n`
-        + `Please click on the following link, or paste this into your browser `
-        + `to complete the process:\n\n`
-        + `https://studieresan.se/password-reset/${token}\n\n`
-        + `If you did not request this, please ignore this email and your `
-        + `password will remain unchanged.\n`,
+          `You are receiving this email because you (or someone else) has `
+          + `requested the reset of the password for your account.\n\n`
+          + `Please click on the following link, or paste this into your browser `
+          + `to complete the process:\n\n`
+          + `https://studieresan.se/password-reset/${token}\n\n`
+          + `If you did not request this, please ignore this email and your `
+          + `password will remain unchanged.\n`,
       }
       sgMail.send(mailOptions).then(() => done()).catch(done)
     },
