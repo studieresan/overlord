@@ -135,10 +135,10 @@ app.post('/signup', (req, res, next) => {
   }
 })
 
-app.post(
+app.put(
   '/account/password',
   passportConfig.isAuthenticated,
-  userController.postUpdatePassword
+  userController.putUpdatePassword
 )
 
 /**
