@@ -116,22 +116,65 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
       res.end()
       return
     } else {
-      user.save((err) => {
-        if (err) { return next(err) }
-        req.logIn(user, (err) => {
-          if (err) {
-            return next(err)
-          }
+      createAndSaveUser(req, res, user, next)
+    }
+  })
+}
+
+/**
+ * Creates and saves a user.
+ * An email verification is sent to the user upon completion.
+ */
+// tslint:disable-line:max-line-length
+const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next: NextFunction) => {
+  async.waterfall([
+    function createRandomToken(done: Function) {
+      crypto.randomBytes(16, (err, buf) => {
+        const token = buf.toString('hex')
+        done(err, token, user)
+      })
+    },
+    function setRandomToken(token: string, user: UserDocument, done: Function) {
+      user.passwordResetToken = token
+      user.passwordResetExpires = Date.now() + 1000 * 60 * 60 * 48 // 48 hours
+      user.save((err: WriteError) => {
+        done(err, token, user)
+      })
+    },
+    // tslint:disable-line:max-line-length
+    function sendAccountCreatedEmail(token: String, user: UserDocument, done: Function) {
+      const mailOptions = {
+        to: user.email,
+        from: 'studs-kommunikation@d.kth.se',
+        subject: 'Welcome to Studieresan!',
+        text:
+          `Hi ${user.profile.firstName}!\n\n` +
+          // tslint:disable-line:max-line-length
+          `You are receiving this email because you've been given an account at Studieresan. ` +
+          // tslint:disable-line:max-line-length
+          `Please proceed to the following link to complete the process: https://studieresan.se/password-reset/${token}\n\n` +
+          `Your username is ${user.email}.\n\n` +
+          `Thank you!\n` +
+          `Studieresan\n`
+        ,
+      }
+      sgMail.send(mailOptions).then(() => done(user)).catch(done)
+    },
+    function loginUser(user: UserDocument) {
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err)
+        } else {
           res.status(201)
           res.json({
             id: user.id,
             email: user.email,
           })
           res.end()
-        })
+        }
       })
-    }
-  })
+    },
+  ])
 }
 
 /**
