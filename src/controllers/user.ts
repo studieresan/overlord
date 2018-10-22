@@ -93,7 +93,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
 
   const errors = req.validationErrors()
   if (errors) {
-    res.json(errors).end()
+    res.status(400).json(errors).end()
     return
   }
 
@@ -113,6 +113,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err) }
     if (existingUser) {
+      res.status(400)
       res.json( { error: 'Account with that email address already exists.' })
       res.end()
       return
@@ -123,7 +124,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
           if (err) {
             return next(err)
           }
-          res.status(200)
+          res.status(201)
           res.json({
             id: user.id,
             email: user.email,
@@ -136,10 +137,10 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
 }
 
 /**
- * POST /account/password
+ * PUT /account/password
  * Update current password.
  */
-export const postUpdatePassword =
+export const putUpdatePassword =
   (req: Request, res: Response, next: NextFunction) => {
 
     req.assert(
