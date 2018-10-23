@@ -66,6 +66,7 @@ export let logout = (req: Request, res: Response) => {
  * POST /signup
  * Create a new local account.
  */
+// tslint:disable-line:max-line-length
 export let postSignup = async(req: Request, res: Response, next: NextFunction) => {
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('firstName', 'First name is required').notEmpty()
@@ -274,7 +275,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         text:
           `You are receiving this email because you (or someone else) has `
           + `requested the reset of the password for your account.\n\n`
-          + `Please click on the following link, or paste this into your browser `
+          + `Please click on the following link, or paste this into your browser ` // tslint:disable-line:max-line-length
           + `to complete the process:\n\n`
           + `https://studieresan.se/password-reset/${token}\n\n`
           + `If you did not request this, please ignore this email and your `

@@ -9,7 +9,7 @@
       true,
       "spaces"
     ],
-    "max-line-length": [ false, 80 ],
+    "max-line-length": [ true, 80 ],
     "trailing-comma": [
       true,
       {
