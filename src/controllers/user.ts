@@ -141,8 +141,24 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
         done(err, token, user)
       })
     },
+    function loginUser(token: String, user: UserDocument, done: Function) {
+      req.logIn(user, (err) => {
+        if (err) {
+          done(err, token, user)
+          return next(err)
+        } else {
+          res.status(201)
+          res.json({
+            id: user.id,
+            email: user.email,
+          })
+          res.end()
+          done(err, token, user)
+        }
+      })
+    },
     // tslint:disable-line:max-line-length
-    function sendAccountCreatedEmail(token: String, user: UserDocument, done: Function) {
+    function sendAccountCreatedEmail(token: String, user: UserDocument) {
       const mailOptions = {
         to: user.email,
         from: 'studs-kommunikation@d.kth.se',
@@ -158,21 +174,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
           `Studieresan\n`
         ,
       }
-      sgMail.send(mailOptions).then(() => done(user)).catch(done)
-    },
-    function loginUser(user: UserDocument) {
-      req.logIn(user, (err) => {
-        if (err) {
-          return next(err)
-        } else {
-          res.status(201)
-          res.json({
-            id: user.id,
-            email: user.email,
-          })
-          res.end()
-        }
-      })
+      sgMail.send(mailOptions)
     },
   ])
 }
@@ -337,4 +339,3 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
     }
   })
 }
-
