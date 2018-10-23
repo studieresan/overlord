@@ -32,7 +32,7 @@ export function createDefaultCV(userId: string): CV {
         items: [],
       },
       {
-        title: 'Personal Projects',
+        title: 'Extracurricular Activities',
         description: '',
         items: [],
       },
