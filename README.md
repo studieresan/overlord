@@ -39,3 +39,9 @@ N.B. If you encounter the error `NonExistentPath: Data directory /data/db not fo
 and then
 
 ``sudo chown -R `whoami` /data/db``
+
+## Deployment
+All merged pull request are automatically deployed to our staging environment
+on Heroku (https://studs-overlord-stage.herokuapp.com/). When all testing has
+been done in the stage environment and you are confident that everything works
+as it should you simply promote the staging app to production.
