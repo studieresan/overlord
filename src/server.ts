@@ -89,8 +89,6 @@ app.use(session({
   saveUninitialized: false,
   cookie : {
     maxAge: 24 * 60 * 60 * 1000 * 14, // two weeks
-    httpOnly: true,
-    secure: true,
   },
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({
