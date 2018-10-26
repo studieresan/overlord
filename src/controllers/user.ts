@@ -323,8 +323,9 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
           + `Please click on the following link, or paste it into your browser ` // tslint:disable-line:max-line-length
           + `to complete the process:\n\n`
           + `https://studieresan.se/password-reset/${token}\n\n`
-          + `This link is valid for one hour. ` 
-          + `If you did not request a password change, please ignore this email and your `
+          + `This link is valid for one hour. `
+          + `If you did not request a password change, `
+          + `please ignore this email and your `
           + `password will remain unchanged.\n`,
       }
       sgMail.send(mailOptions).then(() => done()).catch(done)
