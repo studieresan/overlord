@@ -318,12 +318,13 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         from: 'studs-kommunikation@d.kth.se',
         subject: 'Reset your password on Studieresan.se',
         text:
-          `You are receiving this email because you (or someone else) has `
-          + `requested the reset of the password for your account.\n\n`
-          + `Please click on the following link, or paste this into your browser ` // tslint:disable-line:max-line-length
+          `You are receiving this email because you have `
+          + `requested the reset of the password for your Studs account.\n\n`
+          + `Please click on the following link, or paste it into your browser ` // tslint:disable-line:max-line-length
           + `to complete the process:\n\n`
           + `https://studieresan.se/password-reset/${token}\n\n`
-          + `If you did not request this, please ignore this email and your `
+          + `This link is valid for one hour. ` 
+          + `If you did not request a password change, please ignore this email and your `
           + `password will remain unchanged.\n`,
       }
       sgMail.send(mailOptions).then(() => done()).catch(done)
