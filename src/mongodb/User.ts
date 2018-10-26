@@ -25,6 +25,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     lastName: String,
     profile: String,
     position: String,
+    linkedIn: String,
     phone: String,
     picture: String,
     allergies: String,

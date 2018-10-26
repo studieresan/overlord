@@ -10,6 +10,7 @@ const MutableProfileFields = {
   firstName: { type: GraphQLString },
   lastName: { type: GraphQLString },
   position: { type: GraphQLString },
+  linkedIn: { type: GraphQLString },
   phone: { type: GraphQLString },
   allergies: { type: GraphQLString },
   master: { type: GraphQLString },
