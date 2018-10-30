@@ -13,6 +13,7 @@ export interface StudsProfile {
   readonly lastName: string
   readonly position?: string
   readonly linkedIn?: string
+  readonly github?: string
   readonly phone?: string
   readonly picture?: string
   readonly allergies?: string
