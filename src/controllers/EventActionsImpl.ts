@@ -50,8 +50,8 @@ export class EventActionsImpl implements EventActions {
       })
   }
 
-  private static hasSufficientPermissions(auth: User): boolean {
-    return auth.permissions.includes(Permission.Events) ||
-        auth.permissions.includes(Permission.Admin)
+  private static hasSufficientPermissions(user: User): boolean {
+    return user.permissions.includes(Permission.Events) ||
+        user.permissions.includes(Permission.Admin)
   }
 }
