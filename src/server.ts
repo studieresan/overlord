@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv'
+import * as Sentry from '@sentry/node'
 /**
  * Load environment variables from .env file, where API
  * keys and passwords are configured.
@@ -38,6 +39,13 @@ import * as passportConfig from './config/passport'
  * Create Express server.
  */
 const app = express()
+
+/**
+ * Activate Sentry
+ */
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+})
 
 /**
  * Connect to MongoDB.
