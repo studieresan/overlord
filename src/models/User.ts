@@ -34,5 +34,6 @@ export enum MemberType {
 }
 
 export enum Permission {
+  Admin = 'admin_permission',
   Events = 'events_permission',
 }

@@ -1,5 +1,5 @@
 import { EventActions } from './EventActions'
-import { Event, User, Permission, MemberType } from '../models'
+import { Event, MemberType, Permission, User } from '../models'
 import { rejectIfNull } from './util'
 import * as mongodb from '../mongodb/Event'
 
@@ -24,7 +24,7 @@ export class EventActionsImpl implements EventActions {
 
   createEvent(auth: User, companyName: string, fields: Partial<Event>):
     Promise<Event> {
-    if (!auth.permissions.includes(Permission.Events))
+    if (!EventActionsImpl.hasSufficientPermissions(auth))
       return Promise.reject('Insufficient permissions')
     const event = new mongodb.Event({
       companyName,
@@ -34,7 +34,7 @@ export class EventActionsImpl implements EventActions {
   }
 
   updateEvent(auth: User, id: string, fields: Partial<Event>): Promise<Event> {
-    if (!auth.permissions.includes(Permission.Events))
+    if (!EventActionsImpl.hasSufficientPermissions(auth))
       return Promise.reject('Insufficient permissions')
     return mongodb.Event.findOneAndUpdate(
       { _id: id },
@@ -50,4 +50,8 @@ export class EventActionsImpl implements EventActions {
       })
   }
 
+  private static hasSufficientPermissions(auth: User): boolean {
+    return auth.permissions.includes(Permission.Events) ||
+        auth.permissions.includes(Permission.Admin)
+  }
 }
