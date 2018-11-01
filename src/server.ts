@@ -8,12 +8,10 @@ dotenv.config()
 
 import * as express from 'express'
 import * as compression from 'compression'  // compresses requests
-import * as session from 'express-session'
 import * as bodyParser from 'body-parser'
 import * as logger from 'morgan'
 import * as errorHandler from 'errorhandler'
 import * as lusca from 'lusca'
-import * as mongo from 'connect-mongo'
 import * as mongoose from 'mongoose'
 import * as passport from 'passport'
 import * as graphqlHTTP from 'express-graphql'
@@ -22,8 +20,6 @@ import { signedUploadRequest } from './imageUpload'
 import expressValidator = require('express-validator')
 
 import graphQLSchema from './graphql/schema'
-
-const MongoStore = mongo(session)
 
 /**
  * Controllers (route handlers).
@@ -73,7 +69,7 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', 'true')
     res.header(
       'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept'
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     )
   }
   // Allow preflight
@@ -92,38 +88,11 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.text({ type: 'application/graphql' }))
 app.use(expressValidator())
-app.use(session({
-  resave: false,
-  saveUninitialized: false,
-  cookie : {
-    maxAge: 24 * 60 * 60 * 1000 * 14, // two weeks
-  },
-  secret: process.env.SESSION_SECRET,
-  store: new MongoStore({
-    url: process.env.MONGODB_URI,
-    autoReconnect: true,
-  }),
-}))
 app.use(passport.initialize())
-app.use(passport.session())
 app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
 app.use((req, res, next) => {
   res.locals.user = req.user
-  next()
-})
-app.use((req, res, next) => {
-  // After successful login, redirect back to the intended page
-  if (!req.user &&
-      req.path !== '/login' &&
-      req.path !== '/signup' &&
-      !req.path.match(/^\/auth/) &&
-      !req.path.match(/\./)) {
-    req.session!.returnTo = req.path
-  } else if (req.user &&
-      req.path == '/account') {
-    req.session!.returnTo = req.path
-  }
   next()
 })
 
@@ -131,7 +100,6 @@ app.use((req, res, next) => {
  * Primary app routes.
  */
 app.post('/login', userController.postLogin)
-app.get('/logout', userController.logout)
 app.post('/forgot', userController.postForgot)
 app.post('/reset/:token', userController.postReset)
 app.post('/signup', (req, res, next) => {

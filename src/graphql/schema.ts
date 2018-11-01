@@ -36,22 +36,12 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
+import * as passportConfig from '../config/passport'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
 const eventCtrl: EventActions = new EventActionsImpl()
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
-
-const UNAUTHORIZED_ERROR = 'Not authorized'
-
-function requireAuth<A>(req: any, res: any, body: () => A) {
-  if (req.isAuthenticated())  {
-    return body()
-  } else {
-    res.status(403)
-    return Promise.reject(UNAUTHORIZED_ERROR)
-  }
-}
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -61,7 +51,7 @@ const schema = new GraphQLSchema({
         description: 'Get the currently logged in user',
         type: UserType,
         resolve(a, b, { req, res }) {
-          return requireAuth(req, res, () => req.user)
+          return passportConfig.isAuthenticated(req, res, () => req.user)
         },
       },
       users: {
@@ -81,7 +71,7 @@ const schema = new GraphQLSchema({
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
         resolve(a, { companyId }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => feedbackCtrl.getFeedback(companyId))
         },
       },
@@ -96,7 +86,8 @@ const schema = new GraphQLSchema({
         description: 'Get all feedback as a list',
         type: new GraphQLList(FeedbackType),
         resolve(a, b, { req, res }) {
-          return requireAuth(req, res, () => feedbackCtrl.getAllFeedback())
+          return passportConfig.isAuthenticated(req, res,
+            () => feedbackCtrl.getAllFeedback())
         },
       },
     },
@@ -111,7 +102,7 @@ const schema = new GraphQLSchema({
           fields: { type: UserProfileInputType },
         },
         resolve(a, { fields }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => userCtrl.updateUserProfile(req.user.id, fields))
         },
       },
@@ -122,7 +113,7 @@ const schema = new GraphQLSchema({
           fields: { type: CVInputType },
         },
         resolve(a, { fields }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => cvCtrl.updateCV(req.user.id, fields))
         },
       },
@@ -134,7 +125,7 @@ const schema = new GraphQLSchema({
           fields: { type: EventInputType },
         },
         resolve(a, { companyName, fields }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => eventCtrl.createEvent(req.user, companyName, fields))
         },
       },
@@ -146,7 +137,7 @@ const schema = new GraphQLSchema({
           fields: { type: EventInputType },
         },
         resolve(a, { eventId, fields }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => eventCtrl.updateEvent(req.user, eventId, fields))
         },
       },
@@ -157,7 +148,7 @@ const schema = new GraphQLSchema({
           eventId: { type: GraphQLString },
         },
         resolve(a, { eventId }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => eventCtrl.removeEvent(eventId))
         },
       },
@@ -168,7 +159,7 @@ const schema = new GraphQLSchema({
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
         resolve(a, { companyId }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => feedbackCtrl.createFeedback(companyId))
         },
       },
@@ -180,7 +171,7 @@ const schema = new GraphQLSchema({
           fields: { type: FeedbackInputType },
         },
         resolve(a, { companyId, fields }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => feedbackCtrl.updateFeedback(companyId, fields))
         },
       },
@@ -192,7 +183,7 @@ const schema = new GraphQLSchema({
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
         resolve(a, { companyId }, { req, res }) {
-          return requireAuth(req, res,
+          return passportConfig.isAuthenticated(req, res,
             () => feedbackCtrl.removeFeedback(companyId))
         },
       },

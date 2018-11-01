@@ -13,6 +13,7 @@ import {
   CVActions,
   CVActionsImpl,
 } from './../controllers'
+import * as passport from 'passport'
 
 const cvCtrl: CVActions = new CVActionsImpl()
 
@@ -24,10 +25,15 @@ export const UserType = new GraphQLObjectType({
     permissions: { type: new GraphQLList(GraphQLString) },
     cv: {
       type: CVType,
-      resolve(user, b, { req }) {
-        return req.isAuthenticated()
-          ? cvCtrl.getCV(user.id)
-          : undefined
+      resolve(requestedUser, b, { req, res }) {
+        passport.authenticate('jwt', { session: false },
+          (err: any, user: any, info: any) => {
+            if (err || !user) {
+              return undefined
+            }
+            return cvCtrl.getCV(requestedUser.id)
+          }
+        )(req, res, () => {})
       },
     },
   },
