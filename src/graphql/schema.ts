@@ -51,7 +51,11 @@ const schema = new GraphQLSchema({
         description: 'Get the currently logged in user',
         type: UserType,
         resolve(a, b, { req, res }) {
-          return passportConfig.isAuthenticated(req, res, () => req.user)
+          passportConfig.isAuthenticated(req, res, () => {
+            res.status(200)
+            res.json(req.user)
+            res.end()
+          })
         },
       },
       users: {

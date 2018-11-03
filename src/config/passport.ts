@@ -45,8 +45,9 @@ passport.use(
 passport.use(new JWTStrategy({
     jwtFromRequest : ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey : process.env.JWT_SECRET,
+    passReqToCallback: true,
   },
-  (jwtPayload, done) => {
+  (req: any, jwtPayload: any, done: any) => {
     User.findOne({ email: jwtPayload }, (err, user: any) => {
       if (err) { return done(err) }
       if (!user) {
@@ -56,6 +57,7 @@ passport.use(new JWTStrategy({
           { message: 'Provided user not found.' }
         )
       }
+      req.user = user
       return done(undefined, user)
     })
   }
