@@ -40,17 +40,13 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
         return res.status(401).json({ error: 'Wrong email or password.' })
       }
 
-      req.logIn(user, { session: false }, (err) => {
-        if (err) { return next(err) }
-
-        res.status(200)
-        res.json({
-          id: user.id,
-          email: user.email,
-          token: jwt.sign(user.email, process.env.JWT_SECRET),
-        })
-        res.end()
+      res.status(200)
+      res.json({
+        id: user.id,
+        email: user.email,
+        token: jwt.sign(user.email, process.env.JWT_SECRET),
       })
+      res.end()
     })(req, res, next)
 }
 
