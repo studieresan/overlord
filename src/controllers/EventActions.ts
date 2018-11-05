@@ -3,7 +3,7 @@ import { Event, User } from '../models'
 export interface EventActions {
 
   // Get all events
-  getEvents(auth: User): Promise<Event[]>
+  getEvents(res: any, req: any): Promise<Event[]>
 
   // Create a new event for company name
   createEvent(auth: User, companyName: string, fields: Partial<Event>):

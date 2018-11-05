@@ -86,8 +86,8 @@ const schema = new GraphQLSchema({
       allEvents: {
         description: 'Get all events as a list',
         type: new GraphQLList(EventType),
-        resolve(a, b, { req }) {
-          return eventCtrl.getEvents(req.user)
+        async resolve(a, b, { req, res }) {
+          return await eventCtrl.getEvents(req, res)
         },
       },
       allFeedback: {

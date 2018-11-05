@@ -30,20 +30,17 @@ export class UserActionsImpl implements UserActions {
       passport.authenticate('jwt', { session: false },
         (err: any, user: any, info: any) => {
           if (err) {
-            console.log('An error occured')
             resolve(undefined)
           }
 
           if (user) {
             // All profiles
-            const profiles = mongodb.User.find(
+            resolve(mongodb.User.find(
               { 'profile.memberType': memberType }, {}
-            ).exec()
-
-            resolve(profiles)
+            ).exec())
           } else {
             // Public profiles
-            const publicProfiles = mongodb.User.find(
+            resolve(mongodb.User.find(
               { 'profile.memberType': memberType },
               {
                 'profile.firstName': true,
@@ -51,9 +48,8 @@ export class UserActionsImpl implements UserActions {
                 'profile.picture': true,
                 'profile.position': true,
                 'profile.memberType': true,
-              }).exec()
-
-            resolve(publicProfiles)
+              }
+            ).exec())
           }
         }
       )(req, res, () => {})
