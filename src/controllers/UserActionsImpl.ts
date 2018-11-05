@@ -1,4 +1,5 @@
 import * as mongodb from '../mongodb/User'
+import * as passport from 'passport'
 import { UserActions } from './UserActions'
 import { User, UserProfile, MemberType } from '../models'
 import { merge } from 'ramda'
@@ -24,23 +25,38 @@ export class UserActionsImpl implements UserActions {
       })
   }
 
-  getUsers(auth: User, memberType: MemberType): Promise<User[]> {
-    if (auth) {
-      // All fields
-      return mongodb.User.find(
-        { 'profile.memberType': memberType }, {}
-      ).exec()
-    } else {
-      // Public profile
-      return mongodb.User.find(
-        { 'profile.memberType': memberType },
-        {
-          'profile.firstName': true,
-          'profile.lastName': true,
-          'profile.picture': true,
-          'profile.position': true,
-          'profile.memberType': true,
-        }).exec()
-    }
+  getUsers(req: any, res: any, memberType: MemberType): Promise<User[]> {
+    return new Promise(resolve => {
+      passport.authenticate('jwt', { session: false },
+        (err: any, user: any, info: any) => {
+          if (err) {
+            console.log('An error occured')
+            resolve(undefined)
+          }
+
+          if (user) {
+            // All profiles
+            const profiles = mongodb.User.find(
+              { 'profile.memberType': memberType }, {}
+            ).exec()
+
+            resolve(profiles)
+          } else {
+            // Public profiles
+            const publicProfiles = mongodb.User.find(
+              { 'profile.memberType': memberType },
+              {
+                'profile.firstName': true,
+                'profile.lastName': true,
+                'profile.picture': true,
+                'profile.position': true,
+                'profile.memberType': true,
+              }).exec()
+
+            resolve(publicProfiles)
+          }
+        }
+      )(req, res, () => {})
+    })
   }
 }

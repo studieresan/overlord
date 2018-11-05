@@ -68,8 +68,8 @@ const schema = new GraphQLSchema({
         args: {
           memberType: { type: new GraphQLNonNull(MemberType) },
         },
-        resolve(a, { memberType }, { req }) {
-          return userCtrl.getUsers(req.user, memberType)
+        async resolve(a, { memberType }, { req, res }) {
+          return await userCtrl.getUsers(req, res, memberType)
         },
       },
       feedback: {
