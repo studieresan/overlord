@@ -113,7 +113,7 @@ app.post('/signup', (req, res, next) => {
 
 app.put(
   '/account/password',
-  passportConfig.isAuthenticated,
+  passportConfig.authenticate,
   userController.putUpdatePassword
 )
 
@@ -121,7 +121,7 @@ app.put(
  * Return a signed S3 url that a client will be able to
  * upload files to
  */
-app.get('/signed-upload', passportConfig.isAuthenticated, signedUploadRequest)
+app.get('/signed-upload', passportConfig.authenticate, signedUploadRequest)
 
 /**
  * Error Handler. Provides full stack - remove for production

@@ -45,7 +45,7 @@ const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise(resolve => {
-    passportConfig.isAuthenticated(req, res, () => {
+    passportConfig.authenticate(req, res, () => {
       resolve(body())
     })
   })
