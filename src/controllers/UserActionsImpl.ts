@@ -26,11 +26,11 @@ export class UserActionsImpl implements UserActions {
   }
 
   getUsers(req: any, res: any, memberType: MemberType): Promise<User[]> {
-    return new Promise(resolve => {
+    return new Promise<User[]>((resolve, reject) => {
       passport.authenticate('jwt', { session: false },
         (err: any, user: any, info: any) => {
           if (err) {
-            resolve(undefined)
+            reject(Error(`Error occured when authenticating user: ${err}`))
           }
 
           if (user) {

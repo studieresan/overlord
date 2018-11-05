@@ -7,11 +7,11 @@ import * as passport from 'passport'
 export class EventActionsImpl implements EventActions {
 
   getEvents(req: any, res: any): Promise<Event[]> {
-    return new Promise(resolve => {
+    return new Promise<Event[]>((resolve, reject) => {
       passport.authenticate('jwt', { session: false },
         (err: any, user: any, info: any) => {
           if (err) {
-            resolve(undefined)
+            reject(Error(`Error occured when authenticating user: ${err}`))
           }
 
           if (user && user.profile.memberType === MemberType.StudsMember) {
