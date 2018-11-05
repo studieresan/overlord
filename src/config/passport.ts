@@ -1,10 +1,13 @@
 import * as passport from 'passport'
 import * as passportLocal from 'passport-local'
+import * as passportJWT from 'passport-jwt'
 
 import { User } from '../mongodb/User'
 import { Request, Response, NextFunction } from 'express'
 
 const LocalStrategy = passportLocal.Strategy
+const JWTStrategy = passportJWT.Strategy
+const ExtractJWT = passportJWT.ExtractJwt
 
 passport.serializeUser<any, any>((user, done) => {
   done(undefined, user.id)
@@ -15,7 +18,6 @@ passport.deserializeUser((id, done) => {
     done(err, user!)
   })
 })
-
 
 /**
  * Sign in using Email and Password.
@@ -37,32 +39,31 @@ passport.use(
   })
 }))
 
-
 /**
- * OAuth Strategy Overview
- *
- * - User is already logged in.
- *   - Check if there is an existing account with a provider id.
- *     - If there is, return an error message. (Account merging not supported)
- *     - Else link new OAuth account with currently logged-in user.
- * - User is not logged in.
- *   - Check if it's a returning user.
- *     - If returning user, sign in and we are done.
- *     - Else check if there is an existing account with user's email.
- *       - If there is, return an error message.
- *       - Else create a new account.
+ * Authenticate using JSON Web Tokens.
  */
+passport.use(new JWTStrategy({
+    jwtFromRequest : ExtractJWT.fromAuthHeaderAsBearerToken(),
+    secretOrKey : process.env.JWT_SECRET,
+    passReqToCallback: true,
+  },
+  (req: any, jwtPayload: any, done: any) => {
+    User.findOne({ email: jwtPayload }, (err, user: any) => {
+      if (err) { return done(err) }
+      if (!user) {
+        return done(
+          undefined,
+          false,
+          { message: 'Provided user not found.' }
+        )
+      }
+      req.user = user
+      return done(undefined, user)
+    })
+  }
+))
 
-/**
- * Login Required middleware.
- */
-export let isAuthenticated =
-  (req: Request, res: Response, next: NextFunction) => {
-    if (req.isAuthenticated()) {
-      return next()
-    }
-    res.redirect('/login')
-}
+export let authenticate = passport.authenticate('jwt', { session: false })
 
 /**
  * Authorization Required middleware.

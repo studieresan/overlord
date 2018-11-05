@@ -1,6 +1,7 @@
 import * as async from 'async'
 import * as crypto from 'crypto'
 import * as passport from 'passport'
+import * as jwt from 'jsonwebtoken'
 import { User, UserDocument } from '../mongodb/User'
 import { MemberType, Permission } from '../models'
 import { Request, Response, NextFunction } from 'express'
@@ -30,36 +31,23 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
     return res.status(400).json(errors).end()
   }
 
-  passport.authenticate('local',
+  passport.authenticate('local', { session: false },
     (err: Error, user: any, info: LocalStrategyInfo) => {
       if (err) { return next(err) }
+
       if (!user) {
         console.log(`Invalid login attempt for ${req.body.email}.`)
         return res.status(401).json({ error: 'Wrong email or password.' })
       }
-      req.logIn(user, (err) => {
-        if (err) { return next(err) }
-        res.status(200)
-        res.json({
-          id: user.id,
-          email: user.email,
-        })
-        res.end()
-      })
-    })(req, res, next)
-}
 
-/**
- * GET /logout
- * Log out.
- */
-export let logout = (req: Request, res: Response) => {
-  if (req.session) {
-    req.logout()
-    req.session.destroy(() => {
-      res.json({ 'loggedOut': true }).end()
-    })
-  }
+      res.status(200)
+      res.json({
+        id: user.id,
+        email: user.email,
+        token: jwt.sign(user.email, process.env.JWT_SECRET),
+      })
+      res.end()
+    })(req, res, next)
 }
 
 /**

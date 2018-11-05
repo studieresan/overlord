@@ -36,21 +36,19 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
+import * as passportConfig from '../config/passport'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
 const eventCtrl: EventActions = new EventActionsImpl()
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 
-const UNAUTHORIZED_ERROR = 'Not authorized'
-
 function requireAuth<A>(req: any, res: any, body: () => A) {
-  if (req.isAuthenticated())  {
-    return body()
-  } else {
-    res.status(403)
-    return Promise.reject(UNAUTHORIZED_ERROR)
-  }
+  return new Promise(resolve => {
+    passportConfig.authenticate(req, res, () => {
+      resolve(body())
+    })
+  })
 }
 
 const schema = new GraphQLSchema({
@@ -60,8 +58,8 @@ const schema = new GraphQLSchema({
       user: {
         description: 'Get the currently logged in user',
         type: UserType,
-        resolve(a, b, { req, res }) {
-          return requireAuth(req, res, () => req.user)
+        async resolve(a, b, { req, res }) {
+          return await requireAuth(req, res, () => req.user)
         },
       },
       users: {
@@ -70,8 +68,8 @@ const schema = new GraphQLSchema({
         args: {
           memberType: { type: new GraphQLNonNull(MemberType) },
         },
-        resolve(a, { memberType }, { req }) {
-          return userCtrl.getUsers(req.user, memberType)
+        async resolve(a, { memberType }, { req, res }) {
+          return await userCtrl.getUsers(req, res, memberType)
         },
       },
       feedback: {
@@ -80,23 +78,24 @@ const schema = new GraphQLSchema({
         args: {
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
-        resolve(a, { companyId }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { companyId }, { req, res }) {
+          return await requireAuth(req, res,
             () => feedbackCtrl.getFeedback(companyId))
         },
       },
       allEvents: {
         description: 'Get all events as a list',
         type: new GraphQLList(EventType),
-        resolve(a, b, { req }) {
-          return eventCtrl.getEvents(req.user)
+        async resolve(a, b, { req, res }) {
+          return await eventCtrl.getEvents(req, res)
         },
       },
       allFeedback: {
         description: 'Get all feedback as a list',
         type: new GraphQLList(FeedbackType),
-        resolve(a, b, { req, res }) {
-          return requireAuth(req, res, () => feedbackCtrl.getAllFeedback())
+        async resolve(a, b, { req, res }) {
+          return await requireAuth(req, res,
+            () => feedbackCtrl.getAllFeedback())
         },
       },
     },
@@ -110,8 +109,8 @@ const schema = new GraphQLSchema({
         args: {
           fields: { type: UserProfileInputType },
         },
-        resolve(a, { fields }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { fields }, { req, res }) {
+          return await requireAuth(req, res,
             () => userCtrl.updateUserProfile(req.user.id, fields))
         },
       },
@@ -121,8 +120,8 @@ const schema = new GraphQLSchema({
         args: {
           fields: { type: CVInputType },
         },
-        resolve(a, { fields }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { fields }, { req, res }) {
+          return await requireAuth(req, res,
             () => cvCtrl.updateCV(req.user.id, fields))
         },
       },
@@ -133,8 +132,8 @@ const schema = new GraphQLSchema({
           companyName: { type: GraphQLString },
           fields: { type: EventInputType },
         },
-        resolve(a, { companyName, fields }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { companyName, fields }, { req, res }) {
+          return await requireAuth(req, res,
             () => eventCtrl.createEvent(req.user, companyName, fields))
         },
       },
@@ -145,8 +144,8 @@ const schema = new GraphQLSchema({
           eventId: { type: GraphQLString },
           fields: { type: EventInputType },
         },
-        resolve(a, { eventId, fields }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { eventId, fields }, { req, res }) {
+          return await requireAuth(req, res,
             () => eventCtrl.updateEvent(req.user, eventId, fields))
         },
       },
@@ -156,8 +155,8 @@ const schema = new GraphQLSchema({
         args: {
           eventId: { type: GraphQLString },
         },
-        resolve(a, { eventId }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { eventId }, { req, res }) {
+          return await requireAuth(req, res,
             () => eventCtrl.removeEvent(eventId))
         },
       },
@@ -167,8 +166,8 @@ const schema = new GraphQLSchema({
         args: {
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
-        resolve(a, { companyId }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { companyId }, { req, res }) {
+          return await requireAuth(req, res,
             () => feedbackCtrl.createFeedback(companyId))
         },
       },
@@ -179,8 +178,8 @@ const schema = new GraphQLSchema({
           companyId: { type: new GraphQLNonNull(GraphQLString) },
           fields: { type: FeedbackInputType },
         },
-        resolve(a, { companyId, fields }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { companyId, fields }, { req, res }) {
+          return await requireAuth(req, res,
             () => feedbackCtrl.updateFeedback(companyId, fields))
         },
       },
@@ -191,8 +190,8 @@ const schema = new GraphQLSchema({
         args: {
           companyId: { type: new GraphQLNonNull(GraphQLString) },
         },
-        resolve(a, { companyId }, { req, res }) {
-          return requireAuth(req, res,
+        async resolve(a, { companyId }, { req, res }) {
+          return await requireAuth(req, res,
             () => feedbackCtrl.removeFeedback(companyId))
         },
       },

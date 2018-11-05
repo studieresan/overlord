@@ -2,24 +2,37 @@ import { EventActions } from './EventActions'
 import { Event, MemberType, Permission, User } from '../models'
 import { rejectIfNull } from './util'
 import * as mongodb from '../mongodb/Event'
+import * as passport from 'passport'
 
 export class EventActionsImpl implements EventActions {
 
-  getEvents(auth: User): Promise<Event[]> {
-    if (auth && auth.profile.memberType === MemberType.StudsMember) {
-      // All fields
-      return mongodb.Event.find().exec()
-    } else {
-      // Public event
-      return mongodb.Event.find({}, {
-        'id': true,
-        'companyName': true,
-        'publicDescription': true,
-        'date': true,
-        'pictures': true,
-        'published': true,
-      }).exec()
-    }
+  getEvents(req: any, res: any): Promise<Event[]> {
+    return new Promise<Event[]>((resolve, reject) => {
+      passport.authenticate('jwt', { session: false },
+        (err: any, user: any, info: any) => {
+          if (err) {
+            reject(Error(`Error occured when authenticating user: ${err}`))
+          }
+
+          if (user && user.profile.memberType === MemberType.StudsMember) {
+            // All fields
+            resolve(mongodb.Event.find().exec())
+          } else {
+            // Public event
+            resolve(mongodb.Event.find({},
+              {
+                'id': true,
+                'companyName': true,
+                'publicDescription': true,
+                'date': true,
+                'pictures': true,
+                'published': true,
+              }
+            ).exec())
+          }
+        }
+      )(req, res, () => {})
+    })
   }
 
   createEvent(auth: User, companyName: string, fields: Partial<Event>):
