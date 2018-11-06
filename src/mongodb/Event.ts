@@ -23,4 +23,4 @@ export const Event =
   mongoose.model<EventDocument>('Event', eventSchema)
 
 export const OldEvent =
-    mongoose.model<EventDocument>('OldEvent', eventSchema)
+  mongoose.model<EventDocument>('OldEvent', eventSchema)
