@@ -5,6 +5,9 @@ export interface EventActions {
   // Get all events
   getEvents(res: any, req: any): Promise<Event[]>
 
+  // Get all old events. These contain only public info.
+  getOldEvents(): Promise<Event[]>
+
   // Create a new event for company name
   createEvent(auth: User, companyName: string, fields: Partial<Event>):
     Promise<Event>

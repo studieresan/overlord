@@ -21,3 +21,6 @@ const eventSchema: mongoose.Schema = new mongoose.Schema({
 
 export const Event =
   mongoose.model<EventDocument>('Event', eventSchema)
+
+export const OldEvent =
+    mongoose.model<EventDocument>('OldEvent', eventSchema)

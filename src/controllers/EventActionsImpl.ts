@@ -63,6 +63,21 @@ export class EventActionsImpl implements EventActions {
       })
   }
 
+  getOldEvents(): Promise<Event[]> {
+    return new Promise<Event[]>(resolve => {
+      resolve(mongodb.OldEvent.find({},
+          {
+            'id': true,
+            'companyName': true,
+            'publicDescription': true,
+            'date': true,
+            'pictures': true,
+            'published': true,
+          }
+      ).exec())
+    })
+  }
+
   private static hasSufficientPermissions(user: User): boolean {
     return user.permissions.includes(Permission.Events) ||
         user.permissions.includes(Permission.Admin)
