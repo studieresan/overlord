@@ -90,6 +90,13 @@ const schema = new GraphQLSchema({
           return await eventCtrl.getEvents(req, res)
         },
       },
+      oldEvents: {
+        description: 'Get all old events as a list',
+        type: new GraphQLList(EventType),
+        async resolve() {
+          return await eventCtrl.getOldEvents()
+        },
+      },
       allFeedback: {
         description: 'Get all feedback as a list',
         type: new GraphQLList(FeedbackType),
