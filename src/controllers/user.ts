@@ -158,6 +158,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
           // tslint:disable-line:max-line-length
           `Please proceed to the following link to complete the process: https://studieresan.se/password-reset/${token}\n\n` +
           `This link is valid for one hour. ` +
+          `After that you will have to reset again. ` +
           `Your username is ${user.email}.\n\n` +
           `Thank you!\n` +
           `Studieresan\n`
