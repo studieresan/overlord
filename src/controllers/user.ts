@@ -218,7 +218,9 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
   const errors = req.validationErrors()
 
   if (errors) {
-    return res.sendStatus(400)
+    const ERROR_MSG = 'Passwords must be at least 4 characters long and match.'
+    res.status(400).json({ error: ERROR_MSG }).end()
+    return
   }
 
   async.waterfall([
@@ -229,7 +231,9 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
         .exec((err, user: UserDocument) => {
           if (err) { return next(err) }
           if (!user) {
-            return res.sendStatus(400)
+            const ERROR_MSG = 'Are you sure you have a valid token?'
+            res.status(400).json({ error: ERROR_MSG }).end()
+            return
           }
           user.password = req.body.password
           user.passwordResetToken = undefined
@@ -255,7 +259,6 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
     },
   ], (err) => {
     if (err) {
-      console.log(err)
       return res.sendStatus(500)
     } else {
       res.status(200)
@@ -270,13 +273,15 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
  * Create a random token, then the send user an email with a reset link.
  */
 export let postForgot = (req: Request, res: Response, next: NextFunction) => {
-  req.assert('email', 'Please enter a valid email address.').isEmail()
+  const ERROR_MSG = 'Please enter a valid email address.'
+  req.assert('email', ERROR_MSG).isEmail()
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
 
   const errors = req.validationErrors()
 
   if (errors) {
-    return res.sendStatus(400)
+    res.status(400).json({ error: ERROR_MSG }).end()
+    return
   }
 
   async.waterfall([
@@ -290,7 +295,9 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       User.findOne({ email: req.body.email }, (err, user: UserDocument) => {
         if (err) { return done(err) }
         if (!user) {
-          return res.sendStatus(400)
+          const ERROR_MSG = 'Could not find account'
+          res.status(400).json({ error: ERROR_MSG }).end()
+          return
         }
         user.passwordResetToken = token
         user.passwordResetExpires = Date.now() + 3600000 // 1 hour
@@ -312,6 +319,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
           + `to complete the process:\n\n`
           + `https://studieresan.se/password-reset/${token}\n\n`
           + `This link is valid for one hour. `
+          + `After that you will have to reset again. `
           + `If you did not request a password change, `
           + `please ignore this email and your `
           + `password will remain unchanged.\n`,
@@ -320,7 +328,6 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
     },
   ], (err) => {
     if (err) {
-      console.log(err)
       return res.sendStatus(500)
     } else {
       res.status(200)
