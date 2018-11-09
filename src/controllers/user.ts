@@ -46,9 +46,9 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
         email: user.email,
         token: jwt.sign(user.email, process.env.JWT_SECRET),
         name: `${user.firstName} ${user.lastName}`,
-        position: user.position || null,
-        phone: user.phone || null,
-        picture: user.picture || null,
+        position: user.position || undefined,
+        phone: user.phone || undefined,
+        picture: user.picture || undefined,
       })
       res.end()
     })(req, res, next)
