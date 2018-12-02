@@ -58,7 +58,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
  * POST /signup
  * Create a new local account.
  */
-// tslint:disable-line:max-line-length
+// tslint:disable-next-line:max-line-length
 export let postSignup = async(req: Request, res: Response, next: NextFunction) => {
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('firstName', 'First name is required').notEmpty()
@@ -117,7 +117,7 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
  * Creates and saves a user.
  * An email verification is sent to the user upon completion.
  */
-// tslint:disable-line:max-line-length
+// tslint:disable-next-line:max-line-length
 const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next: NextFunction) => {
   async.waterfall([
     function createRandomToken(done: Function) {
@@ -157,9 +157,9 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
         subject: 'Welcome to Studieresan!',
         text:
           `Hi ${user.profile.firstName}!\n\n` +
-          // tslint:disable-line:max-line-length
+          // tslint:disable-next-line:max-line-length
           `You are receiving this email because you've been given an account at Studieresan. ` +
-          // tslint:disable-line:max-line-length
+          // tslint:disable-next-line:max-line-length
           `Please proceed to the following link to complete the process: https://studieresan.se/password-reset/${token}\n\n` +
           `Your username is ${user.email}.\n\n` +
           `Thank you!\n` +
