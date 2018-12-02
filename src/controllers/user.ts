@@ -128,7 +128,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
     },
     function setRandomToken(token: string, user: UserDocument, done: Function) {
       user.passwordResetToken = token
-      user.passwordResetExpires = Date.now() + 1000 * 60 * 60 * 48 // 48 hours
+      user.passwordResetExpires = Date.now() + 1000 * 60 * 60 * 72 // 72 hours
       user.save((err: WriteError) => {
         done(err, token, user)
       })
@@ -161,6 +161,8 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
           `You are receiving this email because you've been given an account at Studieresan. ` +
           // tslint:disable-next-line:max-line-length
           `Please proceed to the following link to complete the process: https://studieresan.se/password-reset/${token}\n\n` +
+          // tslint:disable-next-line:max-line-length
+          `The link is valid for 72 hours. After that you will have to manually reset your password.\n\n` +
           `Your username is ${user.email}.\n\n` +
           `Thank you!\n` +
           `Studieresan\n`
