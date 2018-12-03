@@ -10,6 +10,7 @@ const eventSchema: mongoose.Schema = new mongoose.Schema({
   privateDescription: String,
   publicDescription: String,
   date: Date,
+  responsible: String,
   beforeSurveys: [String],
   afterSurveys: [String],
   pictures: [String],
