@@ -15,6 +15,7 @@ const MutableEventFields = {
   privateDescription: { type: GraphQLString },
   publicDescription: { type: GraphQLString },
   date: { type: GraphQLDateTime },
+  responsible: { type: GraphQLString },
   beforeSurveys: { type: new GraphQLList(GraphQLString) },
   afterSurveys: { type: new GraphQLList(GraphQLString) },
   pictures: { type: new GraphQLList(GraphQLString) },
