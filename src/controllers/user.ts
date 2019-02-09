@@ -8,7 +8,9 @@ import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { WriteError } from 'mongodb'
 
-const host = process.env.DEV ? 'http://localhost:3000' : 'https://studieresan.se';
+const host = process.env.DEV ?
+  'http://localhost:3000' :
+  'https://studieresan.se'
 
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
