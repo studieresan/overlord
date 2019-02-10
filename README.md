@@ -22,13 +22,25 @@ Start the server
 
 ## Create local account
 
-With curl:
+Right now we're not making any difference in the account creation process from
+running locally or in production. Therefore; after you've created a user below
+you will receive an email requesting you to choose your password.
 
-`curl -H "Content-Type: application/json" -X POST -d '{"email":"some@email.com","password":"asdf","confirmPassword":"asdf","firstName":"Alex","lastName":"DeLarge","memberType":"studs_member","token":"asdf"}' http://localhost:5040/signup`
+You will therefore need a SendGrid API key before proceeding.
 
-With httpie:
+So:
 
-`http POST localhost:5040/signup email=some@email.com password=asdf confirmPassword=asdf firstName=Alex lastName=DeLarge memberType=studs_member token=asdf`
+1. Ask the Head of IT to provide you with the SendGrid API key.
+
+2. Create a studs member account through `curl`. Be sure to specify the correct
+email address.
+
+```
+curl -H "Content-Type: application/json" -X POST -d '{"email":"<your-email-here>","firstName":"<your-firstname>","lastName":"<your-lastname>","memberType":"studs_member","token":"asdf"}' http://localhost:5040/signup
+```
+
+3. Open the email you received and proceed with setting your password to what
+you want it to be.
 
 ---
 
@@ -39,6 +51,16 @@ N.B. If you encounter the error `NonExistentPath: Data directory /data/db not fo
 and then
 
 ``sudo chown -R `whoami` /data/db``
+
+Or, if you're running docker because you feel that it's gross to let a Mongo
+server run loose on you're computer you can just run
+
+```
+docker run --name studs-mongodb --detach --publish 127.0.0.1:27017:27017 mongo
+```
+
+This way your mongo server will only be available to `localhost` (127.0.0.1
+instead of 0.0.0.0) and you won't have the above problem.
 
 ## Deployment
 All merged pull request are automatically deployed to our staging environment

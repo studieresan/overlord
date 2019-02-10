@@ -8,6 +8,10 @@ import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { WriteError } from 'mongodb'
 
+const host = process.env.DEV ?
+  'http://localhost:3000' :
+  'https://studieresan.se'
+
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
@@ -162,13 +166,12 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
           // tslint:disable-next-line:max-line-length
           `You are receiving this email because you've been given an account at Studieresan. ` +
           // tslint:disable-next-line:max-line-length
-          `Please proceed to the following link to complete the process: https://studieresan.se/password-reset/${token}\n\n` +
+          `Please proceed to the following link to complete the process: ${host}/password-reset/${token}\n\n` +
           // tslint:disable-next-line:max-line-length
-          `The link is valid for 72 hours. After that you will have to manually reset your password at https://studieresan.se/user/forgot-password.\n\n` +
+          `The link is valid for 72 hours. After that you will have to manually reset your password at ${host}/user/forgot-password.\n\n` +
           `Your username is ${user.email}.\n\n` +
           `Thank you!\n` +
-          `Studieresan\n`
-        ,
+          `Studieresan\n`,
       }
       sgMail.send(mailOptions)
     },
@@ -325,7 +328,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
           + `requested the reset of the password for your Studs account.\n\n`
           + `Please click on the following link, or paste it into your browser ` // tslint:disable-line:max-line-length
           + `to complete the process:\n\n`
-          + `https://studieresan.se/password-reset/${token}\n\n`
+          + `${host}/password-reset/${token}\n\n`
           + `This link is valid for one hour. `
           + `After that you will have to reset again. `
           + `If you did not request a password change, `
