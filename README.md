@@ -24,7 +24,7 @@ Start the server
 
 Right now we're not making any difference in the account creation process from
 running locally or in production. Therefore; after you've created a user below
-you will recevice an email requesting you to choose your password.
+you will receive an email requesting you to choose your password.
 
 You will therefore need a SendGrid API key before proceeding.
 
@@ -60,7 +60,7 @@ docker run --name studs-mongodb --detach --publish 127.0.0.1:27017:27017 mongo
 ```
 
 This way your mongo server will only be available to `localhost` (127.0.0.1
-instead of 0.0.0.0) and you wont have the above problem.
+instead of 0.0.0.0) and you won't have the above problem.
 
 ## Deployment
 All merged pull request are automatically deployed to our staging environment
