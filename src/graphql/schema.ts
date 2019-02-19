@@ -7,6 +7,8 @@ import {
   EventActionsImpl,
   FeedbackActions,
   FeedbackActionsImpl,
+  EventFormActions,
+  EventFormActionsImpl,
 } from './../controllers'
 import {
   UserType
@@ -29,6 +31,13 @@ import {
   FeedbackInputType,
 } from './GraphQLFeedback'
 import {
+  EventFormType,
+  PreEventFormType,
+  PreEventFormInputType,
+  PostEventFormType,
+  PostEventFormInputType,
+} from './GraphQLEventForms'
+import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -42,6 +51,7 @@ const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
 const eventCtrl: EventActions = new EventActionsImpl()
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
+const eventFormCtrl: EventFormActions = new EventFormActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise(resolve => {
@@ -52,6 +62,7 @@ function requireAuth<A>(req: any, res: any, body: () => A) {
 }
 
 const schema = new GraphQLSchema({
+  types: [PreEventFormType, PostEventFormType, EventFormType],
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -103,6 +114,18 @@ const schema = new GraphQLSchema({
         async resolve(a, b, { req, res }) {
           return await requireAuth(req, res,
             () => feedbackCtrl.getAllFeedback())
+        },
+      },
+      eventForms: {
+        description: 'Get event forms for a certain user and event',
+        type: new GraphQLList(new GraphQLNonNull(EventFormType)),
+        args: {
+          userId: { type: GraphQLString },
+          eventId: { type: GraphQLString },
+        },
+        async resolve(root, { userId, eventId }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.getEventForms(userId, eventId))
         },
       },
     },
@@ -200,6 +223,104 @@ const schema = new GraphQLSchema({
         async resolve(a, { companyId }, { req, res }) {
           return await requireAuth(req, res,
             () => feedbackCtrl.removeFeedback(companyId))
+        },
+      },
+      createPreEventForm: {
+        description: 'Creates a new pre event form for the specified event',
+        type: PreEventFormType,
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+          fields: { type: PreEventFormInputType },
+        },
+        async resolve(root, { eventId, fields }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.createPreEventForm(
+              req.user.id,
+              eventId,
+              fields
+            )
+          )
+        },
+      },
+      createPostEventForm: {
+        description: 'Creates a new post event form for the specified event',
+        type: PostEventFormType,
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+          fields: { type: PostEventFormInputType },
+        },
+        async resolve(root, { eventId, fields }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.createPostEventForm(
+              req.user.id,
+              eventId,
+              fields
+            )
+          )
+        },
+      },
+      updatePreEventForm: {
+        description: 'Updates the provided pre event form',
+        type: PreEventFormType,
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+          fields: { type: PreEventFormInputType },
+        },
+        async resolve(root, { eventId, fields }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.updatePreEventForm(
+              req.user.id,
+              eventId,
+              fields
+            )
+          )
+        },
+      },
+      updatePostEventForm: {
+        description: 'Updates the provided new post event form',
+        type: PostEventFormType,
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+          fields: { type: PostEventFormInputType },
+        },
+        async resolve(root, { eventId, fields }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.updatePostEventForm(
+              req.user.id,
+              eventId,
+              fields
+            )
+          )
+        },
+      },
+      deletePreEventForm: {
+        description: 'Deletes the provided pre event form',
+        type: GraphQLString,
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        async resolve(root, { eventId }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.deletePreEventForm(
+              req.user.id,
+              eventId
+            )
+          )
+        },
+      },
+      deletePostEventForm: {
+        description: 'Deletes the provided post event form',
+        type: GraphQLString,
+        args: {
+          eventId: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        async resolve(root, { eventId }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.deletePostEventForm(
+              req.user.id,
+              eventId
+            )
+          )
         },
       },
     },
