@@ -1,9 +1,10 @@
-import * as mongodb from '../mongodb/EventForms'
+import * as mongodbForms from '../mongodb/EventForms'
+import * as mongodbEvent from '../mongodb/Event'
 import * as models from '../models'
 import { EventFormActions } from './EventFormActions'
 
-const eventPermission = (user) => {
-  return user.permissions.includes(models.Permission.Events);
+const eventPermission = (user: models.User) => {
+  return user.permissions.includes(models.Permission.Events)
 }
 
 export class EventFormActionsImpl implements EventFormActions {
@@ -17,11 +18,11 @@ export class EventFormActionsImpl implements EventFormActions {
       return undefined
     }
 
-    const preEventForms = mongodb.PreEventForm.find(
+    const preEventForms = mongodbForms.PreEventForm.find(
       { userId, eventId }
     ).exec()
 
-    const postEventForms = mongodb.PostEventForm.find(
+    const postEventForms = mongodbForms.PostEventForm.find(
       { userId, eventId }
     ).exec()
 
@@ -36,43 +37,61 @@ export class EventFormActionsImpl implements EventFormActions {
     userId: string,
     eventId: string,
     fields: models.PreEventForm
-  ): Promise<models.EventForm> {
-    const preEventForm = new mongodb.PreEventForm({
-      userId,
-      eventId,
-      ...fields,
-    })
+  ): Promise<models.EventForm | undefined> {
+    return mongodbEvent.Event.find({'_id': eventId}).count().then((count) => {
+      if (count === 0) {
+        return undefined
+      }
 
-    return preEventForm.save()
+      const preEventForm = new mongodbForms.PreEventForm({
+        userId,
+        eventId,
+        ...fields,
+      })
+
+      return preEventForm.save()
+    })
   }
 
   createPostEventForm(
     userId: string,
     eventId: string,
     fields: models.PostEventForm
-  ): Promise<models.EventForm> {
-    const postEventForm = new mongodb.PostEventForm({
-      userId,
-      eventId,
-      ...fields,
-    })
+  ): Promise<models.EventForm | undefined> {
+    return mongodbEvent.Event.find({'_id': eventId}).count().then((count) => {
+      if (count === 0) {
+        return undefined
+      }
 
-    return postEventForm.save()
+      const postEventForm = new mongodbForms.PostEventForm({
+        userId,
+        eventId,
+        ...fields,
+      })
+
+      return postEventForm.save()
+    })
   }
 
   updatePreEventForm(
     userId: string,
     eventId: string,
     fields: models.PreEventForm
-  ): Promise<models.EventForm> {
-    const modifiedPreEventForm = mongodb.PreEventForm.findOneAndUpdate(
-      { userId, eventId },
-      { $set: fields },
-      { new: true }
-    ).exec()
+  ): Promise<models.EventForm | undefined> {
+    return mongodbEvent.Event.find({'_id': eventId}).count().then((count) => {
+      if (count === 0) {
+        return undefined
+      }
 
-    return modifiedPreEventForm.then(form => {
-      return <models.EventForm> form
+      const modifiedPreEventForm = mongodbForms.PreEventForm.findOneAndUpdate(
+        { userId, eventId },
+        { $set: fields },
+        { new: true }
+      ).exec()
+
+      return modifiedPreEventForm.then(form => {
+        return <models.EventForm> form
+      })
     })
   }
 
@@ -80,15 +99,21 @@ export class EventFormActionsImpl implements EventFormActions {
     userId: string,
     eventId: string,
     fields: models.PostEventForm
-  ): Promise<models.EventForm> {
-    const modifiedPostEventForm = mongodb.PostEventForm.findOneAndUpdate(
-      { userId, eventId },
-      { $set: fields },
-      { new: true }
-    ).exec()
+  ): Promise<models.EventForm | undefined> {
+    return mongodbEvent.Event.find({'_id': eventId}).count().then((count) => {
+      if (count === 0) {
+        return undefined
+      }
 
-    return modifiedPostEventForm.then(form => {
-      return <models.EventForm> form
+      const modifiedPostEventForm = mongodbForms.PostEventForm.findOneAndUpdate(
+        { userId, eventId },
+        { $set: fields },
+        { new: true }
+      ).exec()
+
+      return modifiedPostEventForm.then(form => {
+        return <models.EventForm> form
+      })
     })
   }
 
@@ -96,7 +121,7 @@ export class EventFormActionsImpl implements EventFormActions {
     userId: string,
     eventId: string
   ): void {
-    mongodb.PreEventForm.remove({
+    mongodbForms.PreEventForm.remove({
       userId,
       eventId,
     }).exec()
@@ -106,7 +131,7 @@ export class EventFormActionsImpl implements EventFormActions {
     userId: string,
     eventId: string
   ): void {
-    mongodb.PreEventForm.remove({
+    mongodbForms.PreEventForm.remove({
       userId,
       eventId,
     }).exec()

@@ -12,25 +12,25 @@ export interface EventFormActions {
     userId: string,
     eventId: string,
     fields: models.PreEventForm
-  ): Promise<models.EventForm>
+  ): Promise<models.EventForm | undefined>
 
   createPostEventForm(
     userId: string,
     eventId: string,
     fields: models.PostEventForm
-  ): Promise<models.EventForm>
+  ): Promise<models.EventForm | undefined>
 
   updatePreEventForm(
     userId: string,
     eventId: string,
     fields: models.PreEventForm
-  ): Promise<models.EventForm>
+  ): Promise<models.EventForm | undefined>
 
   updatePostEventForm(
     userId: string,
     eventId: string,
     fields: models.PostEventForm
-  ): Promise<models.EventForm>
+  ): Promise<models.EventForm | undefined>
 
   deletePreEventForm(
     userId: string,

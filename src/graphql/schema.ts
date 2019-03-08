@@ -227,7 +227,7 @@ const schema = new GraphQLSchema({
         },
       },
       createPreEventForm: {
-        description: descriptions.createPreEventForm,
+        description: descriptions.createPreEventFormMutation,
         type: PreEventFormType,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -244,7 +244,7 @@ const schema = new GraphQLSchema({
         },
       },
       createPostEventForm: {
-        description: descriptions.createPostEventForm,
+        description: descriptions.createPostEventFormMutation,
         type: PostEventFormType,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -261,7 +261,7 @@ const schema = new GraphQLSchema({
         },
       },
       updatePreEventForm: {
-        description: descriptions.updatePreEventForm,
+        description: descriptions.updatePreEventFormMutation,
         type: PreEventFormType,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -278,7 +278,7 @@ const schema = new GraphQLSchema({
         },
       },
       updatePostEventForm: {
-        description: descriptions.updatePostEventForm,
+        description: descriptions.updatePostEventFormMutation,
         type: PostEventFormType,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -295,7 +295,7 @@ const schema = new GraphQLSchema({
         },
       },
       deletePreEventForm: {
-        description: descriptions.deletePreEventForm,
+        description: descriptions.deletePreEventFormMutation,
         type: GraphQLString,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -310,7 +310,7 @@ const schema = new GraphQLSchema({
         },
       },
       deletePostEventForm: {
-        description: descriptions.deletePostEventForm,
+        description: descriptions.deletePostEventFormMutation,
         type: GraphQLString,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },

@@ -36,7 +36,7 @@ const preEventFormSchema: mongoose.Schema = new mongoose.Schema({
   familiarWithCompany: {
     type: String ,
     required: true,
-    enum: Object.keys(models.Familiarity),
+    enum: Object.values(models.Familiarity),
   },
   viewOfCompany: {
     type: String,
@@ -78,7 +78,7 @@ const postEventFormSchema: mongoose.Schema = new mongoose.Schema({
   eventImpact: {
     type: String,
     required: true,
-    enum: Object.keys(models.EventImpact),
+    enum: Object.values(models.EventImpact),
   },
   qualifiedToWork: {
     type: Boolean,
