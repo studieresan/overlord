@@ -1,7 +1,12 @@
 import * as models from '../models'
 
 export interface EventFormActions {
-  getEventForms(userId: string, eventId: string): Promise<models.EventForm[]>
+
+  getEventForms(
+    user: models.User,
+    userId: string,
+    eventId: string
+  ): Promise<models.EventForm[]> | undefined
 
   createPreEventForm(
     userId: string,

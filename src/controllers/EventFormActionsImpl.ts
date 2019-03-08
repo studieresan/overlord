@@ -2,8 +2,21 @@ import * as mongodb from '../mongodb/EventForms'
 import * as models from '../models'
 import { EventFormActions } from './EventFormActions'
 
+const eventPermission = (user) => {
+  return user.permissions.includes(models.Permission.Events);
+}
+
 export class EventFormActionsImpl implements EventFormActions {
-  getEventForms(userId: string, eventId: string): Promise<models.EventForm[]> {
+
+  getEventForms(
+    user: models.User,
+    userId: string,
+    eventId: string
+  ): Promise<models.EventForm[]> | undefined {
+    if (user.id != userId && !eventPermission(user)) {
+      return undefined
+    }
+
     const preEventForms = mongodb.PreEventForm.find(
       { userId, eventId }
     ).exec()

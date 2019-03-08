@@ -46,6 +46,7 @@ import {
   GraphQLBoolean,
 } from 'graphql'
 import * as passportConfig from '../config/passport'
+import * as descriptions from './schemaDescriptions'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
@@ -117,7 +118,7 @@ const schema = new GraphQLSchema({
         },
       },
       eventForms: {
-        description: 'Get event forms for a certain user and event',
+        description: descriptions.eventFormsQuery,
         type: new GraphQLList(new GraphQLNonNull(EventFormType)),
         args: {
           userId: { type: GraphQLString },
@@ -125,7 +126,7 @@ const schema = new GraphQLSchema({
         },
         async resolve(root, { userId, eventId }, { req, res }) {
           return await requireAuth(req, res,
-            () => eventFormCtrl.getEventForms(userId, eventId))
+            () => eventFormCtrl.getEventForms(req.user, userId, eventId))
         },
       },
     },
@@ -226,7 +227,7 @@ const schema = new GraphQLSchema({
         },
       },
       createPreEventForm: {
-        description: 'Creates a new pre event form for the specified event',
+        description: descriptions.createPreEventForm,
         type: PreEventFormType,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -243,7 +244,7 @@ const schema = new GraphQLSchema({
         },
       },
       createPostEventForm: {
-        description: 'Creates a new post event form for the specified event',
+        description: descriptions.createPostEventForm,
         type: PostEventFormType,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -260,7 +261,7 @@ const schema = new GraphQLSchema({
         },
       },
       updatePreEventForm: {
-        description: 'Updates the provided pre event form',
+        description: descriptions.updatePreEventForm,
         type: PreEventFormType,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -277,7 +278,7 @@ const schema = new GraphQLSchema({
         },
       },
       updatePostEventForm: {
-        description: 'Updates the provided new post event form',
+        description: descriptions.updatePostEventForm,
         type: PostEventFormType,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -294,7 +295,7 @@ const schema = new GraphQLSchema({
         },
       },
       deletePreEventForm: {
-        description: 'Deletes the provided pre event form',
+        description: descriptions.deletePreEventForm,
         type: GraphQLString,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
@@ -309,7 +310,7 @@ const schema = new GraphQLSchema({
         },
       },
       deletePostEventForm: {
-        description: 'Deletes the provided post event form',
+        description: descriptions.deletePostEventForm,
         type: GraphQLString,
         args: {
           eventId: { type: new GraphQLNonNull(GraphQLString) },
