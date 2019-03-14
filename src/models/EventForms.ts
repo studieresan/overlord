@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose'
 export type Rating = 1 | 2 | 3 | 4 | 5
 
 export enum EventImpact {
-  Positive = 'The event had a positve impact on my view of the company',
+  Positive = 'The event had a positive impact on my view of the company',
   Neutral = 'The event had no impact on my view of the company',
   Negative = 'The event had a negative impact on my view of the company',
 }
