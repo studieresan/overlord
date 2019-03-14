@@ -19,16 +19,6 @@ const preEventFormSchema: mongoose.Schema = new mongoose.Schema({
     min: 1,
     max: 5,
   },
-  interestInThesisWork: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 5,
-  },
-  lookingForThesisWork: {
-    type: Boolean,
-    required: true,
-  },
   interestInCompanyMotivation: {
     type: String,
     required: true,
@@ -60,16 +50,6 @@ const postEventFormSchema: mongoose.Schema = new mongoose.Schema({
     required: true,
     min: 1,
     max: 5,
-  },
-  interestInThesisWork: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 5,
-  },
-  lookingForThesisWork: {
-    type: Boolean,
-    required: true,
   },
   interestInCompanyMotivation: {
     type: String,

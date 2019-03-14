@@ -22,8 +22,6 @@ export interface EventForm extends mongoose.Document {
   readonly updatedAt: string
 
   readonly interestInRegularWork: Rating
-  readonly interestInThesisWork: Rating
-  readonly lookingForThesisWork: boolean
   readonly interestInCompanyMotivation: string
 }
 

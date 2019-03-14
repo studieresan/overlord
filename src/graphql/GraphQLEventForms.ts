@@ -57,8 +57,6 @@ const CommonFormFields = {
 
 const MutableFormFields = {
   interestInRegularWork: { type: RatingType },
-  interestInThesisWork: { type: RatingType },
-  lookingForThesisWork: { type: GraphQLBoolean },
   interestInCompanyMotivation: { type: GraphQLString },
 }
 
