@@ -41,11 +41,34 @@ export class EventFormActionsImpl implements EventFormActions {
     })
   }
 
+  getAllEventForms(
+    user: models.User,
+    eventId: string
+  ): Promise<models.EventForm[]> | undefined {
+    if (!studsUser(user) && !eventPermission(user)) {
+      return undefined
+    }
+
+    const preEventForms = mongodbForms.PreEventForm.find(
+      { eventId }
+    ).exec()
+
+    const postEventForms = mongodbForms.PostEventForm.find(
+      { eventId }
+    ).exec()
+
+    return preEventForms.then((preForms: models.EventForm[]) => {
+      return postEventForms.then((postForms: models.EventForm[]) => {
+        return preForms.concat(postForms)
+      })
+    })
+  }
+
   createPreEventForm(
     user: models.User,
     eventId: string,
     fields: models.PreEventForm
-  ): Promise<models.EventForm | undefined> {
+  ): Promise<models.EventForm | undefined> | undefined {
     if (!studsUser(user)) {
       return undefined
     }
@@ -69,7 +92,7 @@ export class EventFormActionsImpl implements EventFormActions {
     user: models.User,
     eventId: string,
     fields: models.PostEventForm
-  ): Promise<models.EventForm | undefined> {
+  ): Promise<models.EventForm | undefined> | undefined {
     if (!studsUser(user)) {
       return undefined
     }
@@ -93,7 +116,7 @@ export class EventFormActionsImpl implements EventFormActions {
     user: models.User,
     eventId: string,
     fields: models.PreEventForm
-  ): Promise<models.EventForm | undefined> {
+  ): Promise<models.EventForm | undefined> | undefined {
     if (!studsUser(user)) {
       return undefined
     }
@@ -119,7 +142,7 @@ export class EventFormActionsImpl implements EventFormActions {
     user: models.User,
     eventId: string,
     fields: models.PostEventForm
-  ): Promise<models.EventForm | undefined> {
+  ): Promise<models.EventForm | undefined> | undefined {
     if (!studsUser(user)) {
       return undefined
     }

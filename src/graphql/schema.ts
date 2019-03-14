@@ -129,6 +129,17 @@ const schema = new GraphQLSchema({
             () => eventFormCtrl.getEventForms(req.user, userId, eventId))
         },
       },
+      allEventForms: {
+        description: descriptions.allEventFormsQuery,
+        type: new GraphQLList(new GraphQLNonNull(EventFormType)),
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        async resolve(root, { eventId }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.getAllEventForms(req.user, eventId))
+        },
+      },
     },
   }),
   mutation: new GraphQLObjectType({
