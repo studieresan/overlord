@@ -14,7 +14,7 @@ export class EventFormActionsImpl implements EventFormActions {
     userId: string,
     eventId: string
   ): Promise<models.EventForm[]> | undefined {
-    if (user.id != userId && !eventPermission(user)) {
+    if (user.id !== userId && !eventPermission(user)) {
       return undefined
     }
 
