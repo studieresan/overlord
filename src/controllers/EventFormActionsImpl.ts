@@ -7,6 +7,10 @@ const eventPermission = (user: models.User) => {
   return user.permissions.includes(models.Permission.Events)
 }
 
+const studsUser = (user: models.User) => {
+  return user.profile.memberType === models.MemberType.StudsMember
+}
+
 export class EventFormActionsImpl implements EventFormActions {
 
   getEventForms(
@@ -14,6 +18,10 @@ export class EventFormActionsImpl implements EventFormActions {
     userId: string,
     eventId: string
   ): Promise<models.EventForm[]> | undefined {
+    if (!studsUser(user)) {
+      return undefined
+    }
+
     if (user.id != userId && !eventPermission(user)) {
       return undefined
     }
@@ -34,18 +42,22 @@ export class EventFormActionsImpl implements EventFormActions {
   }
 
   createPreEventForm(
-    userId: string,
+    user: models.User,
     eventId: string,
     fields: models.PreEventForm
   ): Promise<models.EventForm | undefined> {
+    if (!studsUser(user)) {
+      return undefined
+    }
+
     return mongodbEvent.Event.find({'_id': eventId}).count().then((count) => {
       if (count === 0) {
         return undefined
       }
 
       const preEventForm = new mongodbForms.PreEventForm({
-        userId,
-        eventId,
+        userId: user.id,
+        eventId: eventId,
         ...fields,
       })
 
@@ -54,18 +66,22 @@ export class EventFormActionsImpl implements EventFormActions {
   }
 
   createPostEventForm(
-    userId: string,
+    user: models.User,
     eventId: string,
     fields: models.PostEventForm
   ): Promise<models.EventForm | undefined> {
+    if (!studsUser(user)) {
+      return undefined
+    }
+
     return mongodbEvent.Event.find({'_id': eventId}).count().then((count) => {
       if (count === 0) {
         return undefined
       }
 
       const postEventForm = new mongodbForms.PostEventForm({
-        userId,
-        eventId,
+        userId: user.id,
+        eventId: eventId,
         ...fields,
       })
 
@@ -74,17 +90,21 @@ export class EventFormActionsImpl implements EventFormActions {
   }
 
   updatePreEventForm(
-    userId: string,
+    user: models.User,
     eventId: string,
     fields: models.PreEventForm
   ): Promise<models.EventForm | undefined> {
+    if (!studsUser(user)) {
+      return undefined
+    }
+
     return mongodbEvent.Event.find({'_id': eventId}).count().then((count) => {
       if (count === 0) {
         return undefined
       }
 
       const modifiedPreEventForm = mongodbForms.PreEventForm.findOneAndUpdate(
-        { userId, eventId },
+        { userId: user.id, eventId: eventId },
         { $set: fields },
         { new: true }
       ).exec()
@@ -96,17 +116,21 @@ export class EventFormActionsImpl implements EventFormActions {
   }
 
   updatePostEventForm(
-    userId: string,
+    user: models.User,
     eventId: string,
     fields: models.PostEventForm
   ): Promise<models.EventForm | undefined> {
+    if (!studsUser(user)) {
+      return undefined
+    }
+
     return mongodbEvent.Event.find({'_id': eventId}).count().then((count) => {
       if (count === 0) {
         return undefined
       }
 
       const modifiedPostEventForm = mongodbForms.PostEventForm.findOneAndUpdate(
-        { userId, eventId },
+        { userId: user.id, eventId: eventId },
         { $set: fields },
         { new: true }
       ).exec()
@@ -118,22 +142,30 @@ export class EventFormActionsImpl implements EventFormActions {
   }
 
   deletePreEventForm(
-    userId: string,
+    user: models.User,
     eventId: string
   ): void {
+    if (!studsUser(user)) {
+      return undefined
+    }
+
     mongodbForms.PreEventForm.remove({
-      userId,
-      eventId,
+      userId: user.id,
+      eventId: eventId,
     }).exec()
   }
 
   deletePostEventForm(
-    userId: string,
+    user: models.User,
     eventId: string
   ): void {
+    if (!studsUser(user)) {
+      return undefined
+    }
+
     mongodbForms.PreEventForm.remove({
-      userId,
-      eventId,
+      userId: user.id,
+      eventId: eventId,
     }).exec()
   }
 }

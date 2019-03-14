@@ -236,7 +236,7 @@ const schema = new GraphQLSchema({
         async resolve(root, { eventId, fields }, { req, res }) {
           return await requireAuth(req, res,
             () => eventFormCtrl.createPreEventForm(
-              req.user.id,
+              req.user,
               eventId,
               fields
             )
@@ -253,7 +253,7 @@ const schema = new GraphQLSchema({
         async resolve(root, { eventId, fields }, { req, res }) {
           return await requireAuth(req, res,
             () => eventFormCtrl.createPostEventForm(
-              req.user.id,
+              req.user,
               eventId,
               fields
             )
@@ -270,7 +270,7 @@ const schema = new GraphQLSchema({
         async resolve(root, { eventId, fields }, { req, res }) {
           return await requireAuth(req, res,
             () => eventFormCtrl.updatePreEventForm(
-              req.user.id,
+              req.user,
               eventId,
               fields
             )
@@ -287,7 +287,7 @@ const schema = new GraphQLSchema({
         async resolve(root, { eventId, fields }, { req, res }) {
           return await requireAuth(req, res,
             () => eventFormCtrl.updatePostEventForm(
-              req.user.id,
+              req.user,
               eventId,
               fields
             )
@@ -303,7 +303,7 @@ const schema = new GraphQLSchema({
         async resolve(root, { eventId }, { req, res }) {
           return await requireAuth(req, res,
             () => eventFormCtrl.deletePreEventForm(
-              req.user.id,
+              req.user,
               eventId
             )
           )
@@ -318,7 +318,7 @@ const schema = new GraphQLSchema({
         async resolve(root, { eventId }, { req, res }) {
           return await requireAuth(req, res,
             () => eventFormCtrl.deletePostEventForm(
-              req.user.id,
+              req.user,
               eventId
             )
           )
