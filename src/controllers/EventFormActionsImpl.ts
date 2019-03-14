@@ -163,7 +163,7 @@ export class EventFormActionsImpl implements EventFormActions {
       return undefined
     }
 
-    mongodbForms.PreEventForm.remove({
+    mongodbForms.PostEventForm.remove({
       userId: user.id,
       eventId: eventId,
     }).exec()
