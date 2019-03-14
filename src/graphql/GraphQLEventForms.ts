@@ -24,7 +24,7 @@ const RatingType = new GraphQLScalarType({
   parseValue: rating,
   parseLiteral(ast) {
     if (ast.kind == Kind.INT) {
-      return rating(parseInt(ast.value, 10))
+      return rating(parseInt(ast.value))
     }
   },
 })

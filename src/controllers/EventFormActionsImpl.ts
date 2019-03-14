@@ -22,7 +22,7 @@ export class EventFormActionsImpl implements EventFormActions {
       return undefined
     }
 
-    if (user.id != userId && !eventPermission(user)) {
+    if (user.id !== userId && !eventPermission(user)) {
       return undefined
     }
 
