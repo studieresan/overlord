@@ -6,6 +6,8 @@ import { EventActions } from './EventActions'
 import { EventActionsImpl } from './EventActionsImpl'
 import { FeedbackActions } from './FeedbackActions'
 import { FeedbackActionsImpl } from './FeedbackActionsImpl'
+import { EventFormActions } from './EventFormActions'
+import { EventFormActionsImpl } from './EventFormActionsImpl'
 
 export {
   UserActions,
@@ -16,4 +18,6 @@ export {
   EventActionsImpl,
   FeedbackActions,
   FeedbackActionsImpl,
+  EventFormActions,
+  EventFormActionsImpl,
 }
