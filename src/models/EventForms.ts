@@ -20,16 +20,18 @@ export interface EventForm extends mongoose.Document {
   readonly eventId: string
   readonly createdAt: string
   readonly updatedAt: string
-  readonly interestInRegularWork: Rating
-  readonly interestInCompanyMotivation: string
 }
 
 export interface PreEventForm extends EventForm {
+  readonly interestInRegularWorkBefore: Rating
+  readonly interestInCompanyMotivationBefore: string
   readonly familiarWithCompany: Familiarity
   readonly viewOfCompany: string
 }
 
 export interface PostEventForm extends EventForm {
+  readonly interestInRegularWork: Rating
+  readonly interestInCompanyMotivation: string
   readonly eventImpact: EventImpact
   readonly qualifiedToWork: boolean
   readonly atmosphereRating: Rating
