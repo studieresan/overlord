@@ -55,19 +55,16 @@ const CommonFormFields = {
   updatedAt: { type: GraphQLString },
 }
 
-const MutableFormFields = {
-  interestInRegularWork: { type: RatingType },
-  interestInCompanyMotivation: { type: GraphQLString },
-}
-
 const MutablePreEventFormFields = {
-  ...MutableFormFields,
+  interestInRegularWorkBefore: { type: RatingType },
+  interestInCompanyMotivationBefore: { type: GraphQLString },
   familiarWithCompany: { type: FamiliarityType },
   viewOfCompany: { type: GraphQLString },
 }
 
 const MutablePostEventFormFields = {
-  ...MutableFormFields,
+  interestInRegularWork: { type: RatingType },
+  interestInCompanyMotivation: { type: GraphQLString },
   eventImpact: { type: EventImpactType },
   qualifiedToWork: { type: GraphQLBoolean },
   atmosphereRating: { type: RatingType },

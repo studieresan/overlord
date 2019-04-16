@@ -13,13 +13,13 @@ const preEventFormSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  interestInRegularWork: {
+  interestInRegularWorkBefore: {
     type: Number,
     required: true,
     min: 1,
     max: 5,
   },
-  interestInCompanyMotivation: {
+  interestInCompanyMotivationBefore: {
     type: String,
     required: true,
   },
