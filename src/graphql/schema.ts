@@ -140,6 +140,28 @@ const schema = new GraphQLSchema({
             () => eventFormCtrl.getAllEventForms(req.user, eventId))
         },
       },
+      missingPreEventFormUsers: {
+        description: descriptions.missingPreEventFormUsersQuery,
+        type: new GraphQLList(UserType),
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        async resolve(root, { eventId }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.getMissingPreEventFormUsers(req.user, eventId))
+        },
+      },
+      missingPostEventFormUsers: {
+        description: descriptions.missingPostEventFormUsersQuery,
+        type: new GraphQLList(UserType),
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        async resolve(root, { eventId }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventFormCtrl.getMissingPostEventFormUsers(req.user, eventId))
+        },
+      },
     },
   }),
   mutation: new GraphQLObjectType({

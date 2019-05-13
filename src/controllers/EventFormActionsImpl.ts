@@ -1,5 +1,6 @@
 import * as mongodbForms from '../mongodb/EventForms'
 import * as mongodbEvent from '../mongodb/Event'
+import * as mongodbUser from '../mongodb/User'
 import * as models from '../models'
 import { EventFormActions } from './EventFormActions'
 
@@ -62,6 +63,54 @@ export class EventFormActionsImpl implements EventFormActions {
         return preForms.concat(postForms)
       })
     })
+  }
+
+  async getMissingPreEventFormUsers(
+    user: models.User,
+    eventId: string
+  ): Promise<models.User[] | undefined> {
+    if (!studsUser(user) && !eventPermission(user)) {
+      return undefined
+    }
+
+    const users: models.User[] = await mongodbUser.User.find(
+      { 'profile.memberType': models.MemberType.StudsMember }
+    ).exec()
+
+    const preEventForms: models.EventForm[] =
+      await mongodbForms.PreEventForm.find(
+        { eventId }
+      ).exec()
+
+    const preEventFormUserIds = preEventForms.map(it => it.userId)
+
+    return users.filter(user =>
+      !preEventFormUserIds.includes(user.id)
+    )
+  }
+
+  async getMissingPostEventFormUsers(
+    user: models.User,
+    eventId: string
+  ): Promise<models.User[] | undefined> {
+    if (!studsUser(user) && !eventPermission(user)) {
+      return undefined
+    }
+
+    const users: models.User[] = await mongodbUser.User.find(
+      { 'profile.memberType': models.MemberType.StudsMember }
+    ).exec()
+
+    const postEventForms: models.EventForm[] =
+      await mongodbForms.PostEventForm.find(
+        { eventId }
+      ).exec()
+
+    const postEventFormUserIds = postEventForms.map(it => it.userId)
+
+    return users.filter(user =>
+      !postEventFormUserIds.includes(user.id)
+    )
   }
 
   createPreEventForm(

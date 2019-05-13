@@ -4,6 +4,10 @@ export const eventFormsQuery = 'Returns the event forms that match the ' +
   'allowed to fetch event forms of another userId.'
 export const allEventFormsQuery = 'Returns all event forms for a certain ' +
   'event.'
+export const missingPreEventFormUsersQuery = 'Returns all users that has not ' +
+  'currently filled in the pre event forms for the provided event.'
+export const missingPostEventFormUsersQuery = 'Returns all users that has ' +
+  'not currently filled in the post event forms for the provided event.'
 export const createPreEventFormMutation = 'Creates a new pre event form ' +
   'for the specified event'
 export const createPostEventFormMutation = 'Creates a new post event form ' +

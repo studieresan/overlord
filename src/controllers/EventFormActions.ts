@@ -13,6 +13,16 @@ export interface EventFormActions {
     eventId: string
   ): Promise<models.EventForm[]> | undefined
 
+  getMissingPreEventFormUsers(
+    user: models.User,
+    eventId: string
+  ): Promise<models.User[] | undefined>
+
+  getMissingPostEventFormUsers(
+    user: models.User,
+    eventId: string
+  ): Promise<models.User[] | undefined>
+
   createPreEventForm(
     user: models.User,
     eventId: string,
