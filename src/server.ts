@@ -121,7 +121,7 @@ app.put(
  * Return a signed S3 url that a client will be able to
  * upload files to
  */
-app.get('/signed-upload', passportConfig.authenticate, signedUploadRequest)
+app.get('/signed-upload', signedUploadRequest)
 
 /**
  * Error Handler. Provides full stack - remove for production
