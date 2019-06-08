@@ -55,6 +55,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
         position: user.profile.position || undefined,
         phone: user.profile.phone || undefined,
         picture: user.profile.picture || undefined,
+        permissions: user.permissions,
       })
       res.end()
     })(req, res, next)
