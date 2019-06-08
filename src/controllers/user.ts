@@ -51,10 +51,10 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
         id: user.id,
         email: user.email,
         token,
-        name: `${user.firstName} ${user.lastName}`,
-        position: user.position || undefined,
-        phone: user.phone || undefined,
-        picture: user.picture || undefined,
+        name: `${user.profile.firstName} ${user.profile.lastName}`,
+        position: user.profile.position || undefined,
+        phone: user.profile.phone || undefined,
+        picture: user.profile.picture || undefined,
       })
       res.end()
     })(req, res, next)
