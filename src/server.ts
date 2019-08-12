@@ -61,6 +61,7 @@ mongoose.connection.on('error', () => {
 app.use(function(req, res, next) {
   const allowedOrigins = [
     process.env.FRONTEND_ORIGIN || 'http://localhost:3000',
+    process.env.FRONTEND_ALIAS || 'http://localhost:3000',
     process.env.HEROKU_ORIGIN || 'http://localhost:3000',
   ]
   const origin = allowedOrigins.find(origin => origin == req.headers.origin)
