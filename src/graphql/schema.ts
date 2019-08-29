@@ -9,6 +9,8 @@ import {
   FeedbackActionsImpl,
   EventFormActions,
   EventFormActionsImpl,
+  CompanySalesStatusActions,
+  CompanySalesStatusActionsImpl,
 } from './../controllers'
 import {
   UserType
@@ -38,6 +40,9 @@ import {
   PostEventFormInputType,
 } from './GraphQLEventForms'
 import {
+  CompanySalesStatus,
+} from './GraphQLECompanySalesStatus'
+import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -53,6 +58,7 @@ const cvCtrl: CVActions = new CVActionsImpl()
 const eventCtrl: EventActions = new EventActionsImpl()
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 const eventFormCtrl: EventFormActions = new EventFormActionsImpl()
+const companySalesStatusCtrl: CompanySalesStatusActions = new CompanySalesStatusActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise(resolve => {
@@ -149,6 +155,13 @@ const schema = new GraphQLSchema({
         async resolve(root, { eventId }, { req, res }) {
           return await requireAuth(req, res,
             () => eventFormCtrl.getMissingPreEventFormUsers(req.user, eventId))
+        },
+      },
+      allCompanySalesStatuses: {
+        description: 'Get all events as a list',
+        type: new GraphQLList(CompanySalesStatus),
+        async resolve(a, b, { req, res }) {
+          return await companySalesStatusCtrl.getCompanySalesStatuses(req, res)
         },
       },
       missingPostEventFormUsers: {
