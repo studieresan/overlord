@@ -7,4 +7,5 @@ const CompanySalesStatusSchema: mongoose.Schema = new mongoose.Schema({
   status: { type: String, unique: true },
 }, { timestamps: false })
 
-export const CompanySalesStatus = mongoose.model<CompanySalesStatusDocument>('CompanySalesStatus', CompanySalesStatusSchema)
+export const CompanySalesStatus = mongoose.model<CompanySalesStatusDocument>(
+  'CompanySalesStatus', CompanySalesStatusSchema)

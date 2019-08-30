@@ -1,4 +1,4 @@
-import { CompanySalesStatus, User } from ".";
+import { CompanySalesStatus, User } from '.'
 
 export interface Company {
     readonly id: string

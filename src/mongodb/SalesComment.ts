@@ -7,7 +7,7 @@ const SalesCommentSchema: mongoose.Schema = new mongoose.Schema({
   text: String,
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
   company: {type: mongoose.Schema.Types.ObjectId, ref: 'Company'},
+}, {timestamps: true})
 
-}, { timestamps: true })
- 
-export const SalesComment = mongoose.model<SalesCommentDocument>('SalesComment', SalesCommentSchema)
+export const SalesComment = mongoose.model<SalesCommentDocument>(
+  'SalesComment', SalesCommentSchema)

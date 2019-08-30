@@ -3,13 +3,11 @@ import * as crypto from 'crypto'
 import * as passport from 'passport'
 import * as jwt from 'jsonwebtoken'
 import { User, UserDocument } from '../mongodb/User'
-import { CompanySalesStatus } from '../mongodb/CompanySalesStatus'
 import { Company } from '../mongodb/Company'
 import { MemberType, Permission } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { WriteError } from 'mongodb'
-import { stat } from 'fs';
 
 const host = process.env.DEV ?
   'http://localhost:3000' :
@@ -39,18 +37,18 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
   var company = new Company({name: "Markos Company"})
   company.status = status
   status.save(function (err, status) {
-    if (err) return console.error(err);
-    console.log(status);
+    if (err) return console.error(err)
+    console.log(status)
   });
   company.save(function (err, status) {
-    if (err) return console.error(err);
-    console.log(status);
+    if (err) return console.error(err)
+    console.log(status)
   }); */
 
 
-  Company.find({name: "Markos Company"},function (err, comp) {
-    if (err) return console.error(err);
-    console.log(comp);
+  Company.find({name: 'Markos Company'}, function (err, comp) {
+    if (err) return console.error(err)
+    console.log(comp)
   })
 
   if (errors) {
