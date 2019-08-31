@@ -10,6 +10,8 @@ import { EventFormActions } from './EventFormActions'
 import { EventFormActionsImpl } from './EventFormActionsImpl'
 import { CompanySalesStatusActions } from './CompanySalesStatusActions'
 import { CompanySalesStatusActionsImpl } from './CompanySalesStatusActionsImpl'
+import { CompanyActions } from './CompanyActions'
+import { CompanyActionsImpl } from './CompanyActionsImpl'
 
 export {
   UserActions,
@@ -24,4 +26,6 @@ export {
   EventFormActionsImpl,
   CompanySalesStatusActions,
   CompanySalesStatusActionsImpl,
+  CompanyActions,
+  CompanyActionsImpl,
 }

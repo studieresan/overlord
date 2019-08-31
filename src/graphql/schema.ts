@@ -11,6 +11,8 @@ import {
   EventFormActionsImpl,
   CompanySalesStatusActions,
   CompanySalesStatusActionsImpl,
+  CompanyActions,
+  CompanyActionsImpl
 } from './../controllers'
 import {
   UserType
@@ -43,6 +45,9 @@ import {
   CompanySalesStatus,
 } from './GraphQLECompanySalesStatus'
 import {
+  Company
+} from './GraphQLCompany'
+import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -59,6 +64,7 @@ const eventCtrl: EventActions = new EventActionsImpl()
 const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 const eventFormCtrl: EventFormActions = new EventFormActionsImpl()
 const companySalesStatusCtrl: CompanySalesStatusActions = new CompanySalesStatusActionsImpl()
+const companyCtrl: CompanyActions = new CompanyActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise(resolve => {
@@ -162,6 +168,23 @@ const schema = new GraphQLSchema({
         type: new GraphQLList(CompanySalesStatus),
         async resolve(a, b, { req, res }) {
           return await companySalesStatusCtrl.getCompanySalesStatuses(req, res)
+        },
+      },
+      companies: {
+        description: 'Get all companies as a list',
+        type: new GraphQLList(Company),
+        async resolve(a, b, { req, res }) {
+          return await companyCtrl.getCompanies()
+        },
+      },
+      company: {
+        description: 'Get all companies as a list',
+        type: Company,
+        args: {
+          companyId: { type: GraphQLString },
+        },
+        async resolve(root, {companyId}, { req, res }) {
+          return await companyCtrl.getCompany(companyId)
         },
       },
       missingPostEventFormUsers: {
