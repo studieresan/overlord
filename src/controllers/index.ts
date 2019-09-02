@@ -12,6 +12,8 @@ import { CompanySalesStatusActions } from './CompanySalesStatusActions'
 import { CompanySalesStatusActionsImpl } from './CompanySalesStatusActionsImpl'
 import { CompanyActions } from './CompanyActions'
 import { CompanyActionsImpl } from './CompanyActionsImpl'
+import { SalesCommentActions } from './SalesCommentActions'
+import { SalesCommentActionsImpl } from './SalesCommentActionsImpl'
 
 export {
   UserActions,
@@ -28,4 +30,6 @@ export {
   CompanySalesStatusActionsImpl,
   CompanyActions,
   CompanyActionsImpl,
+  SalesCommentActions,
+  SalesCommentActionsImpl,
 }

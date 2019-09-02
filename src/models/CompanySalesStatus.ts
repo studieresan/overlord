@@ -1,4 +1,4 @@
 export interface CompanySalesStatus {
     readonly id: string
-    readonly status: string
+    readonly name: string
   }

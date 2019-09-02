@@ -15,12 +15,12 @@ export class CompanyActionsImpl implements CompanyActions {
             'status': true,
             'responsibleUser': true,
           }
-        ).populate('status',['status']).populate('responsibleUser').exec())
+        ).populate('status').populate('responsibleUser').exec())
     })
   }
 
   getCompany(companyId: string): Promise<Company> {
-    return mongodb.Company.findById(new ObjectID(companyId)).populate('status',['status']).populate('responsibleUser')
+    return mongodb.Company.findById(new ObjectID(companyId)).populate('status').populate('responsibleUser')
       .then(rejectIfNull('No company matches id'))
       .then(company => company)
   }

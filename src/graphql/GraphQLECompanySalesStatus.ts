@@ -6,7 +6,7 @@ import {
 export const CompanySalesStatus = new GraphQLObjectType({
   name : 'CompanySalesStatus',
   fields : {
-    status:  { type: GraphQLString },
+    name:  { type: GraphQLString },
     id: { type: GraphQLString },
   },
 })

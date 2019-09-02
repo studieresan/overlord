@@ -12,7 +12,9 @@ import {
   CompanySalesStatusActions,
   CompanySalesStatusActionsImpl,
   CompanyActions,
-  CompanyActionsImpl
+  CompanyActionsImpl,
+  SalesCommentActions,
+  SalesCommentActionsImpl,
 } from './../controllers'
 import {
   UserType
@@ -57,6 +59,7 @@ import {
 } from 'graphql'
 import * as passportConfig from '../config/passport'
 import * as descriptions from './schemaDescriptions'
+import { SalesComment } from './GraphQLSalesComment';
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
@@ -65,6 +68,7 @@ const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
 const eventFormCtrl: EventFormActions = new EventFormActionsImpl()
 const companySalesStatusCtrl: CompanySalesStatusActions = new CompanySalesStatusActionsImpl()
 const companyCtrl: CompanyActions = new CompanyActionsImpl()
+const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise(resolve => {
@@ -178,13 +182,23 @@ const schema = new GraphQLSchema({
         },
       },
       company: {
-        description: 'Get all companies as a list',
+        description: 'Get a company specified by an id',
         type: Company,
         args: {
           companyId: { type: GraphQLString },
         },
         async resolve(root, {companyId}, { req, res }) {
           return await companyCtrl.getCompany(companyId)
+        },
+      },
+      comments: {
+        description: 'Get all comment for the company specified by an id',
+        type: new GraphQLList(SalesComment),
+        args: {
+          companyId: { type: GraphQLString },
+        },
+        async resolve(root, {companyId}, { req, res }) {
+          return await salesCommentCtrl.getComments(companyId)
         },
       },
       missingPostEventFormUsers: {

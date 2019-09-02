@@ -4,10 +4,11 @@ import * as passport from 'passport'
 import * as jwt from 'jsonwebtoken'
 import { User, UserDocument } from '../mongodb/User'
 import { Company } from '../mongodb/Company'
+import { SalesComment } from '../mongodb/SalesComment'
 import { MemberType, Permission } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
-import { WriteError } from 'mongodb'
+import { WriteError, ObjectID } from 'mongodb'
 
 const host = process.env.DEV ?
   'http://localhost:3000' :
@@ -33,23 +34,21 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
   const errors = req.validationErrors()
 
   /*
-  var status = new CompanySalesStatus({ status: 'Too expensive' })
-  var company = new Company({name: "Markos Company"})
-  company.status = status
-  status.save(function (err, status) {
-    if (err) return console.error(err)
-    console.log(status)
+  var company = Company.findById(new ObjectID("5d6d26c0cf664f14d9e5d750")).exec(function (err, company) {
+    var user = User.findById(new ObjectID("5d67c2a7f191ad14e8cade70")).exec(function (err, user) {
+      var comment = new SalesComment({text: "failed", company, user})
+      comment.save(function (err, comment) {
+        if (err) return console.error(err)
+        console.log(comment)
   });
-  company.save(function (err, status) {
-    if (err) return console.error(err)
-    console.log(status)
-  }); */
+    })
+  })
 
 
   Company.find({name: 'Markos Company'}, function (err, comp) {
     if (err) return console.error(err)
     console.log(comp)
-  })
+  }) */
 
   if (errors) {
     return res.status(400).json(errors).end()
