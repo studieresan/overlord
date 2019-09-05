@@ -2,6 +2,7 @@ import { CompanyContactActions } from './CompanyContactActions'
 import { CompanyContact } from '../models'
 import * as mongodb from '../mongodb/CompanyContact'
 import { ObjectID } from 'mongodb'
+import { rejectIfNull } from './util'
 
 export class CompanyContactActionsImpl implements CompanyContactActions {
 
@@ -26,6 +27,16 @@ export class CompanyContactActionsImpl implements CompanyContactActions {
       ...fields,
     })
     return contact.save()
+  }
+
+  updateContact(id: string, fields: Partial<CompanyContact>):
+  Promise<CompanyContact> {
+    console.log(id)
+    return mongodb.CompanyContact.findOneAndUpdate(
+      { _id: id },
+      { ...fields },
+      { new: true }
+    ).then(rejectIfNull('No contact exists for given id'))
   }
 
   removeContact(id: string): Promise<boolean> {

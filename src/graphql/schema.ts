@@ -243,7 +243,7 @@ const schema = new GraphQLSchema({
         },
       },
       createContact: {
-        description: 'Create new contact for a company specified by the company id',
+        description: 'Create new contact for a company specified by the company ID',
         type: CompanyContact,
         args: {
           companyId: { type: GraphQLString },
@@ -252,6 +252,18 @@ const schema = new GraphQLSchema({
         async resolve(a, { companyId, fields }, { req, res }) {
           return await requireAuth(req, res,
             () => companyContactCtrl.createContact(companyId, fields))
+        },
+      },
+      updateContact: {
+        description: 'Update the contact with the given ID',
+        type: CompanyContact,
+        args: {
+          id: { type: GraphQLString },
+          fields: { type: CompanyContactInput },
+        },
+        async resolve(a, { id, fields }, { req, res }) {
+          return await requireAuth(req, res,
+            () => companyContactCtrl.updateContact(id, fields))
         },
       },
       removeContact: {
