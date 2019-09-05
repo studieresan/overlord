@@ -254,6 +254,17 @@ const schema = new GraphQLSchema({
             () => companyContactCtrl.createContact(companyId, fields))
         },
       },
+      removeContact: {
+        description: 'Remove contact with a given contact ID',
+        type: GraphQLBoolean,
+        args: {
+          id: { type: GraphQLString },
+        },
+        async resolve(a, { id }, { req, res }) {
+          return await requireAuth(req, res,
+            () => companyContactCtrl.removeContact(id))
+        },
+      },
       updateCV: {
         description: 'Update the CV of the currently logged in user',
         type: CVType,

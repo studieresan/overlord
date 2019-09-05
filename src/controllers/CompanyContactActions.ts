@@ -7,4 +7,7 @@ export interface CompanyContactActions {
 
   // Create a new contact for a company specified by the company id
   createContact(companyId: string, fields: Partial<CompanyContact>): Promise<CompanyContact>
+
+  // Remove a contact with a given ID
+  removeContact(id: string): Promise<boolean>
 }

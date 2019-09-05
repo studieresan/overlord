@@ -27,4 +27,11 @@ export class CompanyContactActionsImpl implements CompanyContactActions {
     })
     return contact.save()
   }
+
+  removeContact(id: string): Promise<boolean> {
+    return mongodb.CompanyContact.findOneAndRemove({ _id: id })
+      .then(contact => {
+        return (contact != undefined)
+      })
+  }
 }
