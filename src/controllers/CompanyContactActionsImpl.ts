@@ -1,9 +1,7 @@
 import { CompanyContactActions } from './CompanyContactActions'
 import { CompanyContact } from '../models'
 import * as mongodb from '../mongodb/CompanyContact'
-import { rejectIfNull } from './util'
-import { ObjectID } from 'mongodb';
-import { Company } from '../mongodb/Company';
+import { ObjectID } from 'mongodb'
 
 export class CompanyContactActionsImpl implements CompanyContactActions {
 
@@ -21,7 +19,8 @@ export class CompanyContactActionsImpl implements CompanyContactActions {
     })
   }
 
-  createContact(companyId: string, fields: Partial<CompanyContact>): Promise<CompanyContact> {
+  createContact(companyId: string, fields: Partial<CompanyContact>):
+  Promise<CompanyContact> {
     const contact = new mongodb.CompanyContact({
       company: new ObjectID(companyId),
       ...fields,

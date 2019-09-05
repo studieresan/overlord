@@ -2,8 +2,8 @@ import {
     GraphQLObjectType,
     GraphQLString,
   } from 'graphql'
-import { UserType } from './GraphQLUser';
-import { Company } from './GraphQLCompany';
+import { UserType } from './GraphQLUser'
+import { Company } from './GraphQLCompany'
 
 export const SalesComment = new GraphQLObjectType({
   name : 'SalesComment',

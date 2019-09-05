@@ -6,5 +6,5 @@ export interface CompanyContactActions {
   getContacts(companyId: string): Promise<CompanyContact[]>
 
   // Create a new contact for a company specified by the company id
-  createContact(companyId:string, fields: Partial<CompanyContact>): Promise<CompanyContact>
+  createContact(companyId: string, fields: Partial<CompanyContact>): Promise<CompanyContact>
 }

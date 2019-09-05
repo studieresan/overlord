@@ -11,4 +11,5 @@ const companyContactSchema: mongoose.Schema = new mongoose.Schema({
   company: {type: mongoose.Schema.Types.ObjectId, ref: 'Company'},
 }, { timestamps: true })
 
-export const CompanyContact = mongoose.model<CompanyContactDocument>('CompanyContact', companyContactSchema)
+export const CompanyContact = mongoose.model<CompanyContactDocument>
+('CompanyContact', companyContactSchema)

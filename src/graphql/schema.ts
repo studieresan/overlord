@@ -61,7 +61,7 @@ import {
 } from 'graphql'
 import * as passportConfig from '../config/passport'
 import * as descriptions from './schemaDescriptions'
-import { SalesComment } from './GraphQLSalesComment';
+import { SalesComment } from './GraphQLSalesComment'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
 
 const userCtrl: UserActions = new UserActionsImpl()

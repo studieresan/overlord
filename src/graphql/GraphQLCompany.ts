@@ -2,8 +2,8 @@ import {
     GraphQLObjectType,
     GraphQLString,
   } from 'graphql'
-import { UserType } from './GraphQLUser';
-import { CompanySalesStatus } from './GraphQLECompanySalesStatus';
+import { UserType } from './GraphQLUser'
+import { CompanySalesStatus } from './GraphQLECompanySalesStatus'
 
 export const Company = new GraphQLObjectType({
   name : 'Company',

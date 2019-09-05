@@ -1,4 +1,4 @@
-import { Company} from '.'
+import { Company } from '.'
 
 export interface CompanyContact {
     readonly id: string
@@ -7,4 +7,4 @@ export interface CompanyContact {
     readonly phoneNumber: string
     readonly comment: string
     readonly company: Company
-  }
+}
