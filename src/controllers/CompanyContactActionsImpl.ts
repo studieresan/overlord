@@ -31,7 +31,6 @@ export class CompanyContactActionsImpl implements CompanyContactActions {
 
   updateContact(id: string, fields: Partial<CompanyContact>):
   Promise<CompanyContact> {
-    console.log(id)
     return mongodb.CompanyContact.findOneAndUpdate(
       { _id: id },
       { ...fields },

@@ -1,6 +1,7 @@
 import {
     GraphQLObjectType,
     GraphQLString,
+    GraphQLBoolean,
   } from 'graphql'
 import { UserType } from './GraphQLUser'
 import { Company } from './GraphQLCompany'
@@ -12,5 +13,6 @@ export const SalesComment = new GraphQLObjectType({
     id: { type: GraphQLString },
     company: { type: Company },
     user: { type: UserType },
+    edited: { type: GraphQLBoolean},
   },
 })

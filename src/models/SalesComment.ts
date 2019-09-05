@@ -5,4 +5,5 @@ export interface SalesComment {
     readonly timestamp: Date
     readonly company: Company
     readonly user: User
+    readonly edited: Boolean
   }

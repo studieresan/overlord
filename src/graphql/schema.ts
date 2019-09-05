@@ -277,6 +277,41 @@ const schema = new GraphQLSchema({
             () => companyContactCtrl.removeContact(id))
         },
       },
+      createComment: {
+        description: 'Create new comment for a company specified by the company ID',
+        type: SalesComment,
+        args: {
+          companyId: { type: GraphQLString },
+          text: { type: GraphQLString},
+        },
+        async resolve(a, { companyId, text }, { req, res }) {
+          return await requireAuth(req, res,
+            () => salesCommentCtrl.createComment(req.user, companyId, text))
+        },
+      },
+      updateComment: {
+        description: 'Update the comment with the given ID',
+        type: SalesComment,
+        args: {
+          id: { type: GraphQLString },
+          text: { type: GraphQLString },
+        },
+        async resolve(a, { id, text }, { req, res }) {
+          return await requireAuth(req, res,
+            () => salesCommentCtrl.updateComment(req.user, id, text))
+        },
+      },
+      removeComment: {
+        description: 'Remove comment with a given contact ID',
+        type: GraphQLBoolean,
+        args: {
+          id: { type: GraphQLString },
+        },
+        async resolve(a, { id }, { req, res }) {
+          return await requireAuth(req, res,
+            () => salesCommentCtrl.removeComment(req.user, id))
+        },
+      },
       updateCV: {
         description: 'Update the CV of the currently logged in user',
         type: CVType,

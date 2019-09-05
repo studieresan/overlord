@@ -7,4 +7,7 @@ export interface CompanyActions {
 
   // Get company by company id
   getCompany(companyId: string): Promise<Company>
+
+  // Create a company with given name
+  createCompany(name: string): Promise<Company>
 }
