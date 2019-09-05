@@ -15,6 +15,8 @@ import {
   CompanyActionsImpl,
   SalesCommentActions,
   SalesCommentActionsImpl,
+  CompanyContactActions,
+  CompanyContactActionsImpl,
 } from './../controllers'
 import {
   UserType
@@ -60,6 +62,7 @@ import {
 import * as passportConfig from '../config/passport'
 import * as descriptions from './schemaDescriptions'
 import { SalesComment } from './GraphQLSalesComment';
+import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
@@ -69,6 +72,7 @@ const eventFormCtrl: EventFormActions = new EventFormActionsImpl()
 const companySalesStatusCtrl: CompanySalesStatusActions = new CompanySalesStatusActionsImpl()
 const companyCtrl: CompanyActions = new CompanyActionsImpl()
 const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
+const companyContactCtrl: CompanyContactActions = new CompanyContactActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise(resolve => {
@@ -201,6 +205,16 @@ const schema = new GraphQLSchema({
           return await salesCommentCtrl.getComments(companyId)
         },
       },
+      contacts: {
+        description: 'Get all contacts for the company specified by an id',
+        type: new GraphQLList(CompanyContact),
+        args: {
+          companyId: { type: GraphQLString },
+        },
+        async resolve(root, {companyId}, { req, res }) {
+          return await companyContactCtrl.getContacts(companyId)
+        },
+      },
       missingPostEventFormUsers: {
         description: descriptions.missingPostEventFormUsersQuery,
         type: new GraphQLList(UserType),
@@ -226,6 +240,18 @@ const schema = new GraphQLSchema({
         async resolve(a, { fields }, { req, res }) {
           return await requireAuth(req, res,
             () => userCtrl.updateUserProfile(req.user.id, fields))
+        },
+      },
+      createContact: {
+        description: 'Create new contact for a company specified by the company id',
+        type: CompanyContact,
+        args: {
+          companyId: { type: GraphQLString },
+          fields: { type: CompanyContactInput },
+        },
+        async resolve(a, { companyId, fields }, { req, res }) {
+          return await requireAuth(req, res,
+            () => companyContactCtrl.createContact(companyId, fields))
         },
       },
       updateCV: {

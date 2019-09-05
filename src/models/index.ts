@@ -5,6 +5,7 @@ import { Event } from './Event'
 import { Company } from './Company'
 import { CompanySalesStatus } from './CompanySalesStatus'
 import { SalesComment } from './SalesComment'
+import { CompanyContact } from './CompanyContact'
 import {
   EventForm,
   PreEventForm,
@@ -32,4 +33,5 @@ export {
   Company,
   CompanySalesStatus,
   SalesComment,
+  CompanyContact,
 }

@@ -9,6 +9,7 @@ import { MemberType, Permission } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { WriteError, ObjectID } from 'mongodb'
+import { CompanyContact } from '../mongodb/CompanyContact';
 
 const host = process.env.DEV ?
   'http://localhost:3000' :
@@ -34,21 +35,21 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
   const errors = req.validationErrors()
 
   /*
-  var company = Company.findById(new ObjectID("5d6d26c0cf664f14d9e5d750")).exec(function (err, company) {
-    var user = User.findById(new ObjectID("5d67c2a7f191ad14e8cade70")).exec(function (err, user) {
+  Company.findById(new ObjectID("5d67b60d1b910a1193639640")).exec(function (err, company) {
+    User.findById(new ObjectID("5d67c2a7f191ad14e8cade70")).exec(function (err, user) {
       var comment = new SalesComment({text: "failed", company, user})
       comment.save(function (err, comment) {
         if (err) return console.error(err)
         console.log(comment)
-  });
+      });
     })
-  })
-
-
-  Company.find({name: 'Markos Company'}, function (err, comp) {
-    if (err) return console.error(err)
-    console.log(comp)
+    var contact = new CompanyContact({name: "Marko Lazic", email: "123@a.com", phoneNumber: "0720720013", company, comment: "Good"})
+    contact.save(function (err, contact) {
+      if (err) return console.error(err)
+      console.log(contact)
+    })
   }) */
+
 
   if (errors) {
     return res.status(400).json(errors).end()

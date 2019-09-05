@@ -14,6 +14,8 @@ import { CompanyActions } from './CompanyActions'
 import { CompanyActionsImpl } from './CompanyActionsImpl'
 import { SalesCommentActions } from './SalesCommentActions'
 import { SalesCommentActionsImpl } from './SalesCommentActionsImpl'
+import { CompanyContactActions } from './CompanyContactActions'
+import { CompanyContactActionsImpl } from './CompanyContactActionsImpl' 
 
 export {
   UserActions,
@@ -32,4 +34,6 @@ export {
   CompanyActionsImpl,
   SalesCommentActions,
   SalesCommentActionsImpl,
+  CompanyContactActions,
+  CompanyContactActionsImpl,
 }
