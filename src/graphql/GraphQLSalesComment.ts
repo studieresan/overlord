@@ -5,6 +5,7 @@ import {
   } from 'graphql'
 import { UserType } from './GraphQLUser'
 import { Company } from './GraphQLCompany'
+import { GraphQLDateTime } from './GraphQLDateTime';
 
 export const SalesComment = new GraphQLObjectType({
   name : 'SalesComment',
@@ -13,6 +14,7 @@ export const SalesComment = new GraphQLObjectType({
     id: { type: GraphQLString },
     company: { type: Company },
     user: { type: UserType },
+    createdAt: {type: GraphQLDateTime },
     edited: { type: GraphQLBoolean},
   },
 })

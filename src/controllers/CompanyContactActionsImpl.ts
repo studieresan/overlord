@@ -14,7 +14,7 @@ export class CompanyContactActionsImpl implements CompanyContactActions {
             'id': true,
             'email': true,
             'phoneNumber': true,
-            'comment:': true,
+            'comment': true,
           }
         ).exec())
     })

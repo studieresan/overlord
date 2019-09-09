@@ -15,6 +15,7 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
             'company': true,
             'user': true,
             'edited': true,
+            'createdAt': true,
           }
         ).populate('company').populate('user').exec())
     })
@@ -40,7 +41,7 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
 
   removeComment(auth: User, id: string): Promise<boolean> {
     return mongodb.SalesComment.findOneAndRemove(
-      { _id: id, user: auth },
+      { _id: id, user: auth }
     ).then(comment => {
       return comment != undefined
     })

@@ -7,7 +7,7 @@ export class CompanySalesStatusActionsImpl implements CompanySalesStatusActions 
     return new Promise<CompanySalesStatus[]>((resolve, reject) => {
       return resolve(mongodb.CompanySalesStatus.find({},
           {
-            'status': true,
+            'name': true,
             'id': true,
           }
         ).exec())

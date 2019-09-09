@@ -8,7 +8,7 @@ const MutableCompanyConstactFields = {
   name: { type: GraphQLString },
   email: { type: GraphQLString },
   phoneNumber: { type: GraphQLString },
-  comment: {type: GraphQLString },
+  comment: { type: GraphQLString },
 }
 
 export const CompanyContact = new GraphQLObjectType({
