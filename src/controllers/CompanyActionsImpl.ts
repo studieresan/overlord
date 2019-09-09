@@ -26,4 +26,9 @@ export class CompanyActionsImpl implements CompanyActions {
       .then(rejectIfNull('No company matches id'))
       .then(company => company)
   }
+
+  createCompany(name: string): Promise<Company> {
+    const company = new mongodb.Company({name})
+    return company.save()
+  }
 }

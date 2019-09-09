@@ -242,6 +242,16 @@ const schema = new GraphQLSchema({
             () => userCtrl.updateUserProfile(req.user.id, fields))
         },
       },
+      createCompany: {
+        description: 'Create a company with name',
+        type: Company,
+        args: {
+          name: { type: GraphQLString },
+        },
+        async resolve(a, {name}, { req, res }) {
+          return await companyCtrl.createCompany(name)
+        },
+      },
       createContact: {
         description: 'Create new contact for a company specified by the company ID',
         type: CompanyContact,
