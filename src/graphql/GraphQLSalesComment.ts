@@ -5,7 +5,7 @@ import {
   } from 'graphql'
 import { UserType } from './GraphQLUser'
 import { Company } from './GraphQLCompany'
-import { GraphQLDateTime } from './GraphQLDateTime';
+import { GraphQLDateTime } from './GraphQLDateTime'
 
 export const SalesComment = new GraphQLObjectType({
   name : 'SalesComment',
