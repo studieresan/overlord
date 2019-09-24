@@ -4,7 +4,7 @@ import {
     GraphQLInputObjectType,
   } from 'graphql'
 
-const MutableCompanyConstactFields = {
+const MutableCompanyContactFields = {
   name: { type: GraphQLString },
   email: { type: GraphQLString },
   phoneNumber: { type: GraphQLString },
@@ -15,11 +15,11 @@ export const CompanyContact = new GraphQLObjectType({
   name : 'CompanyContact',
   fields : {
     id: { type: GraphQLString },
-    ...MutableCompanyConstactFields,
+    ...MutableCompanyContactFields,
   },
 })
 
 export const CompanyContactInput = new GraphQLInputObjectType({
   name : 'CompanyContactInput',
-  fields : MutableCompanyConstactFields,
+  fields : MutableCompanyContactFields,
 })

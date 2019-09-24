@@ -10,4 +10,7 @@ export interface CompanyActions {
 
   // Create a company with given name
   createCompany(name: string): Promise<Company>
+
+  // Create a company with given name
+  updateCompany(id: string, fields: Partial<Company>): Promise<Company>
 }

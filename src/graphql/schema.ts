@@ -49,7 +49,8 @@ import {
   CompanySalesStatus,
 } from './GraphQLECompanySalesStatus'
 import {
-  Company
+  Company,
+  CompanyInput,
 } from './GraphQLCompany'
 import {
   GraphQLList,
@@ -250,6 +251,18 @@ const schema = new GraphQLSchema({
         },
         async resolve(a, {name}, { req, res }) {
           return await companyCtrl.createCompany(name)
+        },
+      },
+      updateCompany: {
+        description: 'Update the company with the given ID',
+        type: Company,
+        args: {
+          id: { type: GraphQLString },
+          fields: { type: CompanyInput },
+        },
+        async resolve(a, { id, fields }, { req, res }) {
+          return await requireAuth(req, res,
+            () => companyCtrl.updateCompany(id, fields))
         },
       },
       createContact: {

@@ -31,4 +31,15 @@ export class CompanyActionsImpl implements CompanyActions {
     const company = new mongodb.Company({name})
     return company.save()
   }
+
+  updateCompany(id: string, fields: Partial<Company>):
+  Promise<Company> {
+    return mongodb.Company.findOneAndUpdate(
+      { _id: id },
+      { ...fields },
+      { new: true }
+    ).populate('status')
+     .populate('responsibleUser')
+     .then(rejectIfNull('No company exists for given id'))
+  }
 }
