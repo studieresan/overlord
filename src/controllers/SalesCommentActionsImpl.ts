@@ -36,7 +36,9 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
       { _id: id, user: auth },
       { text, edited: true },
       { new: true }
-    ).then(rejectIfNull('Comment does not exist or insufficient persmission'))
+    ).populate('company')
+     .populate('user')
+     .then(rejectIfNull('Comment does not exist or insufficient persmission'))
   }
 
   removeComment(auth: User, id: string): Promise<boolean> {
