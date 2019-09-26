@@ -13,4 +13,9 @@ export class CompanySalesStatusActionsImpl implements CompanySalesStatusActions 
         ).exec())
     })
   }
+
+  createSalesStatus(name: string): Promise<CompanySalesStatus> {
+    const status = new mongodb.CompanySalesStatus({name})
+    return status.save()
+  }
 }

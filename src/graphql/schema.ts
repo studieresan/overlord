@@ -243,6 +243,16 @@ const schema = new GraphQLSchema({
             () => userCtrl.updateUserProfile(req.user.id, fields))
         },
       },
+      createSalesStatus: {
+        description: 'Create a company sales status with name',
+        type: CompanySalesStatus,
+        args: {
+          name: { type: GraphQLString },
+        },
+        async resolve(a, {name}, { req, res }) {
+          return await companySalesStatusCtrl.createSalesStatus(name)
+        },
+      },
       createCompany: {
         description: 'Create a company with name',
         type: Company,
@@ -251,6 +261,13 @@ const schema = new GraphQLSchema({
         },
         async resolve(a, {name}, { req, res }) {
           return await companyCtrl.createCompany(name)
+        },
+      },
+      createCompanies: {
+        description: 'Create companies with specified names',
+        type: new GraphQLList(Company),
+        async resolve(a, {}, { req, res }) {
+          return await companyCtrl.bulkCreateCompanies()
         },
       },
       updateCompany: {

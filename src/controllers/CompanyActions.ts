@@ -12,5 +12,8 @@ export interface CompanyActions {
   createCompany(name: string): Promise<Company>
 
   // Create a company with given name
+  bulkCreateCompanies(): Promise<Boolean>
+
+  // Create a company with given name
   updateCompany(id: string, fields: Partial<Company>): Promise<Company>
 }
