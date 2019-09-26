@@ -4,11 +4,6 @@ import * as mongodb from '../mongodb/Company'
 import { rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
 
-const fs = require('fs'),
-    path = require('path'),
-    filePath = path.join(__dirname, 'companies.txt')
-
-
 export class CompanyActionsImpl implements CompanyActions {
 
   getCompanies(): Promise<Company[]> {
@@ -37,23 +32,17 @@ export class CompanyActionsImpl implements CompanyActions {
     return company.save()
   }
 
-  bulkCreateCompanies(): Promise<Boolean> {
-    return fs.readFile(filePath, {encoding: 'utf-8'}, function(err: any, data: string){
-      if (!err) {
-          const names: string[] = data.split('\n')
-          const companies: Company[] = []
-          names.forEach(name => {
-            const n = name.slice(1, -1)
-            companies.push(new mongodb.Company({name: n}))
-          })
-          return mongodb.Company.collection.insertMany(companies)
-          .then(t => {
-            return (t != undefined)
-            })
-      } else {
-          console.log(err)
-      }
+  bulkCreateCompanies(names: string): Promise<Boolean> {
+    const namest: string[] = names.split(',')
+    const companies: Company[] = []
+    namest.forEach(name => {
+      const n = name.slice(1, -1)
+      companies.push(new mongodb.Company({name: n}))
     })
+    return mongodb.Company.collection.insertMany(companies)
+    .then(t => {
+      return (t != undefined)
+      })
   }
 
   updateCompany(id: string, fields: Partial<Company>):
