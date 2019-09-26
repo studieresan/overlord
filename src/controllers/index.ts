@@ -8,6 +8,14 @@ import { FeedbackActions } from './FeedbackActions'
 import { FeedbackActionsImpl } from './FeedbackActionsImpl'
 import { EventFormActions } from './EventFormActions'
 import { EventFormActionsImpl } from './EventFormActionsImpl'
+import { CompanySalesStatusActions } from './CompanySalesStatusActions'
+import { CompanySalesStatusActionsImpl } from './CompanySalesStatusActionsImpl'
+import { CompanyActions } from './CompanyActions'
+import { CompanyActionsImpl } from './CompanyActionsImpl'
+import { SalesCommentActions } from './SalesCommentActions'
+import { SalesCommentActionsImpl } from './SalesCommentActionsImpl'
+import { CompanyContactActions } from './CompanyContactActions'
+import { CompanyContactActionsImpl } from './CompanyContactActionsImpl'
 
 export {
   UserActions,
@@ -20,4 +28,12 @@ export {
   FeedbackActionsImpl,
   EventFormActions,
   EventFormActionsImpl,
+  CompanySalesStatusActions,
+  CompanySalesStatusActionsImpl,
+  CompanyActions,
+  CompanyActionsImpl,
+  SalesCommentActions,
+  SalesCommentActionsImpl,
+  CompanyContactActions,
+  CompanyContactActionsImpl,
 }
