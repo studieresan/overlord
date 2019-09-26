@@ -265,9 +265,12 @@ const schema = new GraphQLSchema({
       },
       createCompanies: {
         description: 'Create companies with specified names',
+        args: {
+          names: { type: GraphQLString },
+        },
         type: new GraphQLList(Company),
-        async resolve(a, {}, { req, res }) {
-          return await companyCtrl.bulkCreateCompanies()
+        async resolve(a, {names}, { req, res }) {
+          return await companyCtrl.bulkCreateCompanies(names)
         },
       },
       updateCompany: {
