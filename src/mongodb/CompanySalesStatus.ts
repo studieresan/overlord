@@ -5,6 +5,7 @@ export type CompanySalesStatusDocument = mongoose.Document & models.CompanySales
 
 const CompanySalesStatusSchema: mongoose.Schema = new mongoose.Schema({
   name: { type: String, unique: true },
+  priority: { type: Number },
 }, { timestamps: false })
 
 export const CompanySalesStatus = mongoose.model<CompanySalesStatusDocument>(
