@@ -1,6 +1,7 @@
 import {
     GraphQLObjectType,
     GraphQLString,
+    GraphQLInt,
   } from 'graphql'
 
 export const CompanySalesStatus = new GraphQLObjectType({
@@ -8,5 +9,6 @@ export const CompanySalesStatus = new GraphQLObjectType({
   fields : {
     name:  { type: GraphQLString },
     id: { type: GraphQLString },
+    priority: { type: GraphQLInt },
   },
 })
