@@ -17,7 +17,10 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
             'edited': true,
             'createdAt': true,
           }
-        ).populate('company').populate('user').exec())
+        ).sort([['createdAt', 'asc']])
+         .populate('company')
+         .populate('user')
+         .exec())
     })
   }
 

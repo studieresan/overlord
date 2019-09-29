@@ -9,6 +9,7 @@ export class CompanySalesStatusActionsImpl implements CompanySalesStatusActions 
           {
             'name': true,
             'id': true,
+            'priority': true,
           }
         ).sort([['priority', 'asc']]).exec())
     })
