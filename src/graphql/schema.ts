@@ -258,9 +258,13 @@ const schema = new GraphQLSchema({
         type: Company,
         args: {
           name: { type: GraphQLString },
+          statusId: { type: GraphQLString },
         },
-        async resolve(a, {name}, { req, res }) {
-          return await companyCtrl.createCompany(name)
+        async resolve(a, {name, statusId}, { req, res }) {
+          if (!statusId) {
+            return Error("Can not create a company without a status")
+          }
+          return await companyCtrl.createCompany(name, statusId)
         },
       },
       createCompanies: {
@@ -283,6 +287,17 @@ const schema = new GraphQLSchema({
         async resolve(a, { id, fields }, { req, res }) {
           return await requireAuth(req, res,
             () => companyCtrl.updateCompany(id, fields))
+        },
+      },
+      setAllCompaniesStatus: {
+        description: 'Update the status of all companies without any',
+        type: new GraphQLList(Company),
+        args: {
+          id: { type: GraphQLString },
+        },
+        async resolve(a, { id}, { req, res }) {
+          return await requireAuth(req, res,
+            () => companyCtrl.setCompaniesStatus(id))
         },
       },
       createContact: {

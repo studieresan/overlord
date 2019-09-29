@@ -3,6 +3,7 @@ import { Company } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
+import { reject } from 'bluebird';
 
 export class CompanyActionsImpl implements CompanyActions {
 
@@ -27,8 +28,12 @@ export class CompanyActionsImpl implements CompanyActions {
       .then(company => company)
   }
 
-  createCompany(name: string): Promise<Company> {
-    const company = new mongodb.Company({name})
+  createCompany(name: string, statusId: string): Promise<Company> {
+    const company = new mongodb.Company(
+      {
+        name,
+        status: statusId,
+      })
     return company.save()
   }
 
@@ -55,4 +60,16 @@ export class CompanyActionsImpl implements CompanyActions {
      .populate('responsibleUser')
      .then(rejectIfNull('No company exists for given id'))
   }
+
+  setCompaniesStatus(statusId: string): Promise<Company[]> {
+    return mongodb.Company.update(
+      { status: null },
+      { status: statusId },
+      { multi: true }
+    ).populate('status')
+     .populate('responsibleUser')
+     .exec()
+  }
 }
+
+
