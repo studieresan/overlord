@@ -3,7 +3,6 @@ import { Company } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
-import { reject } from 'bluebird';
 
 export class CompanyActionsImpl implements CompanyActions {
 
@@ -63,7 +62,7 @@ export class CompanyActionsImpl implements CompanyActions {
 
   setCompaniesStatus(statusId: string): Promise<Company[]> {
     return mongodb.Company.update(
-      { status: null },
+      { status: undefined },
       { status: statusId },
       { multi: true }
     ).populate('status')

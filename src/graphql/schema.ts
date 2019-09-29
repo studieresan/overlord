@@ -262,7 +262,7 @@ const schema = new GraphQLSchema({
         },
         async resolve(a, {name, statusId}, { req, res }) {
           if (!statusId) {
-            return Error("Can not create a company without a status")
+            return Error('Can not create a company without a status')
           }
           return await companyCtrl.createCompany(name, statusId)
         },
