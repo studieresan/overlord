@@ -11,9 +11,12 @@ export interface CompanyActions {
   // Create a company with given name
   createCompany(name: string): Promise<Company>
 
-  // Create a company with given name
+  // Create several companies with given names
   bulkCreateCompanies(names: string): Promise<Boolean>
 
   // Create a company with given name
   updateCompany(id: string, fields: Partial<Company>): Promise<Company>
+
+  // Set default company status to all companies
+  setCompaniesStatus(statusId: string): Promise<Company[]>
 }

@@ -28,8 +28,15 @@ export class CompanyActionsImpl implements CompanyActions {
   }
 
   createCompany(name: string): Promise<Company> {
-    const company = new mongodb.Company({name})
-    return company.save()
+    const company = new mongodb.Company(
+      {
+        name,
+        status: process.env.DEFAULT_STATUS_ID,
+      })
+    return company.save().then(company =>
+    company.populate('status')
+    .populate('responsibleUser')
+    .execPopulate())
   }
 
   bulkCreateCompanies(names: string): Promise<Boolean> {
@@ -55,4 +62,16 @@ export class CompanyActionsImpl implements CompanyActions {
      .populate('responsibleUser')
      .then(rejectIfNull('No company exists for given id'))
   }
+
+  setCompaniesStatus(statusId: string): Promise<Company[]> {
+    return mongodb.Company.update(
+      { status: undefined },
+      { status: statusId },
+      { multi: true }
+    ).populate('status')
+     .populate('responsibleUser')
+     .exec()
+  }
 }
+
+
