@@ -27,13 +27,16 @@ export class CompanyActionsImpl implements CompanyActions {
       .then(company => company)
   }
 
-  createCompany(name: string, statusId: string): Promise<Company> {
+  createCompany(name: string): Promise<Company> {
     const company = new mongodb.Company(
       {
         name,
-        status: statusId,
+        status: process.env.DEFAULT_STATUS_ID,
       })
-    return company.save()
+    return company.save().then(company =>
+    company.populate('status')
+    .populate('responsibleUser')
+    .execPopulate())
   }
 
   bulkCreateCompanies(names: string): Promise<Boolean> {

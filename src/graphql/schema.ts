@@ -260,11 +260,8 @@ const schema = new GraphQLSchema({
           name: { type: GraphQLString },
           statusId: { type: GraphQLString },
         },
-        async resolve(a, {name, statusId}, { req, res }) {
-          if (!statusId) {
-            return Error('Can not create a company without a status')
-          }
-          return await companyCtrl.createCompany(name, statusId)
+        async resolve(a, {name}, { req, res }) {
+          return await companyCtrl.createCompany(name)
         },
       },
       createCompanies: {

@@ -9,7 +9,7 @@ export interface CompanyActions {
   getCompany(companyId: string): Promise<Company>
 
   // Create a company with given name
-  createCompany(name: string, statusId: string): Promise<Company>
+  createCompany(name: string): Promise<Company>
 
   // Create several companies with given names
   bulkCreateCompanies(names: string): Promise<Boolean>
