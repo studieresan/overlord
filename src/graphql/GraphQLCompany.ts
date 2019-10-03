@@ -21,5 +21,6 @@ export const CompanyInput = new GraphQLInputObjectType({
   fields : {
     responsibleUser: { type: GraphQLString },
     status: { type: GraphQLString },
+    name: {type: GraphQLString },
   },
 })
