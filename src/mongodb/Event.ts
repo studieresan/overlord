@@ -14,6 +14,7 @@ const eventSchema: mongoose.Schema = new mongoose.Schema({
   beforeSurveys: [String],
   afterSurveys: [String],
   pictures: [String],
+  company: {type: mongoose.Schema.Types.ObjectId, ref: 'Company'},
   published: {
     type: Boolean,
     default: false,

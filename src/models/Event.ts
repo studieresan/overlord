@@ -1,6 +1,7 @@
 export interface Event {
   readonly id: string
   readonly companyName: string
+  readonly company: string
   readonly schedule: string
   readonly location: string
   readonly privateDescription: string
