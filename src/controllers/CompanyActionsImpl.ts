@@ -19,6 +19,22 @@ export class CompanyActionsImpl implements CompanyActions {
     })
   }
 
+  getSoldCompanies(): Promise<Company[]> {
+    return new Promise<Company[]>((resolve, reject) => {
+      return resolve(mongodb.Company.find(
+          {
+            status: process.env.DEFAULT_SOLD_STATUS_ID,
+          },
+          {
+            'name': true,
+            'id': true,
+            'status': true,
+            'responsibleUser': true,
+          }
+        ).populate('status').populate('responsibleUser').exec())
+    })
+  }
+
   getCompany(companyId: string): Promise<Company> {
     return mongodb.Company.findById(new ObjectID(companyId))
       .populate('status')

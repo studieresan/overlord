@@ -186,6 +186,13 @@ const schema = new GraphQLSchema({
           return await companyCtrl.getCompanies()
         },
       },
+      soldCompanies: {
+        description: 'Get all sold companies as a list',
+        type: new GraphQLList(Company),
+        async resolve(a, b, { req, res }) {
+          return await companyCtrl.getSoldCompanies()
+        },
+      },
       company: {
         description: 'Get a company specified by an id',
         type: Company,

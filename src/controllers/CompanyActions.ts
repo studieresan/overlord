@@ -5,6 +5,9 @@ export interface CompanyActions {
   // Get all companies
   getCompanies(): Promise<Company[]>
 
+  // Get all sold companies
+  getSoldCompanies(): Promise<Company[]>
+
   // Get company by company id
   getCompany(companyId: string): Promise<Company>
 
