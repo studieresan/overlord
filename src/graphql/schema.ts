@@ -176,21 +176,24 @@ const schema = new GraphQLSchema({
         description: 'Get all events as a list',
         type: new GraphQLList(CompanySalesStatus),
         async resolve(a, b, { req, res }) {
-          return await companySalesStatusCtrl.getCompanySalesStatuses(req, res)
+          return await requireAuth(req, res,
+            () => companySalesStatusCtrl.getCompanySalesStatuses(req, res))
         },
       },
       companies: {
         description: 'Get all companies as a list',
         type: new GraphQLList(Company),
         async resolve(a, b, { req, res }) {
-          return await companyCtrl.getCompanies()
+          return await requireAuth(req, res,
+            () => companyCtrl.getCompanies())
         },
       },
       soldCompanies: {
         description: 'Get all sold companies as a list',
         type: new GraphQLList(Company),
         async resolve(a, b, { req, res }) {
-          return await companyCtrl.getSoldCompanies()
+          return await requireAuth(req, res,
+            () => companyCtrl.getSoldCompanies())
         },
       },
       company: {
@@ -200,7 +203,8 @@ const schema = new GraphQLSchema({
           companyId: { type: GraphQLString },
         },
         async resolve(root, {companyId}, { req, res }) {
-          return await companyCtrl.getCompany(companyId)
+          return await requireAuth(req, res,
+            () => companyCtrl.getCompany(companyId))
         },
       },
       comments: {
@@ -210,7 +214,8 @@ const schema = new GraphQLSchema({
           companyId: { type: GraphQLString },
         },
         async resolve(root, {companyId}, { req, res }) {
-          return await salesCommentCtrl.getComments(companyId)
+          return await requireAuth(req, res,
+            () => salesCommentCtrl.getComments(companyId))
         },
       },
       contacts: {
@@ -220,7 +225,8 @@ const schema = new GraphQLSchema({
           companyId: { type: GraphQLString },
         },
         async resolve(root, {companyId}, { req, res }) {
-          return await companyContactCtrl.getContacts(companyId)
+          return await requireAuth(req, res,
+            () => companyContactCtrl.getContacts(companyId))
         },
       },
       missingPostEventFormUsers: {
@@ -257,7 +263,8 @@ const schema = new GraphQLSchema({
           name: { type: GraphQLString },
         },
         async resolve(a, {name}, { req, res }) {
-          return await companySalesStatusCtrl.createSalesStatus(name)
+          return await requireAuth(req, res,
+            () => companySalesStatusCtrl.createSalesStatus(name))
         },
       },
       createCompany: {
