@@ -46,6 +46,7 @@ import {
 } from 'graphql'
 import * as passportConfig from '../config/passport'
 import { SalesComment } from './GraphQLSalesComment'
+import * as User from '../models/User'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
 
 const userCtrl: UserActions = new UserActionsImpl()
@@ -64,6 +65,18 @@ function requireAuth<A>(req: any, res: any, body: () => A) {
   })
 }
 
+function getUserRoles() {
+  return [
+    User.UserRole.ProjectManager,
+    User.UserRole.EventGroup,
+    User.UserRole.FinanceGroup,
+    User.UserRole.InfoGroup,
+    User.UserRole.ItGroup,
+    User.UserRole.SalesGroup,
+    User.UserRole.TravelGroup,
+  ]
+}
+
 const schema = new GraphQLSchema({
   types: [],
   query: new GraphQLObjectType({
@@ -77,6 +90,7 @@ const schema = new GraphQLSchema({
         },
       },
       users: {
+        // tslint:disable-next-line:max-line-length
         description: 'Get a list of users of the given user role. If role is null all users are returned',
         type: new GraphQLList(UserType),
         args: {
@@ -144,6 +158,14 @@ const schema = new GraphQLSchema({
         async resolve(root, {companyId}, { req, res }) {
           return await requireAuth(req, res,
             () => salesCommentCtrl.getComments(companyId))
+        },
+      },
+      userRoles: {
+        description: 'Get all user roles',
+        type: new GraphQLList(UserRole),
+        async resolve(a, b, { req, res }) {
+          return await requireAuth(req, res,
+            () => getUserRoles())
         },
       },
       contacts: {

@@ -97,10 +97,11 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
       email: req.body.email,
       firstName: req.body.firstName,
       lastName: req.body.lastName || '',
-      userRole: req.body.userRole,
-      companyName: req.body.companyName,
+      userRole: req.body.user_role,
     },
   })
+
+  console.log(user.profile)
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err) }

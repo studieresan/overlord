@@ -18,7 +18,7 @@ const MutableProfileFields = {
 }
 
 export const UserRole = new GraphQLEnumType({
-  name : 'UserRoll',
+  name : 'UserRole',
   values: {
     'project_manager': { value: models.UserRole.ProjectManager },
     'it_group': { value: models.UserRole.ItGroup },
@@ -34,7 +34,7 @@ export const UserProfileType = new GraphQLObjectType({
   name : 'UserProfile',
   fields : {
     email:  { type: GraphQLString },
-    userRoll:  { type: UserRole },
+    userRole:  { type: UserRole },
     picture:  { type: GraphQLString },
     companyName: { type: GraphQLString },
     ...MutableProfileFields,

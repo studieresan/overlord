@@ -32,7 +32,6 @@ export class UserActionsImpl implements UserActions {
           if (err) {
             reject(Error(`Error occured when authenticating user: ${err}`))
           }
-
           if (!userRole) {
             // All profiles
             resolve(mongodb.User.find(
@@ -40,7 +39,7 @@ export class UserActionsImpl implements UserActions {
             ).exec())
           } else {
             resolve(mongodb.User.find(
-              { 'userRole': userRole }, {}
+              { 'profile.userRole': userRole }, {}
             ).exec())
           }
         }
