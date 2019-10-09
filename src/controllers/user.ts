@@ -3,7 +3,7 @@ import * as crypto from 'crypto'
 import * as passport from 'passport'
 import * as jwt from 'jsonwebtoken'
 import { User, UserDocument } from '../mongodb/User'
-import { UserRole } from '../models'
+import { UserRole, Permission } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { WriteError } from 'mongodb'
@@ -92,7 +92,7 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
   const user = new User({
     email: req.body.email,
     password: await generateRandomPassword(),
-    permissions: [],
+    permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
     profile: {
       email: req.body.email,
       firstName: req.body.firstName,
@@ -100,8 +100,6 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
       userRole: req.body.user_role,
     },
   })
-
-  console.log(user.profile)
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err) }
