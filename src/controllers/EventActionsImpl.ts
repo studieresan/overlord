@@ -1,5 +1,5 @@
 import { EventActions } from './EventActions'
-import { Event, MemberType, Permission, User } from '../models'
+import { Event, Permission, User } from '../models'
 import { rejectIfNull } from './util'
 import * as mongodb from '../mongodb/Event'
 import * as passport from 'passport'
@@ -15,9 +15,9 @@ export class EventActionsImpl implements EventActions {
             reject(Error(`Error occured when authenticating user: ${err}`))
           }
 
-          if (user && user.profile.memberType === MemberType.StudsMember) {
+          if (user) {
             // All fields
-            resolve(mongodb.Event.find().exec())
+            resolve(mongodb.Event.find().populate('company').populate('responsible').exec())
           } else {
             // Public event
             resolve(mongodb.Event.find({},
@@ -52,7 +52,7 @@ export class EventActionsImpl implements EventActions {
       responsible: new ObjectID(responsibleUserId),
       ...fields,
     })
-    return event.save().then(event => 
+    return event.save().then(event =>
       event.populate('company').populate('responsible').execPopulate()
     )
   }

@@ -4,10 +4,10 @@ export interface User {
   permissions: Permission[]
 }
 
-export type UserProfile = StudsProfile | CompanyProfile
+export type UserProfile = StudsProfile
 
 export interface StudsProfile {
-  readonly memberType: MemberType.StudsMember
+  readonly userRole: UserRole
   readonly email: string
   readonly firstName: string
   readonly lastName: string
@@ -20,17 +20,14 @@ export interface StudsProfile {
   readonly master?: string
 }
 
-export interface CompanyProfile {
-  readonly memberType: MemberType.CompanyMember
-  readonly email: string
-  readonly firstName: string
-  readonly lastName: string
-  readonly companyName: string
-}
-
-export enum MemberType {
-  StudsMember = 'studs_member',
-  CompanyMember = 'company_member',
+export enum UserRole {
+  ProjectManager = 'project_manager',
+  ItGroup = 'it_group',
+  SalesGroup = 'sales_group',
+  EventGroup = 'event_group',
+  InfoGroup = 'info_group',
+  FinanceGroup = 'finance_group',
+  TravelGroup = 'travel_group',
 }
 
 export enum Permission {

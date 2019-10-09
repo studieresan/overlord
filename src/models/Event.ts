@@ -1,4 +1,4 @@
-import { Company, User } from ".";
+import { Company, User } from '.'
 
 export interface Event {
   readonly id: string

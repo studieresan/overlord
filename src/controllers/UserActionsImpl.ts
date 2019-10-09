@@ -1,7 +1,7 @@
 import * as mongodb from '../mongodb/User'
 import * as passport from 'passport'
 import { UserActions } from './UserActions'
-import { User, UserProfile, MemberType } from '../models'
+import { User, UserProfile, UserRole } from '../models'
 import { merge } from 'ramda'
 import { rejectIfNull } from './util'
 
@@ -25,7 +25,7 @@ export class UserActionsImpl implements UserActions {
       })
   }
 
-  getUsers(req: any, res: any, memberType: MemberType): Promise<User[]> {
+  getUsers(req: any, res: any, userRole: UserRole): Promise<User[]> {
     return new Promise<User[]>((resolve, reject) => {
       passport.authenticate('jwt', { session: false },
         (err: any, user: any, info: any) => {
@@ -33,22 +33,14 @@ export class UserActionsImpl implements UserActions {
             reject(Error(`Error occured when authenticating user: ${err}`))
           }
 
-          if (user) {
+          if (!userRole) {
             // All profiles
             resolve(mongodb.User.find(
-              { 'profile.memberType': memberType }, {}
+              {}, {}
             ).exec())
           } else {
-            // Public profiles
             resolve(mongodb.User.find(
-              { 'profile.memberType': memberType },
-              {
-                'profile.firstName': true,
-                'profile.lastName': true,
-                'profile.picture': true,
-                'profile.position': true,
-                'profile.memberType': true,
-              }
+              { 'userRole': userRole }, {}
             ).exec())
           }
         }

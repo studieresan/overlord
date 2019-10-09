@@ -31,7 +31,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     picture: String,
     allergies: String,
     master: String,
-    memberType: String,
+    userRoll: String,
   },
 }, { timestamps: true })
 

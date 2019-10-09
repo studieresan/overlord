@@ -17,11 +17,16 @@ const MutableProfileFields = {
   master: { type: GraphQLString },
 }
 
-export const MemberType = new GraphQLEnumType({
-  name : 'MemberType',
+export const UserRole = new GraphQLEnumType({
+  name : 'UserRoll',
   values: {
-    'studs_member': { value: models.MemberType.StudsMember },
-    'company_member': { value: models.MemberType.CompanyMember },
+    'project_manager': { value: models.UserRole.ProjectManager },
+    'it_group': { value: models.UserRole.ItGroup },
+    'sales_group': { value: models.UserRole.SalesGroup },
+    'finance_group': { value: models.UserRole.FinanceGroup },
+    'event_group': { value: models.UserRole.EventGroup },
+    'travel_group': { value: models.UserRole.TravelGroup },
+    'info_group': { value: models.UserRole.InfoGroup },
   },
 })
 
@@ -29,7 +34,7 @@ export const UserProfileType = new GraphQLObjectType({
   name : 'UserProfile',
   fields : {
     email:  { type: GraphQLString },
-    memberType:  { type: MemberType },
+    userRoll:  { type: UserRole },
     picture:  { type: GraphQLString },
     companyName: { type: GraphQLString },
     ...MutableProfileFields,
