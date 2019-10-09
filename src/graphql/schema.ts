@@ -396,12 +396,12 @@ const schema = new GraphQLSchema({
         description: 'Create new event tied to company name',
         type: EventType,
         args: {
-          companyName: { type: GraphQLString },
+          companyId: { type: GraphQLString },
           fields: { type: EventInputType },
         },
-        async resolve(a, { companyName, fields }, { req, res }) {
+        async resolve(a, { companyId, fields }, { req, res }) {
           return await requireAuth(req, res,
-            () => eventCtrl.createEvent(req.user, companyName, fields))
+            () => eventCtrl.createEvent(req.user, companyId, fields.responsibleUserId, fields))
         },
       },
       updateEvent: {
