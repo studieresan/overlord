@@ -69,6 +69,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
 export let postSignup = async(req: Request, res: Response, next: NextFunction) => {
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('firstName', 'First name is required').notEmpty()
+  req.assert('lastName', 'Last name is required').notEmpty()
   req.assert(
     'user_role',
     'user_role was invalid'
@@ -96,7 +97,7 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
     profile: {
       email: req.body.email,
       firstName: req.body.firstName,
-      lastName: req.body.lastName || '',
+      lastName: req.body.lastName,
       userRole: req.body.user_role,
     },
   })
