@@ -7,15 +7,15 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 import { GraphQLDateTime } from './GraphQLDateTime'
+import { Company } from './GraphQLCompany'
+import { UserType } from './GraphQLUser'
 
 const MutableEventFields = {
-  companyName: { type: GraphQLString },
   schedule: { type: GraphQLString },
   location: { type: GraphQLString },
   privateDescription: { type: GraphQLString },
   publicDescription: { type: GraphQLString },
   date: { type: GraphQLDateTime },
-  responsible: { type: GraphQLString },
   beforeSurveys: { type: new GraphQLList(GraphQLString) },
   afterSurveys: { type: new GraphQLList(GraphQLString) },
   pictures: { type: new GraphQLList(GraphQLString) },
@@ -26,11 +26,17 @@ export const EventType = new GraphQLObjectType({
   name : 'Event',
   fields : {
     id: { type: GraphQLString },
+    company: { type: Company },
+    companyName: { type: GraphQLString },
+    responsible: { type: UserType },
     ...MutableEventFields,
   },
 })
 
 export const EventInputType = new GraphQLInputObjectType({
   name : 'EventInput',
-  fields : MutableEventFields,
+  fields : {
+    responsibleUserId: {type: GraphQLString},
+    ...MutableEventFields,
+  },
 })

@@ -3,7 +3,7 @@ import * as crypto from 'crypto'
 import * as passport from 'passport'
 import * as jwt from 'jsonwebtoken'
 import { User, UserDocument } from '../mongodb/User'
-import { MemberType, Permission } from '../models'
+import { UserRole, Permission } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { WriteError } from 'mongodb'
@@ -69,24 +69,20 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
 export let postSignup = async(req: Request, res: Response, next: NextFunction) => {
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('firstName', 'First name is required').notEmpty()
+  req.assert('lastName', 'Last name is required').notEmpty()
   req.assert(
-    'memberType',
-    'memberType was invalid'
-  ).isIn([MemberType.StudsMember, MemberType.CompanyMember])
-  if (req.body.memberType !== MemberType.StudsMember) {
-    req.assert(
-      'companyName',
-      'Company name is needed for company members'
-    ).notEmpty()
-  }
+    'user_role',
+    'user_role was invalid'
+  ).isIn([
+      UserRole.SalesGroup,
+      UserRole.TravelGroup,
+      UserRole.ProjectManager,
+      UserRole.InfoGroup,
+      UserRole.FinanceGroup,
+      UserRole.ItGroup,
+      UserRole.EventGroup,
+    ])
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
-
-  const validPermissions =
-    Object.keys(Permission).map(k => Permission[k as any])
-  req.assert(
-    'permissions',
-    `Invalid permissions specified. Valid permissions: ${validPermissions}`
-  ).optional().isIn(validPermissions)
 
   const errors = req.validationErrors()
   if (errors) {
@@ -97,13 +93,12 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
   const user = new User({
     email: req.body.email,
     password: await generateRandomPassword(),
-    permissions: req.body.permissions || [],
+    permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
     profile: {
       email: req.body.email,
       firstName: req.body.firstName,
-      lastName: req.body.lastName || '',
-      memberType: req.body.memberType,
-      companyName: req.body.companyName,
+      lastName: req.body.lastName,
+      userRole: req.body.user_role,
     },
   })
 

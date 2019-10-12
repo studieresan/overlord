@@ -9,7 +9,7 @@ export interface EventActions {
   getOldEvents(): Promise<Event[]>
 
   // Create a new event for company name
-  createEvent(auth: User, companyName: string, fields: Partial<Event>):
+  createEvent(auth: User, companyId: string, responsibleUserId: string, fields: Partial<Event>):
     Promise<Event>
 
   // Update the event with given id

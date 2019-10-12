@@ -1,4 +1,4 @@
-import { User, UserProfile, MemberType } from '../models'
+import { User, UserProfile, UserRole } from '../models'
 
 export interface UserActions {
   // Gets the profile of the user with the specified id
@@ -9,7 +9,7 @@ export interface UserActions {
   updateUserProfile(id: string, fields: Partial<UserProfile>):
     Promise<UserProfile>
 
-  // Gets all users with the specified membertype
-  getUsers(req: any, res: any, type: MemberType): Promise<User[]>
+  // Gets all users with the specified user role
+  getUsers(req: any, res: any, type: UserRole): Promise<User[]>
 
 }

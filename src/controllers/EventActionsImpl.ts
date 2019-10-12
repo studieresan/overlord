@@ -1,8 +1,9 @@
 import { EventActions } from './EventActions'
-import { Event, MemberType, Permission, User } from '../models'
+import { Event, Permission, User } from '../models'
 import { rejectIfNull } from './util'
 import * as mongodb from '../mongodb/Event'
 import * as passport from 'passport'
+import { ObjectID } from 'mongodb'
 
 export class EventActionsImpl implements EventActions {
 
@@ -14,36 +15,46 @@ export class EventActionsImpl implements EventActions {
             reject(Error(`Error occured when authenticating user: ${err}`))
           }
 
-          if (user && user.profile.memberType === MemberType.StudsMember) {
+          if (user) {
             // All fields
-            resolve(mongodb.Event.find().exec())
+            resolve(mongodb.Event.find().populate('company').populate('responsible').exec())
           } else {
             // Public event
             resolve(mongodb.Event.find({},
               {
                 'id': true,
-                'companyName': true,
+                'company': true,
+                'responsible': true,
                 'publicDescription': true,
                 'date': true,
                 'pictures': true,
                 'published': true,
               }
-            ).exec())
+            ).populate('company')
+             .populate('responsible')
+             .exec())
           }
         }
       )(req, res, () => {})
     })
   }
 
-  createEvent(auth: User, companyName: string, fields: Partial<Event>):
+  createEvent(auth: User, companyId: string, responsibleUserId: string, fields: Partial<Event>):
     Promise<Event> {
     if (!EventActionsImpl.hasSufficientPermissions(auth))
       return Promise.reject('Insufficient permissions')
+    if (!companyId)
+      return Promise.reject('Company must be specified')
+    if (!responsibleUserId)
+      return Promise.reject('Responsible user must be specified')
     const event = new mongodb.Event({
-      companyName,
+      company: new ObjectID(companyId),
+      responsible: new ObjectID(responsibleUserId),
       ...fields,
     })
-    return event.save()
+    return event.save().then(event =>
+      event.populate('company').populate('responsible').execPopulate()
+    )
   }
 
   updateEvent(auth: User, id: string, fields: Partial<Event>): Promise<Event> {

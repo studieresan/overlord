@@ -5,10 +5,6 @@ import {
   CVActionsImpl,
   EventActions,
   EventActionsImpl,
-  FeedbackActions,
-  FeedbackActionsImpl,
-  EventFormActions,
-  EventFormActionsImpl,
   CompanySalesStatusActions,
   CompanySalesStatusActionsImpl,
   CompanyActions,
@@ -24,7 +20,7 @@ import {
 import {
   UserProfileType,
   UserProfileInputType,
-  MemberType,
+  UserRole,
 } from './GraphQLUserProfile'
 import {
   CVType,
@@ -35,17 +31,6 @@ import {
   EventInputType
 } from './GraphQLEvent'
 import {
-  FeedbackType,
-  FeedbackInputType,
-} from './GraphQLFeedback'
-import {
-  EventFormType,
-  PreEventFormType,
-  PreEventFormInputType,
-  PostEventFormType,
-  PostEventFormInputType,
-} from './GraphQLEventForms'
-import {
   CompanySalesStatus,
 } from './GraphQLECompanySalesStatus'
 import {
@@ -54,22 +39,19 @@ import {
 } from './GraphQLCompany'
 import {
   GraphQLList,
-  GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
 import * as passportConfig from '../config/passport'
-import * as descriptions from './schemaDescriptions'
 import { SalesComment } from './GraphQLSalesComment'
+import * as User from '../models/User'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
 const eventCtrl: EventActions = new EventActionsImpl()
-const feedbackCtrl: FeedbackActions = new FeedbackActionsImpl()
-const eventFormCtrl: EventFormActions = new EventFormActionsImpl()
 const companySalesStatusCtrl: CompanySalesStatusActions = new CompanySalesStatusActionsImpl()
 const companyCtrl: CompanyActions = new CompanyActionsImpl()
 const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
@@ -83,8 +65,20 @@ function requireAuth<A>(req: any, res: any, body: () => A) {
   })
 }
 
+function getUserRoles() {
+  return [
+    User.UserRole.ProjectManager,
+    User.UserRole.EventGroup,
+    User.UserRole.FinanceGroup,
+    User.UserRole.InfoGroup,
+    User.UserRole.ItGroup,
+    User.UserRole.SalesGroup,
+    User.UserRole.TravelGroup,
+  ]
+}
+
 const schema = new GraphQLSchema({
-  types: [PreEventFormType, PostEventFormType, EventFormType],
+  types: [],
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -96,24 +90,14 @@ const schema = new GraphQLSchema({
         },
       },
       users: {
-        description: 'Get a list of users of the given member type',
+        // tslint:disable-next-line:max-line-length
+        description: 'Get a list of users of the given user role. If role is null all users are returned',
         type: new GraphQLList(UserType),
         args: {
-          memberType: { type: new GraphQLNonNull(MemberType) },
+          userRole: { type: UserRole },
         },
-        async resolve(a, { memberType }, { req, res }) {
-          return await userCtrl.getUsers(req, res, memberType)
-        },
-      },
-      feedback: {
-        description: 'Get feedback for a company ID',
-        type: FeedbackType,
-        args: {
-          companyId: { type: new GraphQLNonNull(GraphQLString) },
-        },
-        async resolve(a, { companyId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => feedbackCtrl.getFeedback(companyId))
+        async resolve(a, { userRole }, { req, res }) {
+          return await userCtrl.getUsers(req, res, userRole)
         },
       },
       allEvents: {
@@ -128,48 +112,6 @@ const schema = new GraphQLSchema({
         type: new GraphQLList(EventType),
         async resolve() {
           return await eventCtrl.getOldEvents()
-        },
-      },
-      allFeedback: {
-        description: 'Get all feedback as a list',
-        type: new GraphQLList(FeedbackType),
-        async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res,
-            () => feedbackCtrl.getAllFeedback())
-        },
-      },
-      eventForms: {
-        description: descriptions.eventFormsQuery,
-        type: new GraphQLList(new GraphQLNonNull(EventFormType)),
-        args: {
-          userId: { type: GraphQLString },
-          eventId: { type: GraphQLString },
-        },
-        async resolve(root, { userId, eventId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.getEventForms(req.user, userId, eventId))
-        },
-      },
-      allEventForms: {
-        description: descriptions.allEventFormsQuery,
-        type: new GraphQLList(new GraphQLNonNull(EventFormType)),
-        args: {
-          eventId: { type: GraphQLString },
-        },
-        async resolve(root, { eventId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.getAllEventForms(req.user, eventId))
-        },
-      },
-      missingPreEventFormUsers: {
-        description: descriptions.missingPreEventFormUsersQuery,
-        type: new GraphQLList(UserType),
-        args: {
-          eventId: { type: GraphQLString },
-        },
-        async resolve(root, { eventId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.getMissingPreEventFormUsers(req.user, eventId))
         },
       },
       allCompanySalesStatuses: {
@@ -218,6 +160,14 @@ const schema = new GraphQLSchema({
             () => salesCommentCtrl.getComments(companyId))
         },
       },
+      userRoles: {
+        description: 'Get all user roles',
+        type: new GraphQLList(UserRole),
+        async resolve(a, b, { req, res }) {
+          return await requireAuth(req, res,
+            () => getUserRoles())
+        },
+      },
       contacts: {
         description: 'Get all contacts for the company specified by an id',
         type: new GraphQLList(CompanyContact),
@@ -227,17 +177,6 @@ const schema = new GraphQLSchema({
         async resolve(root, {companyId}, { req, res }) {
           return await requireAuth(req, res,
             () => companyContactCtrl.getContacts(companyId))
-        },
-      },
-      missingPostEventFormUsers: {
-        description: descriptions.missingPostEventFormUsersQuery,
-        type: new GraphQLList(UserType),
-        args: {
-          eventId: { type: GraphQLString },
-        },
-        async resolve(root, { eventId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.getMissingPostEventFormUsers(req.user, eventId))
         },
       },
     },
@@ -396,12 +335,12 @@ const schema = new GraphQLSchema({
         description: 'Create new event tied to company name',
         type: EventType,
         args: {
-          companyName: { type: GraphQLString },
+          companyId: { type: GraphQLString },
           fields: { type: EventInputType },
         },
-        async resolve(a, { companyName, fields }, { req, res }) {
+        async resolve(a, { companyId, fields }, { req, res }) {
           return await requireAuth(req, res,
-            () => eventCtrl.createEvent(req.user, companyName, fields))
+            () => eventCtrl.createEvent(req.user, companyId, fields.responsibleUserId, fields))
         },
       },
       updateEvent: {
@@ -425,139 +364,6 @@ const schema = new GraphQLSchema({
         async resolve(a, { eventId }, { req, res }) {
           return await requireAuth(req, res,
             () => eventCtrl.removeEvent(eventId))
-        },
-      },
-      createFeedback: {
-        description: 'Create new feedback tied to a company ID',
-        type: FeedbackType,
-        args: {
-          companyId: { type: new GraphQLNonNull(GraphQLString) },
-        },
-        async resolve(a, { companyId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => feedbackCtrl.createFeedback(companyId))
-        },
-      },
-      updateFeedback: {
-        description: 'Update the feedback tied to a company ID',
-        type: FeedbackType,
-        args: {
-          companyId: { type: new GraphQLNonNull(GraphQLString) },
-          fields: { type: FeedbackInputType },
-        },
-        async resolve(a, { companyId, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => feedbackCtrl.updateFeedback(companyId, fields))
-        },
-      },
-      removeFeedback: {
-        description: 'Remove the feedback tied to a company ID, '
-          + 'returns true if feedback was successfully removed',
-        type: GraphQLBoolean,
-        args: {
-          companyId: { type: new GraphQLNonNull(GraphQLString) },
-        },
-        async resolve(a, { companyId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => feedbackCtrl.removeFeedback(companyId))
-        },
-      },
-      createPreEventForm: {
-        description: descriptions.createPreEventFormMutation,
-        type: PreEventFormType,
-        args: {
-          eventId: { type: new GraphQLNonNull(GraphQLString) },
-          fields: { type: PreEventFormInputType },
-        },
-        async resolve(root, { eventId, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.createPreEventForm(
-              req.user,
-              eventId,
-              fields
-            )
-          )
-        },
-      },
-      createPostEventForm: {
-        description: descriptions.createPostEventFormMutation,
-        type: PostEventFormType,
-        args: {
-          eventId: { type: new GraphQLNonNull(GraphQLString) },
-          fields: { type: PostEventFormInputType },
-        },
-        async resolve(root, { eventId, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.createPostEventForm(
-              req.user,
-              eventId,
-              fields
-            )
-          )
-        },
-      },
-      updatePreEventForm: {
-        description: descriptions.updatePreEventFormMutation,
-        type: PreEventFormType,
-        args: {
-          eventId: { type: new GraphQLNonNull(GraphQLString) },
-          fields: { type: PreEventFormInputType },
-        },
-        async resolve(root, { eventId, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.updatePreEventForm(
-              req.user,
-              eventId,
-              fields
-            )
-          )
-        },
-      },
-      updatePostEventForm: {
-        description: descriptions.updatePostEventFormMutation,
-        type: PostEventFormType,
-        args: {
-          eventId: { type: new GraphQLNonNull(GraphQLString) },
-          fields: { type: PostEventFormInputType },
-        },
-        async resolve(root, { eventId, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.updatePostEventForm(
-              req.user,
-              eventId,
-              fields
-            )
-          )
-        },
-      },
-      deletePreEventForm: {
-        description: descriptions.deletePreEventFormMutation,
-        type: GraphQLString,
-        args: {
-          eventId: { type: new GraphQLNonNull(GraphQLString) },
-        },
-        async resolve(root, { eventId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.deletePreEventForm(
-              req.user,
-              eventId
-            )
-          )
-        },
-      },
-      deletePostEventForm: {
-        description: descriptions.deletePostEventFormMutation,
-        type: GraphQLString,
-        args: {
-          eventId: { type: new GraphQLNonNull(GraphQLString) },
-        },
-        async resolve(root, { eventId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventFormCtrl.deletePostEventForm(
-              req.user,
-              eventId
-            )
-          )
         },
       },
     },

@@ -36,7 +36,7 @@ So:
 email address.
 
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"email":"<your-email-here>","firstName":"<your-firstname>","lastName":"<your-lastname>","memberType":"studs_member","token":"asdf"}' http://localhost:5040/signup
+curl -H "Content-Type: application/json" -X POST -d '{"email":"<your-email-here>","firstName":"<your-firstname>","lastName":"<your-lastname>","user_role":"project_manager","token":"asdf"}' http://localhost:5040/signup
 ```
 
 3. Open the email you received and proceed with setting your password to what
