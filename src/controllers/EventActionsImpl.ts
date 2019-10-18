@@ -1,6 +1,6 @@
 import { EventActions } from './EventActions'
-import { Event, Permission, User } from '../models'
-import { rejectIfNull } from './util'
+import { Event, User } from '../models'
+import { rejectIfNull, hasSufficientPermissions } from './util'
 import * as mongodb from '../mongodb/Event'
 import * as passport from 'passport'
 import { ObjectID } from 'mongodb'
@@ -41,7 +41,7 @@ export class EventActionsImpl implements EventActions {
 
   createEvent(auth: User, companyId: string, responsibleUserId: string, fields: Partial<Event>):
     Promise<Event> {
-    if (!EventActionsImpl.hasSufficientPermissions(auth))
+    if (!hasSufficientPermissions(auth))
       return Promise.reject('Insufficient permissions')
     if (!companyId)
       return Promise.reject('Company must be specified')
@@ -58,7 +58,7 @@ export class EventActionsImpl implements EventActions {
   }
 
   updateEvent(auth: User, id: string, fields: Partial<Event>): Promise<Event> {
-    if (!EventActionsImpl.hasSufficientPermissions(auth))
+    if (!hasSufficientPermissions(auth))
       return Promise.reject('Insufficient permissions')
     return mongodb.Event.findOneAndUpdate(
       { _id: id },
@@ -87,10 +87,5 @@ export class EventActionsImpl implements EventActions {
           }
       ).exec())
     })
-  }
-
-  private static hasSufficientPermissions(user: User): boolean {
-    return user.permissions.includes(Permission.Events) ||
-        user.permissions.includes(Permission.Admin)
   }
 }
