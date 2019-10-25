@@ -15,6 +15,7 @@ const MutableProfileFields = {
   phone: { type: GraphQLString },
   allergies: { type: GraphQLString },
   master: { type: GraphQLString },
+  resumeEmail: { type: GraphQLString },
 }
 
 export const UserRole = new GraphQLEnumType({

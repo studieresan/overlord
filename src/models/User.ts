@@ -18,6 +18,7 @@ export interface StudsProfile {
   readonly picture?: string
   readonly allergies?: string
   readonly master?: string
+  readonly resumeEmail: string
 }
 
 export enum UserRole {
