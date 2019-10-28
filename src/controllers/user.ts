@@ -45,6 +45,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
       }
 
       const token = jwt.sign(user.email, process.env.JWT_SECRET)
+      console.log(token)
       res.status(200)
       res.setHeader('Authorization', `Bearer ${token}`)
       res.json({

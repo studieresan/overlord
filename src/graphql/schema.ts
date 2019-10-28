@@ -100,6 +100,14 @@ const schema = new GraphQLSchema({
           return await userCtrl.getUsers(req, res, userRole)
         },
       },
+      cvs: {
+        description: 'Get all current user cvs',
+        type: new GraphQLList(CVType),
+        async resolve(a, b, { req, res }) {
+          return await requireAuth(req, res,
+             () => cvCtrl.getAllCVs(req.user))
+        },
+      },
       allEvents: {
         description: 'Get all events as a list',
         type: new GraphQLList(EventType),

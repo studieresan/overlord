@@ -1,7 +1,8 @@
 import * as mongodb from '../mongodb/CV'
+import * as userDb from '../mongodb/User'
 import { CVActions } from './CVActions'
-import { CV, createDefaultCV } from '../models'
-import { rejectIfNull } from './util'
+import { CV, createDefaultCV, User } from '../models'
+import { rejectIfNull, hasSufficientPermissions } from './util'
 
 export class CVActionsImpl implements CVActions {
 
@@ -22,4 +23,18 @@ export class CVActionsImpl implements CVActions {
     ).then(rejectIfNull('No CV exists for given id'))
   }
 
+  getAllCVs(auth: User): Promise<CV[]> {
+    if (!hasSufficientPermissions(auth))
+      return Promise.reject('Insufficient permissions')
+    return userDb.User.find({}, {'id': true}).then(users => {
+      const userIds = users.map(userId => {
+        return userId._id
+      })
+      return mongodb.CV.find({
+        'userId': {
+          $in: userIds,
+        },
+      }).exec()
+    })
+  }
 }
