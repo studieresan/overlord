@@ -29,6 +29,8 @@ export const EventType = new GraphQLObjectType({
     company: { type: Company },
     companyName: { type: GraphQLString },
     responsible: { type: UserType },
+    checkedInUsers: { type: new GraphQLList(UserType) },
+    notCheckedInUsers: { type: new GraphQLList(UserType) },
     ...MutableEventFields,
   },
 })

@@ -1,4 +1,5 @@
 import { Event, User } from '../models'
+import { DH_CHECK_P_NOT_PRIME } from 'constants';
 
 export interface EventActions {
 
@@ -17,5 +18,8 @@ export interface EventActions {
 
   // Remove an event with the given id
   removeEvent(id: string): Promise<boolean>
+
+  // Checks in user to the event with the given id
+  checkIn(auth: User, id: string): Promise<boolean>
 
 }

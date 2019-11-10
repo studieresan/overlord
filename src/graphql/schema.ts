@@ -374,6 +374,17 @@ const schema = new GraphQLSchema({
             () => eventCtrl.removeEvent(eventId))
         },
       },
+      checkIn: {
+        description: 'Check in user to the given event',
+        type: GraphQLBoolean,
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        async resolve(a, { eventId }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventCtrl.checkIn(req.user, eventId))
+        },
+      },
     },
   }),
 })

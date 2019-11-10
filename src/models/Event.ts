@@ -14,4 +14,5 @@ export interface Event {
   readonly afterSurveys: string[]
   readonly pictures: string[]
   readonly published: boolean
+  readonly checkedInUsers: User[]
 }

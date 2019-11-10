@@ -17,7 +17,7 @@ export class EventActionsImpl implements EventActions {
 
           if (user) {
             // All fields
-            resolve(mongodb.Event.find().populate('company').populate('responsible').exec())
+            resolve(mongodb.Event.find().populate('company').populate('responsible').populate('checkedInUsers').exec())
           } else {
             // Public event
             resolve(mongodb.Event.find({},
@@ -36,6 +36,8 @@ export class EventActionsImpl implements EventActions {
           }
         }
       )(req, res, () => {})
+    }).then(events => {
+      return events
     })
   }
 
@@ -72,6 +74,16 @@ export class EventActionsImpl implements EventActions {
       .then(event => {
         return (event != undefined)
       })
+  }
+
+  checkIn(auth: User, id: string): Promise<boolean> {
+    return mongodb.Event.findOneAndUpdate(
+      { _id: id },
+      { $addToSet: {checkedInUsers: auth.id} },
+      { new: true }
+    ).then(rejectIfNull('No event exists for given id')).then(event => {
+      return (event != undefined)
+    })
   }
 
   getOldEvents(): Promise<Event[]> {
