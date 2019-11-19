@@ -15,7 +15,8 @@ const eventSchema: mongoose.Schema = new mongoose.Schema({
   afterSurveys: [String],
   pictures: [String],
   company: {type: mongoose.Schema.Types.ObjectId, ref: 'Company'},
-  checkedInUsers: [{type:mongoose.Schema.Types.ObjectId, ref: 'User', unique: true}],
+  checkedInUsers: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  notCheckedInUsers: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
   published: {
     type: Boolean,
     default: false,

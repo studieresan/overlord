@@ -1,5 +1,4 @@
 import { Event, User } from '../models'
-import { DH_CHECK_P_NOT_PRIME } from 'constants';
 
 export interface EventActions {
 
