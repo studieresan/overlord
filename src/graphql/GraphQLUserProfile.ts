@@ -37,6 +37,7 @@ export const UserProfileType = new GraphQLObjectType({
     email:  { type: GraphQLString },
     userRole:  { type: UserRole },
     picture:  { type: GraphQLString },
+    alternativePicture:  { type: GraphQLString },
     companyName: { type: GraphQLString },
     ...MutableProfileFields,
   },
