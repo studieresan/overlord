@@ -16,6 +16,7 @@ export interface StudsProfile {
   readonly github?: string
   readonly phone?: string
   readonly picture?: string
+  readonly alternativePicture?: string
   readonly allergies?: string
   readonly master?: string
   readonly resumeEmail: string
