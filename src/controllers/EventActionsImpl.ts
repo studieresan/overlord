@@ -5,7 +5,6 @@ import * as mongodb from '../mongodb/Event'
 import * as mongodbUser from '../mongodb/User'
 import * as passport from 'passport'
 import { ObjectID } from 'mongodb'
-import { mongo } from 'mongoose';
 
 export class EventActionsImpl implements EventActions {
 
@@ -64,7 +63,7 @@ export class EventActionsImpl implements EventActions {
 
     return event.save().then(event => {
       mongodbUser.User.find({}, {}).then(users => {
-        let ids = users.map(user => {
+        const ids = users.map(user => {
           return user._id
         })
         mongodb.Event.findOneAndUpdate({ _id: event._id },
