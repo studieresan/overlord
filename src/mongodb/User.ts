@@ -24,7 +24,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     profile: String,
-    alternativeProfile: String,
+    alternativePicture: String,
     position: String,
     linkedIn: String,
     github: String,
