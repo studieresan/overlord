@@ -115,6 +115,16 @@ const schema = new GraphQLSchema({
           return await eventCtrl.getEvents(req, res)
         },
       },
+      event: {
+        description: 'Get a specific event',
+        type: EventType,
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        async resolve(a, { eventId }, { req, res }) {
+          return await eventCtrl.getEvent(eventId)
+        },
+      },
       oldEvents: {
         description: 'Get all old events as a list',
         type: new GraphQLList(EventType),

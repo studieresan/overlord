@@ -5,6 +5,9 @@ export interface EventActions {
   // Get all events
   getEvents(res: any, req: any): Promise<Event[]>
 
+  // Get a specific event
+  getEvent(eventId: string): Promise<Event>
+
   // Get all old events. These contain only public info.
   getOldEvents(): Promise<Event[]>
 

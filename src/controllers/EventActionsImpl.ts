@@ -42,9 +42,17 @@ export class EventActionsImpl implements EventActions {
           }
         }
       )(req, res, () => {})
-    }).then(events => {
-      return events
     })
+  }
+
+  getEvent(eventId: string): Promise<Event> {
+    return mongodb.Event.findById(new ObjectID(eventId))
+      .populate('company')
+      .populate('responsible')
+      .populate('checkedInUsers')
+      .populate('notCheckedInUsers')
+      .then(rejectIfNull('No event matches id'))
+      .then(event => event)
   }
 
   createEvent(auth: User, companyId: string, responsibleUserId: string, fields: Partial<Event>):
