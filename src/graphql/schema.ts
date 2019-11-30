@@ -115,6 +115,16 @@ const schema = new GraphQLSchema({
           return await eventCtrl.getEvents(req, res)
         },
       },
+      event: {
+        description: 'Get a specific event',
+        type: EventType,
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        async resolve(a, { eventId }, { req, res }) {
+          return await eventCtrl.getEvent(eventId)
+        },
+      },
       oldEvents: {
         description: 'Get all old events as a list',
         type: new GraphQLList(EventType),
@@ -372,6 +382,17 @@ const schema = new GraphQLSchema({
         async resolve(a, { eventId }, { req, res }) {
           return await requireAuth(req, res,
             () => eventCtrl.removeEvent(eventId))
+        },
+      },
+      checkIn: {
+        description: 'Check in user to the given event',
+        type: GraphQLBoolean,
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        async resolve(a, { eventId }, { req, res }) {
+          return await requireAuth(req, res,
+            () => eventCtrl.checkIn(req.user, eventId))
         },
       },
     },

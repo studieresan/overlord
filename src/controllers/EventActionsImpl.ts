@@ -2,6 +2,7 @@ import { EventActions } from './EventActions'
 import { Event, User } from '../models'
 import { rejectIfNull, hasSufficientPermissions } from './util'
 import * as mongodb from '../mongodb/Event'
+import * as mongodbUser from '../mongodb/User'
 import * as passport from 'passport'
 import { ObjectID } from 'mongodb'
 
@@ -17,7 +18,12 @@ export class EventActionsImpl implements EventActions {
 
           if (user) {
             // All fields
-            resolve(mongodb.Event.find().populate('company').populate('responsible').exec())
+            resolve(mongodb.Event.find()
+            .populate('company')
+            .populate('responsible')
+            .populate('checkedInUsers')
+            .populate('notCheckedInUsers')
+            .exec())
           } else {
             // Public event
             resolve(mongodb.Event.find({},
@@ -39,6 +45,16 @@ export class EventActionsImpl implements EventActions {
     })
   }
 
+  getEvent(eventId: string): Promise<Event> {
+    return mongodb.Event.findById(new ObjectID(eventId))
+      .populate('company')
+      .populate('responsible')
+      .populate('checkedInUsers')
+      .populate('notCheckedInUsers')
+      .then(rejectIfNull('No event matches id'))
+      .then(event => event)
+  }
+
   createEvent(auth: User, companyId: string, responsibleUserId: string, fields: Partial<Event>):
     Promise<Event> {
     if (!hasSufficientPermissions(auth))
@@ -52,9 +68,18 @@ export class EventActionsImpl implements EventActions {
       responsible: new ObjectID(responsibleUserId),
       ...fields,
     })
-    return event.save().then(event =>
-      event.populate('company').populate('responsible').execPopulate()
-    )
+
+    return event.save().then(event => {
+      mongodbUser.User.find({}, {}).then(users => {
+        const ids = users.map(user => {
+          return user._id
+        })
+        mongodb.Event.findOneAndUpdate({ _id: event._id },
+          { $push: {notCheckedInUsers: { $each: ids}}},
+          { new: true }).then(event => event)
+      })
+      return event.populate('company').populate('responsible').execPopulate()
+    })
   }
 
   updateEvent(auth: User, id: string, fields: Partial<Event>): Promise<Event> {
@@ -72,6 +97,16 @@ export class EventActionsImpl implements EventActions {
       .then(event => {
         return (event != undefined)
       })
+  }
+
+  checkIn(auth: User, id: string): Promise<boolean> {
+    return mongodb.Event.findOneAndUpdate(
+      { _id: id },
+      { $addToSet: {checkedInUsers: auth.id}, $pull: {notCheckedInUsers: auth.id} },
+      { new: true }
+    ).then(rejectIfNull('No event exists for given id')).then(event => {
+      return (event != undefined)
+    })
   }
 
   getOldEvents(): Promise<Event[]> {
