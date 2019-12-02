@@ -23,6 +23,7 @@ export class EventActionsImpl implements EventActions {
             .populate('responsible')
             .populate('checkedInUsers')
             .populate('notCheckedInUsers')
+            .sort([['date', 'descending']])
             .exec())
           } else {
             // Public event
@@ -38,6 +39,7 @@ export class EventActionsImpl implements EventActions {
               }
             ).populate('company')
              .populate('responsible')
+             .sort([['date', 'descending']])
              .exec())
           }
         }
