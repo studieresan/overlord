@@ -82,7 +82,7 @@
     "jsonwebtoken": "^8.3.0",
     "lusca": "^1.4.1",
     "mongoose": "^4.6.6",
-    "morgan": "^1.7.0",
+    "morgan": "^1.9.1",
     "nodemon": "^1.14.3",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
