@@ -11,6 +11,7 @@ export class CompanyActionsImpl implements CompanyActions {
       return resolve(mongodb.Company.find({},
           {
             'name': true,
+            'amount': true,
             'id': true,
             'status': true,
             'responsibleUser': true,
