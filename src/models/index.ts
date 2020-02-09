@@ -5,6 +5,7 @@ import { Company } from './Company'
 import { CompanySalesStatus } from './CompanySalesStatus'
 import { SalesComment } from './SalesComment'
 import { CompanyContact } from './CompanyContact'
+import { ContactRequest } from './ContactRequest'
 export {
   CV,
   CVSection,
@@ -18,4 +19,5 @@ export {
   CompanySalesStatus,
   SalesComment,
   CompanyContact,
+  ContactRequest,
 }

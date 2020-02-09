@@ -13,6 +13,8 @@ import {
   SalesCommentActionsImpl,
   CompanyContactActions,
   CompanyContactActionsImpl,
+  ContactRequestActions,
+  ContactRequestActionsImpl,
 } from './../controllers'
 import {
   UserType
@@ -48,6 +50,7 @@ import * as passportConfig from '../config/passport'
 import { SalesComment } from './GraphQLSalesComment'
 import * as User from '../models/User'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
+import { ContactRequest } from './GraphQLContactRequest'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
@@ -56,6 +59,7 @@ const companySalesStatusCtrl: CompanySalesStatusActions = new CompanySalesStatus
 const companyCtrl: CompanyActions = new CompanyActionsImpl()
 const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
 const companyContactCtrl: CompanyContactActions = new CompanyContactActionsImpl()
+const contactRequestCrtl: ContactRequestActions = new ContactRequestActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise(resolve => {
@@ -195,6 +199,14 @@ const schema = new GraphQLSchema({
         async resolve(root, {companyId}, { req, res }) {
           return await requireAuth(req, res,
             () => companyContactCtrl.getContacts(companyId))
+        },
+      },
+      contactRequests: {
+        description: 'Get all contact requests',
+        type: new GraphQLList(ContactRequest),
+        async resolve(root, {}, { req, res }) {
+          return await requireAuth(req, res,
+            () => contactRequestCrtl.getContactRequests())
         },
       },
     },
@@ -393,6 +405,16 @@ const schema = new GraphQLSchema({
         async resolve(a, { eventId }, { req, res }) {
           return await requireAuth(req, res,
             () => eventCtrl.checkIn(req.user, eventId))
+        },
+      },
+      addContactRequest: {
+        description: 'Add a contact request',
+        type: ContactRequest,
+        args: {
+          email: { type: GraphQLString },
+        },
+        async resolve(a, { email }, { req, res }) {
+          return contactRequestCrtl.addContactRequest(email)
         },
       },
     },
