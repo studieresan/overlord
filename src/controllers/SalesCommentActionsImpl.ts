@@ -6,13 +6,14 @@ import { rejectIfNull } from './util'
 
 export class SalesCommentActionsImpl implements SalesCommentActions {
 
-  getComments(companyId: string, studsYear:number): Promise<SalesComment[]> {
+  getComments(companyId: string, studsYear: number): Promise<SalesComment[]> {
     return new Promise<SalesComment[]>((resolve, reject) => {
-      return resolve(mongodb.SalesComment.find({company: new ObjectID(companyId), year: studsYear},
+      return resolve(mongodb.SalesComment.find({company: new ObjectID(companyId), studsYear: studsYear},
           {
             'text': true,
             'id': true,
             'company': true,
+            'studsYear': true,
             'user': true,
             'edited': true,
             'createdAt': true,
