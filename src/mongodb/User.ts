@@ -33,6 +33,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     allergies: String,
     master: String,
     userRole: String,
+    studsYear: Number,
     resumeEmail: String,
   },
 }, { timestamps: true })

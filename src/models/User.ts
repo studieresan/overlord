@@ -8,6 +8,7 @@ export type UserProfile = StudsProfile
 
 export interface StudsProfile {
   readonly userRole: UserRole
+  readonly studsYear: number
   readonly email: string
   readonly firstName: string
   readonly lastName: string
