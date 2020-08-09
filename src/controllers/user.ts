@@ -100,6 +100,7 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       userRole: req.body.user_role,
+      studsYear: process.env.STUDS_YEAR,
     },
   })
 
