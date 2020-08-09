@@ -177,11 +177,10 @@ const schema = new GraphQLSchema({
         type: new GraphQLList(SalesComment),
         args: {
           companyId: { type: GraphQLString },
-          studsYear: { type: GraphQLInt },
         },
-        async resolve(root, {companyId, studsYear}, { req, res }) {
+        async resolve(root, {companyId}, { req, res }) {
           return await requireAuth(req, res,
-            () => salesCommentCtrl.getComments(companyId, studsYear))
+            () => salesCommentCtrl.getComments(companyId))
         },
       },
       userRoles: {
