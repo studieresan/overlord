@@ -45,7 +45,6 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLBoolean,
-  GraphQLInt,
 } from 'graphql'
 import * as passportConfig from '../config/passport'
 import { SalesComment } from './GraphQLSalesComment'

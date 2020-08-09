@@ -13,7 +13,6 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
             'text': true,
             'id': true,
             'company': true,
-            'studsYear': true,
             'user': true,
             'edited': true,
             'createdAt': true,
