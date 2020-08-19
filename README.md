@@ -18,7 +18,8 @@ Start the server
 
 `yarn start`
 
-
+## API
+The api documentation can be found in [API.html](API.html)
 
 ## Create local account
 
