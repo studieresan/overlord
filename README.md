@@ -19,7 +19,7 @@ Start the server
 `yarn start`
 
 ## API
-The api documentation can be found in [API.html](API.html)
+The api documentation can be found in [API.html](API.html) (you probably don't want to view it in the Github preview)
 
 ## Create local account
 
