@@ -45,6 +45,7 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLInt,
 } from 'graphql'
 import * as passportConfig from '../config/passport'
 import { SalesComment } from './GraphQLSalesComment'
@@ -172,14 +173,15 @@ const schema = new GraphQLSchema({
         },
       },
       comments: {
-        description: 'Get all comment for the company specified by an id',
+        description: 'Get all comment for the company specified by an id and studs year',
         type: new GraphQLList(SalesComment),
         args: {
           companyId: { type: GraphQLString },
+          studsYear: { type: GraphQLInt},
         },
-        async resolve(root, {companyId}, { req, res }) {
+        async resolve(root, {companyId, studsYear}, { req, res }) {
           return await requireAuth(req, res,
-            () => salesCommentCtrl.getComments(companyId))
+            () => salesCommentCtrl.getComments(companyId, studsYear))
         },
       },
       userRoles: {
