@@ -1,12 +1,12 @@
 import { CompanyActions } from './CompanyActions'
-import { Company } from '../models'
+import { Company, CompanyWithOneUser } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
 
 export class CompanyActionsImpl implements CompanyActions {
 
-  getCompanies(): Promise<Company[]> {
+  getCompanies(studsYear: number): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
       return resolve(mongodb.Company.find({},
           {
@@ -14,9 +14,22 @@ export class CompanyActionsImpl implements CompanyActions {
             'amount': true,
             'id': true,
             'status': true,
-            'responsibleUser': true,
+            'responsibleUsers': true,
           }
-        ).populate('status').populate('responsibleUser').exec())
+        ).populate('status')
+        .populate({
+          path: 'responsibleUsers',
+          match: { 'profile.studsYear': studsYear },
+        }).exec().then(companies => companies.map(company =>  {
+          const newCompany: CompanyWithOneUser = {
+            id: company.id,
+            name: company.name,
+            amount: company.amount,
+            status: company.status,
+            responsibleUser: company.responsibleUsers[0],
+          }
+          return newCompany
+        })))
     })
   }
 

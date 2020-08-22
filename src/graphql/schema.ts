@@ -146,11 +146,14 @@ const schema = new GraphQLSchema({
         },
       },
       companies: {
-        description: 'Get all companies as a list',
+        description: 'Get all companies as a list specified by a year',
         type: new GraphQLList(Company),
-        async resolve(a, b, { req, res }) {
+        args: {
+          studsYear: { type: GraphQLInt },
+        },
+        async resolve(root, {studsYear}, { req, res }) {
           return await requireAuth(req, res,
-            () => companyCtrl.getCompanies())
+            () => companyCtrl.getCompanies(studsYear))
         },
       },
       soldCompanies: {

@@ -2,8 +2,8 @@ import { Company } from '../models'
 
 export interface CompanyActions {
 
-  // Get all companies
-  getCompanies(): Promise<Company[]>
+  // Get all companies from a specific year
+  getCompanies(studsYear: number): Promise<Company[]>
 
   // Get all sold companies
   getSoldCompanies(): Promise<Company[]>
