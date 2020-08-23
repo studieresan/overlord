@@ -1,5 +1,5 @@
 import { CompanyActions } from './CompanyActions'
-import { Company, CompanyWithOneUser } from '../models'
+import { Company, companyFactory } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
@@ -20,16 +20,7 @@ export class CompanyActionsImpl implements CompanyActions {
         .populate({
           path: 'responsibleUsers',
           match: { 'profile.studsYear': studsYear },
-        }).exec().then(companies => companies.map(company =>  {
-          const newCompany: CompanyWithOneUser = {
-            id: company.id,
-            name: company.name,
-            amount: company.amount,
-            status: company.status,
-            responsibleUser: company.responsibleUsers[0],
-          }
-          return newCompany
-        })))
+        }).exec().then(companies => companies.map(company =>  companyFactory(company))))
     })
   }
 
@@ -49,12 +40,15 @@ export class CompanyActionsImpl implements CompanyActions {
     })
   }
 
-  getCompany(companyId: string): Promise<Company> {
+  getCompany(companyId: string, studsYear: number): Promise<Company> {
     return mongodb.Company.findById(new ObjectID(companyId))
       .populate('status')
-      .populate('responsibleUser')
+      .populate({
+        path: 'responsibleUsers',
+        match: { 'profile.studsYear': studsYear },
+      })
       .then(rejectIfNull('No company matches id'))
-      .then(company => company)
+      .then(company =>  companyFactory(company))
   }
 
   createCompany(name: string): Promise<Company> {

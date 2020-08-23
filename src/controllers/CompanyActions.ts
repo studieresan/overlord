@@ -8,8 +8,8 @@ export interface CompanyActions {
   // Get all sold companies
   getSoldCompanies(): Promise<Company[]>
 
-  // Get company by company id
-  getCompany(companyId: string): Promise<Company>
+  // Get company by company id and specific year
+  getCompany(companyId: string, studsYear: number): Promise<Company>
 
   // Create a company with given name
   createCompany(name: string): Promise<Company>

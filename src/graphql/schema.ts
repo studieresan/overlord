@@ -165,14 +165,15 @@ const schema = new GraphQLSchema({
         },
       },
       company: {
-        description: 'Get a company specified by an id',
+        description: 'Get company information specified by an id and studs year',
         type: Company,
         args: {
           companyId: { type: GraphQLString },
+          studsYear: { type: GraphQLInt },
         },
-        async resolve(root, {companyId}, { req, res }) {
+        async resolve(root, {companyId, studsYear}, { req, res }) {
           return await requireAuth(req, res,
-            () => companyCtrl.getCompany(companyId))
+            () => companyCtrl.getCompany(companyId, studsYear))
         },
       },
       comments: {
