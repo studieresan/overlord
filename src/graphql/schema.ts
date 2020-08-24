@@ -96,13 +96,14 @@ const schema = new GraphQLSchema({
       },
       users: {
         // tslint:disable-next-line:max-line-length
-        description: 'Get a list of users of the given user role. If role is null all users are returned',
+        description: 'Get a list of users of the given user role and year. If role is null all users are returned',
         type: new GraphQLList(UserType),
         args: {
           userRole: { type: UserRole },
+          studsYear: { type: GraphQLInt },
         },
-        async resolve(a, { userRole }, { req, res }) {
-          return await userCtrl.getUsers(req, res, userRole)
+        async resolve(a, { userRole, studsYear }, { req, res }) {
+          return await userCtrl.getUsers(req, res, userRole, studsYear)
         },
       },
       cvs: {
