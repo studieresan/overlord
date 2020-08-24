@@ -264,15 +264,16 @@ const schema = new GraphQLSchema({
         },
       },
       updateCompany: {
-        description: 'Update the company with the given ID',
+        description: 'Update the company with the given ID for the given year',
         type: Company,
         args: {
           id: { type: GraphQLString },
+          studsYear: { type: GraphQLInt },
           fields: { type: CompanyInput },
         },
-        async resolve(a, { id, fields }, { req, res }) {
+        async resolve(a, { id, studsYear, fields }, { req, res }) {
           return await requireAuth(req, res,
-            () => companyCtrl.updateCompany(id, fields))
+            () => companyCtrl.updateCompany(id, studsYear, fields))
         },
       },
       setAllCompaniesStatus: {
