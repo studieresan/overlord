@@ -17,8 +17,8 @@ export interface CompanyActions {
   // Create several companies with given names
   bulkCreateCompanies(names: string): Promise<Boolean>
 
-  // Create a company with given name
-  updateCompany(id: string, fields: Partial<Company>): Promise<Company>
+  // Update a company with id and year
+  updateCompany(id: string, studsYear: number, fields: Partial<Company>): Promise<Company>
 
   // Set default company status to all companies
   setCompaniesStatus(statusId: string): Promise<Company[]>

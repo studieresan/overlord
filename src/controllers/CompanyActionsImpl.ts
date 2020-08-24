@@ -1,5 +1,5 @@
 import { CompanyActions } from './CompanyActions'
-import { Company, companyFactory } from '../models'
+import { Company, companyFactory, CompanyWithOneUser, User } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
@@ -76,15 +76,42 @@ export class CompanyActionsImpl implements CompanyActions {
       })
   }
 
-  updateCompany(id: string, fields: Partial<Company>):
+  updateCompany(id: string, studsYear: number, fields: Partial<CompanyWithOneUser>):
   Promise<Company> {
-    return mongodb.Company.findOneAndUpdate(
-      { _id: id },
-      { ...fields },
-      { new: true }
-    ).populate('status')
-     .populate('responsibleUser')
-     .then(rejectIfNull('No company exists for given id'))
+    if (fields.responsibleUser) {
+      return this.updateCompanyResponsibleUser(id, studsYear, fields.responsibleUser)
+    } else {
+      return mongodb.Company.findOneAndUpdate(
+        { _id: id },
+        { ...fields },
+        { new: true }
+      ).populate('status')
+      .populate('responsibleUser')
+      .then(rejectIfNull('No company exists for given id'))
+    }
+  }
+
+  updateCompanyResponsibleUser(id: string, studsYear: number, newResponsibleUser: User):
+  Promise<Company> {
+    return mongodb.Company.findById(new ObjectID(id))
+    .populate({
+      path: 'responsibleUsers',
+    })
+    .then(rejectIfNull('No company exists for given id'))
+    .then(company => {
+      if (company.responsibleUsers.length > 0) {
+        // If there exist a responsible user for this year, remove that
+        company.responsibleUsers = company.responsibleUsers
+        .filter(user => user.profile.studsYear != studsYear)
+      }
+      company.responsibleUsers.push(newResponsibleUser)
+      return company.save().then(newCompany => newCompany
+        .populate('status')
+        .populate({
+          path: 'responsibleUsers',
+          match: { 'profile.studsYear': studsYear },
+        }).execPopulate().then(c =>  companyFactory(c)))
+    })
   }
 
   setCompaniesStatus(statusId: string): Promise<Company[]> {
