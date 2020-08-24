@@ -9,7 +9,7 @@ export interface UserActions {
   updateUserProfile(id: string, fields: Partial<UserProfile>):
     Promise<UserProfile>
 
-  // Gets all users with the specified user role
-  getUsers(req: any, res: any, type: UserRole): Promise<User[]>
+  // Gets all users with the specified user role and year
+  getUsers(req: any, res: any, type: UserRole, studsYear: number): Promise<User[]>
 
 }

@@ -25,7 +25,7 @@ export class UserActionsImpl implements UserActions {
       })
   }
 
-  getUsers(req: any, res: any, userRole: UserRole): Promise<User[]> {
+  getUsers(req: any, res: any, userRole: UserRole, studsYear: number): Promise<User[]> {
     return new Promise<User[]>((resolve, reject) => {
       passport.authenticate('jwt', { session: false },
         (err: any, user: any, info: any) => {
@@ -35,11 +35,11 @@ export class UserActionsImpl implements UserActions {
           if (!userRole) {
             // All profiles
             resolve(mongodb.User.find(
-              {}, {}
+              {'profile.studsYear': studsYear}, {}
             ).exec())
           } else {
             resolve(mongodb.User.find(
-              { 'profile.userRole': userRole }, {}
+              { 'profile.userRole': userRole, 'profile.studsYear': studsYear }, {}
             ).exec())
           }
         }
