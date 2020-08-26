@@ -37,7 +37,6 @@ import {
 } from './GraphQLECompanySalesStatus'
 import {
   Company,
-  CompanyInput,
 } from './GraphQLCompany'
 import {
   GraphQLList,
@@ -149,12 +148,8 @@ const schema = new GraphQLSchema({
       companies: {
         description: 'Get all companies as a list specified by a year',
         type: new GraphQLList(Company),
-        args: {
-          studsYear: { type: GraphQLInt },
-        },
-        async resolve(root, {studsYear}, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyCtrl.getCompanies(studsYear))
+        async resolve(root, b, { req, res }) {
+          return await companyCtrl.getCompanies()
         },
       },
       soldCompanies: {
@@ -165,18 +160,18 @@ const schema = new GraphQLSchema({
             () => companyCtrl.getSoldCompanies())
         },
       },
-      company: {
-        description: 'Get company information specified by an id and studs year',
-        type: Company,
-        args: {
-          companyId: { type: GraphQLString },
-          studsYear: { type: GraphQLInt },
-        },
-        async resolve(root, {companyId, studsYear}, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyCtrl.getCompany(companyId, studsYear))
-        },
-      },
+      // company: {
+      //   description: 'Get company information specified by an id and studs year',
+      //   type: Company,
+      //   args: {
+      //     companyId: { type: GraphQLString },
+      //     studsYear: { type: GraphQLInt },
+      //   },
+      //   async resolve(root, {companyId, studsYear}, { req, res }) {
+      //     return await requireAuth(req, res,
+      //       () => companyCtrl.getCompany(companyId, studsYear))
+      //   },
+      // },
       comments: {
         description: 'Get all comment for the company specified by an id and studs year',
         type: new GraphQLList(SalesComment),
@@ -264,19 +259,19 @@ const schema = new GraphQLSchema({
           return await companyCtrl.bulkCreateCompanies(names)
         },
       },
-      updateCompany: {
-        description: 'Update the company with the given ID for the given year',
-        type: Company,
-        args: {
-          id: { type: GraphQLString },
-          studsYear: { type: GraphQLInt },
-          fields: { type: CompanyInput },
-        },
-        async resolve(a, { id, studsYear, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyCtrl.updateCompany(id, studsYear, fields))
-        },
-      },
+      // updateCompany: {
+      //   description: 'Update the company with the given ID for the given year',
+      //   type: Company,
+      //   args: {
+      //     id: { type: GraphQLString },
+      //     studsYear: { type: GraphQLInt },
+      //     fields: { type: CompanyInput },
+      //   },
+      //   async resolve(a, { id, studsYear, fields }, { req, res }) {
+      //     return await requireAuth(req, res,
+      //       () => companyCtrl.updateCompany(id, studsYear, fields))
+      //   },
+      // },
       setAllCompaniesStatus: {
         description: 'Update the status of all companies without any',
         type: new GraphQLList(Company),
