@@ -54,12 +54,14 @@ export class CompanyActionsImpl implements CompanyActions {
   createCompany(name: string): Promise<Company> {
     const company = new mongodb.Company({
       name,
-      status: process.env.DEFAULT_STATUS_ID,
     })
     return company
       .save()
       .then((company) =>
-        company.populate('status').populate('responsibleUser').execPopulate()
+        company
+          .populate('years.status')
+          .populate('years.responsibleUser')
+          .execPopulate()
       )
   }
 
@@ -98,9 +100,14 @@ export class CompanyActionsImpl implements CompanyActions {
             yearToEdit[key] = companyFields[key]
           }
         } else {
-          company.years = company.years.concat([
-            { ...companyFields, year: year },
-          ])
+          const newYear = {
+            ...companyFields,
+            year: year,
+          }
+          if (!newYear.status) {
+            newYear.status = process.env.DEFAULT_STATUS_ID
+          }
+          company.years = company.years.concat([newYear])
         }
         return company
           .save()
@@ -111,29 +118,6 @@ export class CompanyActionsImpl implements CompanyActions {
           )
       })
   }
-
-  // updateCompanyResponsibleUser(id: string, studsYear: number, newResponsibleUser: User):
-  // Promise<Company> {
-  //   return mongodb.Company.findById(new ObjectID(id))
-  //   .populate({
-  //     path: 'responsibleUsers',
-  //   })
-  //   .then(rejectIfNull('No company exists for given id'))
-  //   .then(company => {
-  //     if (company.responsibleUsers.length > 0) {
-  //       // If there exist a responsible user for this year, remove that
-  //       company.responsibleUsers = company.responsibleUsers
-  //       .filter(user => user.profile.studsYear != studsYear)
-  //     }
-  //     company.responsibleUsers.push(newResponsibleUser)
-  //     return company.save().then(newCompany => newCompany
-  //       .populate('status')
-  //       .populate({
-  //         path: 'responsibleUsers',
-  //         match: { 'profile.studsYear': studsYear },
-  //       }).execPopulate().then(c =>  companyFactory(c)))
-  //   })
-  // }
 
   setCompaniesStatus(statusId: string): Promise<Company[]> {
     return mongodb.Company.update(
