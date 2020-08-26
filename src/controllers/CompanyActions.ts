@@ -1,7 +1,6 @@
 import { Company } from '../models'
 
 export interface CompanyActions {
-
   // Get all companies from a specific year
   getCompanies(): Promise<Company[]>
 
@@ -9,7 +8,7 @@ export interface CompanyActions {
   getSoldCompanies(): Promise<Company[]>
 
   // Get company by company id and specific year
-  // getCompany(companyId: string, studsYear: number): Promise<Company>
+  getCompany(companyId: string): Promise<Company>
 
   // Create a company with given name
   createCompany(name: string): Promise<Company>
