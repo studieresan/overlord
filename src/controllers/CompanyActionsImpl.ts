@@ -115,6 +115,7 @@ export class CompanyActionsImpl implements CompanyActions {
             newCompany
               .populate('years.status')
               .populate('years.responsibleUser')
+              .execPopulate()
           )
       })
   }
