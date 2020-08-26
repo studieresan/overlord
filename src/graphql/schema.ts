@@ -138,7 +138,7 @@ const schema = new GraphQLSchema({
         description: 'Get all companies as a list specified by a year',
         type: new GraphQLList(Company),
         async resolve(root, b, { req, res }) {
-          return await companyCtrl.getCompanies()
+          return await requireAuth(req, res, () => companyCtrl.getCompanies())
         },
       },
       soldCompanies: {
@@ -241,7 +241,9 @@ const schema = new GraphQLSchema({
           statusId: { type: GraphQLString },
         },
         async resolve(a, { name }, { req, res }) {
-          return await companyCtrl.createCompany(name)
+          return await requireAuth(req, res, () =>
+            companyCtrl.createCompany(name)
+          )
         },
       },
       createCompanies: {
@@ -265,7 +267,9 @@ const schema = new GraphQLSchema({
           fields: { type: CompanyInput },
         },
         async resolve(a, { id, year, fields }, { req, res }) {
-          return await companyCtrl.updateCompany(id, year, fields)
+          return await requireAuth(req, res, () =>
+            companyCtrl.updateCompany(id, year, fields)
+          )
         },
       },
       setAllCompaniesStatus: {
