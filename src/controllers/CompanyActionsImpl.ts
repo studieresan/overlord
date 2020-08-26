@@ -1,5 +1,5 @@
 import { CompanyActions } from './CompanyActions'
-import { Company } from '../models'
+import { Company, CompanyYear } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
@@ -75,20 +75,40 @@ export class CompanyActionsImpl implements CompanyActions {
     })
   }
 
-  // updateCompany(id: string, studsYear: number, fields: Partial<Company>):
-  // Promise<Company> {
-  //   if (fields.responsibleUser) {
-  //     return this.updateCompanyResponsibleUser(id, studsYear, fields.responsibleUser)
-  //   } else {
-  //     return mongodb.Company.findOneAndUpdate(
-  //       { _id: id },
-  //       { ...fields },
-  //       { new: true }
-  //     ).populate('status')
-  //     .populate('responsibleUser')
-  //     .then(rejectIfNull('No company exists for given id'))
-  //   }
-  // }
+  updateCompany(
+    id: string,
+    year: number,
+    fields: Partial<Company> & Partial<CompanyYear>
+  ): Promise<Company> {
+    return mongodb.Company.findById(new ObjectID(id))
+      .then(rejectIfNull('No company exists for given id'))
+      .then((company) => {
+        if (fields.name) {
+          company.name = fields.name
+        }
+        delete fields['name']
+        const companyFields = fields as CompanyYear
+
+        const editYear = company.years.find((y) => y.year === year)
+        if (editYear) {
+          for (const key in companyFields) {
+            // Typescript does not realize that editYear and companyFields are
+            // both of type CompanyYear, and thus have the same keys...
+            // @ts-ignore: Unreachable code error
+            editYear[key] = companyFields[key]
+          }
+        } else {
+          // TODO: create new year
+        }
+        return company
+          .save()
+          .then((newCompany) =>
+            newCompany
+              .populate('years.status')
+              .populate('years.responsibleUser')
+          )
+      })
+  }
 
   // updateCompanyResponsibleUser(id: string, studsYear: number, newResponsibleUser: User):
   // Promise<Company> {

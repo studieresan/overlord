@@ -1,7 +1,7 @@
 import { CV, CVSection, createDefaultCV } from './CV'
 import { User, UserProfile, UserRole, Permission } from './User'
 import { Event } from './Event'
-import { Company } from './Company'
+import { Company, CompanyYear } from './Company'
 import { CompanySalesStatus } from './CompanySalesStatus'
 import { SalesComment } from './SalesComment'
 import { CompanyContact } from './CompanyContact'
@@ -16,6 +16,7 @@ export {
   Permission,
   Event,
   Company,
+  CompanyYear,
   CompanySalesStatus,
   SalesComment,
   CompanyContact,

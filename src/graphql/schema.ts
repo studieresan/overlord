@@ -25,7 +25,7 @@ import {
 import { CVType, CVInputType } from './GraphQLCV'
 import { EventType, EventInputType } from './GraphQLEvent'
 import { CompanySalesStatus } from './GraphQLECompanySalesStatus'
-import { Company } from './GraphQLCompany'
+import { Company, CompanyInput } from './GraphQLCompany'
 import {
   GraphQLList,
   GraphQLObjectType,
@@ -256,19 +256,18 @@ const schema = new GraphQLSchema({
           )
         },
       },
-      // updateCompany: {
-      //   description: 'Update the company with the given ID for the given year',
-      //   type: Company,
-      //   args: {
-      //     id: { type: GraphQLString },
-      //     studsYear: { type: GraphQLInt },
-      //     fields: { type: CompanyInput },
-      //   },
-      //   async resolve(a, { id, studsYear, fields }, { req, res }) {
-      //     return await requireAuth(req, res,
-      //       () => companyCtrl.updateCompany(id, studsYear, fields))
-      //   },
-      // },
+      updateCompany: {
+        description: 'Update the company with the given ID for the given year',
+        type: Company,
+        args: {
+          id: { type: GraphQLString },
+          year: { type: GraphQLInt },
+          fields: { type: CompanyInput },
+        },
+        async resolve(a, { id, year, fields }, { req, res }) {
+          return await companyCtrl.updateCompany(id, year, fields)
+        },
+      },
       setAllCompaniesStatus: {
         description: 'Update the status of all companies without any',
         type: new GraphQLList(Company),
