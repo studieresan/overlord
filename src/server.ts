@@ -48,7 +48,8 @@ Sentry.init({
  */
 const options = {
   promiseLibrary: global.Promise,
-  useMongoClient: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 }
 
 mongoose.connect(process.env.MONGODB_URI, options)
