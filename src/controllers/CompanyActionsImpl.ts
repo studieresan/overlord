@@ -89,16 +89,18 @@ export class CompanyActionsImpl implements CompanyActions {
         delete fields['name']
         const companyFields = fields as CompanyYear
 
-        const editYear = company.years.find((y) => y.year === year)
-        if (editYear) {
+        const yearToEdit = company.years.find((y) => y.year === year)
+        if (yearToEdit) {
           for (const key in companyFields) {
-            // Typescript does not realize that editYear and companyFields are
+            // Typescript does not realize that yearToEdit and companyFields are
             // both of type CompanyYear, and thus have the same keys...
             // @ts-ignore: Unreachable code error
-            editYear[key] = companyFields[key]
+            yearToEdit[key] = companyFields[key]
           }
         } else {
-          // TODO: create new year
+          company.years = company.years.concat([
+            { ...companyFields, year: year },
+          ])
         }
         return company
           .save()
