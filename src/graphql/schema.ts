@@ -16,35 +16,23 @@ import {
   ContactRequestActions,
   ContactRequestActionsImpl,
 } from './../controllers'
-import {
-  UserType
-} from './GraphQLUser'
+import { UserType } from './GraphQLUser'
 import {
   UserProfileType,
   UserProfileInputType,
   UserRole,
 } from './GraphQLUserProfile'
-import {
-  CVType,
-  CVInputType,
-} from './GraphQLCV'
-import {
-  EventType,
-  EventInputType
-} from './GraphQLEvent'
-import {
-  CompanySalesStatus,
-} from './GraphQLECompanySalesStatus'
-import {
-  Company,
-  CompanyInput,
-} from './GraphQLCompany'
+import { CVType, CVInputType } from './GraphQLCV'
+import { EventType, EventInputType } from './GraphQLEvent'
+import { CompanySalesStatus } from './GraphQLECompanySalesStatus'
+import { Company, CompanyInput } from './GraphQLCompany'
 import {
   GraphQLList,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLInt,
 } from 'graphql'
 import * as passportConfig from '../config/passport'
 import { SalesComment } from './GraphQLSalesComment'
@@ -62,7 +50,7 @@ const companyContactCtrl: CompanyContactActions = new CompanyContactActionsImpl(
 const contactRequestCrtl: ContactRequestActions = new ContactRequestActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     passportConfig.authenticate(req, res, () => {
       resolve(body())
     })
@@ -95,21 +83,22 @@ const schema = new GraphQLSchema({
       },
       users: {
         // tslint:disable-next-line:max-line-length
-        description: 'Get a list of users of the given user role. If role is null all users are returned',
+        description:
+          'Get a list of users of the given user role and year. If role is null all users are returned',
         type: new GraphQLList(UserType),
         args: {
           userRole: { type: UserRole },
+          studsYear: { type: GraphQLInt },
         },
-        async resolve(a, { userRole }, { req, res }) {
-          return await userCtrl.getUsers(req, res, userRole)
+        async resolve(a, { userRole, studsYear }, { req, res }) {
+          return await userCtrl.getUsers(req, res, userRole, studsYear)
         },
       },
       cvs: {
         description: 'Get all current user cvs',
         type: new GraphQLList(CVType),
         async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res,
-             () => cvCtrl.getAllCVs(req.user))
+          return await requireAuth(req, res, () => cvCtrl.getAllCVs(req.user))
         },
       },
       allEvents: {
@@ -140,54 +129,58 @@ const schema = new GraphQLSchema({
         description: 'Get all events as a list',
         type: new GraphQLList(CompanySalesStatus),
         async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res,
-            () => companySalesStatusCtrl.getCompanySalesStatuses(req, res))
+          return await requireAuth(req, res, () =>
+            companySalesStatusCtrl.getCompanySalesStatuses(req, res)
+          )
         },
       },
       companies: {
-        description: 'Get all companies as a list',
+        description: 'Get all companies as a list specified by a year',
         type: new GraphQLList(Company),
-        async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyCtrl.getCompanies())
+        async resolve(root, b, { req, res }) {
+          return await requireAuth(req, res, () => companyCtrl.getCompanies())
         },
       },
       soldCompanies: {
         description: 'Get all sold companies as a list',
         type: new GraphQLList(Company),
         async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyCtrl.getSoldCompanies())
+          return await requireAuth(req, res, () =>
+            companyCtrl.getSoldCompanies()
+          )
         },
       },
       company: {
-        description: 'Get a company specified by an id',
+        description: 'Get company information specified by an id',
         type: Company,
         args: {
           companyId: { type: GraphQLString },
         },
-        async resolve(root, {companyId}, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyCtrl.getCompany(companyId))
+        async resolve(root, { companyId }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.getCompany(companyId)
+          )
         },
       },
       comments: {
-        description: 'Get all comment for the company specified by an id',
+        description:
+          'Get all comment for the company specified by an id and studs year',
         type: new GraphQLList(SalesComment),
         args: {
           companyId: { type: GraphQLString },
+          studsYear: { type: GraphQLInt },
         },
-        async resolve(root, {companyId}, { req, res }) {
-          return await requireAuth(req, res,
-            () => salesCommentCtrl.getComments(companyId))
+        async resolve(root, { companyId, studsYear }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            salesCommentCtrl.getComments(companyId, studsYear)
+          )
         },
       },
       userRoles: {
         description: 'Get all user roles',
         type: new GraphQLList(UserRole),
         async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res,
-            () => getUserRoles())
+          return await requireAuth(req, res, () => getUserRoles())
         },
       },
       contacts: {
@@ -196,17 +189,19 @@ const schema = new GraphQLSchema({
         args: {
           companyId: { type: GraphQLString },
         },
-        async resolve(root, {companyId}, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyContactCtrl.getContacts(companyId))
+        async resolve(root, { companyId }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyContactCtrl.getContacts(companyId)
+          )
         },
       },
       contactRequests: {
         description: 'Get all contact requests',
         type: new GraphQLList(ContactRequest),
         async resolve(root, {}, { req, res }) {
-          return await requireAuth(req, res,
-            () => contactRequestCrtl.getContactRequests())
+          return await requireAuth(req, res, () =>
+            contactRequestCrtl.getContactRequests()
+          )
         },
       },
     },
@@ -221,8 +216,9 @@ const schema = new GraphQLSchema({
           fields: { type: UserProfileInputType },
         },
         async resolve(a, { fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => userCtrl.updateUserProfile(req.user.id, fields))
+          return await requireAuth(req, res, () =>
+            userCtrl.updateUserProfile(req.user.id, fields)
+          )
         },
       },
       createSalesStatus: {
@@ -231,9 +227,10 @@ const schema = new GraphQLSchema({
         args: {
           name: { type: GraphQLString },
         },
-        async resolve(a, {name}, { req, res }) {
-          return await requireAuth(req, res,
-            () => companySalesStatusCtrl.createSalesStatus(name))
+        async resolve(a, { name }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companySalesStatusCtrl.createSalesStatus(name)
+          )
         },
       },
       createCompany: {
@@ -243,8 +240,10 @@ const schema = new GraphQLSchema({
           name: { type: GraphQLString },
           statusId: { type: GraphQLString },
         },
-        async resolve(a, {name}, { req, res }) {
-          return await companyCtrl.createCompany(name)
+        async resolve(a, { name }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.createCompany(name)
+          )
         },
       },
       createCompanies: {
@@ -253,20 +252,24 @@ const schema = new GraphQLSchema({
           names: { type: GraphQLString },
         },
         type: new GraphQLList(Company),
-        async resolve(a, {names}, { req, res }) {
-          return await companyCtrl.bulkCreateCompanies(names)
+        async resolve(a, { names }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.bulkCreateCompanies(names)
+          )
         },
       },
       updateCompany: {
-        description: 'Update the company with the given ID',
+        description: 'Update the company with the given ID for the given year',
         type: Company,
         args: {
           id: { type: GraphQLString },
+          year: { type: GraphQLInt },
           fields: { type: CompanyInput },
         },
-        async resolve(a, { id, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyCtrl.updateCompany(id, fields))
+        async resolve(a, { id, year, fields }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.updateCompany(id, year, fields)
+          )
         },
       },
       setAllCompaniesStatus: {
@@ -275,21 +278,24 @@ const schema = new GraphQLSchema({
         args: {
           id: { type: GraphQLString },
         },
-        async resolve(a, { id}, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyCtrl.setCompaniesStatus(id))
+        async resolve(a, { id }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.setCompaniesStatus(id)
+          )
         },
       },
       createContact: {
-        description: 'Create new contact for a company specified by the company ID',
+        description:
+          'Create new contact for a company specified by the company ID',
         type: CompanyContact,
         args: {
           companyId: { type: GraphQLString },
           fields: { type: CompanyContactInput },
         },
         async resolve(a, { companyId, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyContactCtrl.createContact(companyId, fields))
+          return await requireAuth(req, res, () =>
+            companyContactCtrl.createContact(companyId, fields)
+          )
         },
       },
       updateContact: {
@@ -300,8 +306,9 @@ const schema = new GraphQLSchema({
           fields: { type: CompanyContactInput },
         },
         async resolve(a, { id, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyContactCtrl.updateContact(id, fields))
+          return await requireAuth(req, res, () =>
+            companyContactCtrl.updateContact(id, fields)
+          )
         },
       },
       removeContact: {
@@ -311,20 +318,23 @@ const schema = new GraphQLSchema({
           id: { type: GraphQLString },
         },
         async resolve(a, { id }, { req, res }) {
-          return await requireAuth(req, res,
-            () => companyContactCtrl.removeContact(id))
+          return await requireAuth(req, res, () =>
+            companyContactCtrl.removeContact(id)
+          )
         },
       },
       createComment: {
-        description: 'Create new comment for a company specified by the company ID',
+        description:
+          'Create new comment for a company specified by the company ID',
         type: SalesComment,
         args: {
           companyId: { type: GraphQLString },
-          text: { type: GraphQLString},
+          text: { type: GraphQLString },
         },
         async resolve(a, { companyId, text }, { req, res }) {
-          return await requireAuth(req, res,
-            () => salesCommentCtrl.createComment(req.user, companyId, text))
+          return await requireAuth(req, res, () =>
+            salesCommentCtrl.createComment(req.user, companyId, text)
+          )
         },
       },
       updateComment: {
@@ -335,8 +345,9 @@ const schema = new GraphQLSchema({
           text: { type: GraphQLString },
         },
         async resolve(a, { id, text }, { req, res }) {
-          return await requireAuth(req, res,
-            () => salesCommentCtrl.updateComment(req.user, id, text))
+          return await requireAuth(req, res, () =>
+            salesCommentCtrl.updateComment(req.user, id, text)
+          )
         },
       },
       removeComment: {
@@ -346,8 +357,9 @@ const schema = new GraphQLSchema({
           id: { type: GraphQLString },
         },
         async resolve(a, { id }, { req, res }) {
-          return await requireAuth(req, res,
-            () => salesCommentCtrl.removeComment(req.user, id))
+          return await requireAuth(req, res, () =>
+            salesCommentCtrl.removeComment(req.user, id)
+          )
         },
       },
       updateCV: {
@@ -357,8 +369,9 @@ const schema = new GraphQLSchema({
           fields: { type: CVInputType },
         },
         async resolve(a, { fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => cvCtrl.updateCV(req.user.id, fields))
+          return await requireAuth(req, res, () =>
+            cvCtrl.updateCV(req.user.id, fields)
+          )
         },
       },
       createEvent: {
@@ -369,8 +382,14 @@ const schema = new GraphQLSchema({
           fields: { type: EventInputType },
         },
         async resolve(a, { companyId, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventCtrl.createEvent(req.user, companyId, fields.responsibleUserId, fields))
+          return await requireAuth(req, res, () =>
+            eventCtrl.createEvent(
+              req.user,
+              companyId,
+              fields.responsibleUserId,
+              fields
+            )
+          )
         },
       },
       updateEvent: {
@@ -381,8 +400,9 @@ const schema = new GraphQLSchema({
           fields: { type: EventInputType },
         },
         async resolve(a, { eventId, fields }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventCtrl.updateEvent(req.user, eventId, fields))
+          return await requireAuth(req, res, () =>
+            eventCtrl.updateEvent(req.user, eventId, fields)
+          )
         },
       },
       removeEvent: {
@@ -392,8 +412,9 @@ const schema = new GraphQLSchema({
           eventId: { type: GraphQLString },
         },
         async resolve(a, { eventId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventCtrl.removeEvent(eventId))
+          return await requireAuth(req, res, () =>
+            eventCtrl.removeEvent(eventId)
+          )
         },
       },
       checkIn: {
@@ -403,8 +424,9 @@ const schema = new GraphQLSchema({
           eventId: { type: GraphQLString },
         },
         async resolve(a, { eventId }, { req, res }) {
-          return await requireAuth(req, res,
-            () => eventCtrl.checkIn(req.user, eventId))
+          return await requireAuth(req, res, () =>
+            eventCtrl.checkIn(req.user, eventId)
+          )
         },
       },
       addContactRequest: {

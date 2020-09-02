@@ -6,7 +6,7 @@ import { rejectIfNull } from './util'
 
 export class SalesCommentActionsImpl implements SalesCommentActions {
 
-  getComments(companyId: string): Promise<SalesComment[]> {
+  getComments(companyId: string, studsYear: number): Promise<SalesComment[]> {
     return new Promise<SalesComment[]>((resolve, reject) => {
       return resolve(mongodb.SalesComment.find({company: new ObjectID(companyId)},
           {
@@ -20,7 +20,10 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
         ).sort([['createdAt', 'asc']])
          .populate('company')
          .populate('user')
-         .exec())
+         .exec()
+         .then(listOfComments =>
+          listOfComments.filter(comment => comment.user.profile.studsYear == studsYear))
+        )
     })
   }
 

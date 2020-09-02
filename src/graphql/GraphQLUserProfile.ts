@@ -3,6 +3,7 @@ import {
   GraphQLInputObjectType,
   GraphQLEnumType,
   GraphQLString,
+  GraphQLInt,
 } from 'graphql'
 import * as models from './../models'
 
@@ -36,6 +37,7 @@ export const UserProfileType = new GraphQLObjectType({
   fields : {
     email:  { type: GraphQLString },
     userRole:  { type: UserRole },
+    studsYear: {type: GraphQLInt},
     picture:  { type: GraphQLString },
     alternativePicture:  { type: GraphQLString },
     companyName: { type: GraphQLString },
