@@ -25,7 +25,6 @@ const MutableEventFields = {
   published: { type: new GraphQLNonNull(GraphQLBoolean) },
 }
 
-
 export const EventType: GraphQLObjectType = new GraphQLObjectType({
   name: 'Event',
   fields: () => ({
