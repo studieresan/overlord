@@ -21,8 +21,6 @@ export class EventActionsImpl implements EventActions {
             resolve(mongodb.Event.find()
             .populate('company')
             .populate('responsible')
-            .populate('checkedInUsers')
-            .populate('notCheckedInUsers')
             .sort([['date', 'descending']])
             .exec())
           } else {
@@ -51,8 +49,6 @@ export class EventActionsImpl implements EventActions {
     return mongodb.Event.findById(new ObjectID(eventId))
       .populate('company')
       .populate('responsible')
-      .populate('checkedInUsers')
-      .populate('notCheckedInUsers')
       .then(rejectIfNull('No event matches id'))
       .then(event => event)
   }
