@@ -11,12 +11,13 @@
     * [CVSection](#cvsection)
     * [Company](#company)
     * [CompanyContact](#companycontact)
-    * [CompanySalesStatus](#companysalesstatus)
     * [ContactRequest](#contactrequest)
     * [Event](#event)
     * [SalesComment](#salescomment)
+    * [StatusType](#statustype)
     * [User](#user)
     * [UserProfile](#userprofile)
+    * [YearResponsible](#yearresponsible)
   * [Inputs](#inputs)
     * [CVInput](#cvinput)
     * [CVItemInput](#cviteminput)
@@ -30,6 +31,7 @@
   * [Scalars](#scalars)
     * [Boolean](#boolean)
     * [DateTime](#datetime)
+    * [ID](#id)
     * [Int](#int)
     * [String](#string)
 
@@ -60,7 +62,7 @@ Get the currently logged in user
 <td valign="top">[<a href="#user">User</a>]</td>
 <td>
 
-Get a list of users of the given user role. If role is null all users are returned
+Get a list of users of the given user role and year. If role is null all users are returned
 
 </td>
 </tr>
@@ -70,20 +72,30 @@ Get a list of users of the given user role. If role is null all users are return
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>cvs</strong></td>
-<td valign="top">[<a href="#cv">CV</a>]</td>
+<td colspan="2" align="right" valign="top">studsYear</td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#company">Company</a></td>
 <td>
 
-Get all current user cvs
+Get company information specified by an id
 
 </td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>allEvents</strong></td>
-<td valign="top">[<a href="#event">Event</a>]</td>
+<td colspan="2" align="right" valign="top">companyId</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>companies</strong></td>
+<td valign="top">[<a href="#company">Company</a>]</td>
 <td>
 
-Get all events as a list
+Get all companies as a list specified by a year
 
 </td>
 </tr>
@@ -102,17 +114,8 @@ Get a specific event
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>oldEvents</strong></td>
+<td colspan="2" valign="top"><strong>events</strong></td>
 <td valign="top">[<a href="#event">Event</a>]</td>
-<td>
-
-Get all old events as a list
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>allCompanySalesStatuses</strong></td>
-<td valign="top">[<a href="#companysalesstatus">CompanySalesStatus</a>]</td>
 <td>
 
 Get all events as a list
@@ -120,80 +123,11 @@ Get all events as a list
 </td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>companies</strong></td>
-<td valign="top">[<a href="#company">Company</a>]</td>
-<td>
-
-Get all companies as a list
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>soldCompanies</strong></td>
-<td valign="top">[<a href="#company">Company</a>]</td>
-<td>
-
-Get all sold companies as a list
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#company">Company</a></td>
-<td>
-
-Get a company specified by an id
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">companyId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>comments</strong></td>
-<td valign="top">[<a href="#salescomment">SalesComment</a>]</td>
-<td>
-
-Get all comment for the company specified by an id
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">companyId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>userRoles</strong></td>
 <td valign="top">[<a href="#userrole">UserRole</a>]</td>
 <td>
 
 Get all user roles
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>contacts</strong></td>
-<td valign="top">[<a href="#companycontact">CompanyContact</a>]</td>
-<td>
-
-Get all contacts for the company specified by an id
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">companyId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>contactRequests</strong></td>
-<td valign="top">[<a href="#contactrequest">ContactRequest</a>]</td>
-<td>
-
-Get all contact requests
 
 </td>
 </tr>
@@ -223,20 +157,6 @@ Update the profile of the currently logged in user
 <tr>
 <td colspan="2" align="right" valign="top">fields</td>
 <td valign="top"><a href="#userprofileinput">UserProfileInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>createSalesStatus</strong></td>
-<td valign="top"><a href="#companysalesstatus">CompanySalesStatus</a></td>
-<td>
-
-Create a company sales status with name
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">name</td>
-<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
@@ -277,13 +197,18 @@ Create companies with specified names
 <td valign="top"><a href="#company">Company</a></td>
 <td>
 
-Update the company with the given ID
+Update the company with the given ID for the given year
 
 </td>
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">id</td>
 <td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">year</td>
+<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 <tr>
@@ -354,44 +279,6 @@ Remove contact with a given contact ID
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>createComment</strong></td>
-<td valign="top"><a href="#salescomment">SalesComment</a></td>
-<td>
-
-Create new comment for a company specified by the company ID
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">companyId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">text</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>updateComment</strong></td>
-<td valign="top"><a href="#salescomment">SalesComment</a></td>
-<td>
-
-Update the comment with the given ID
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">text</td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -606,13 +493,8 @@ Add a contact request
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>status</strong></td>
-<td valign="top"><a href="#companysalesstatus">CompanySalesStatus</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>id</strong></td>
-<td valign="top"><a href="#string">String</a></td>
+<td valign="top"><a href="#id">ID</a></td>
 <td></td>
 </tr>
 <tr>
@@ -621,13 +503,18 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>amount</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
+<td colspan="2" valign="top"><strong>companyContacts</strong></td>
+<td valign="top">[<a href="#companycontact">CompanyContact</a>]</td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>responsibleUser</strong></td>
-<td valign="top"><a href="#user">User</a></td>
+<td colspan="2" valign="top"><strong>responsibleUsers</strong></td>
+<td valign="top">[<a href="#yearresponsible">YearResponsible</a>]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>events</strong></td>
+<td valign="top">[<a href="#event">Event</a>]</td>
 <td></td>
 </tr>
 </tbody>
@@ -647,7 +534,7 @@ Add a contact request
 <tbody>
 <tr>
 <td colspan="2" valign="top"><strong>id</strong></td>
-<td valign="top"><a href="#string">String</a></td>
+<td valign="top"><a href="#id">ID</a></td>
 <td></td>
 </tr>
 <tr>
@@ -661,43 +548,13 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>phoneNumber</strong></td>
+<td colspan="2" valign="top"><strong>phone</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>comment</strong></td>
 <td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-### CompanySalesStatus
-
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>name</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>id</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>priority</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -747,46 +604,21 @@ Add a contact request
 <tbody>
 <tr>
 <td colspan="2" valign="top"><strong>id</strong></td>
-<td valign="top"><a href="#string">String</a></td>
+<td valign="top"><a href="#id">ID</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#company">Company</a></td>
+<td colspan="2" valign="top"><strong>date</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>companyName</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>responsible</strong></td>
-<td valign="top"><a href="#user">User</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>checkedInUsers</strong></td>
-<td valign="top">[<a href="#user">User</a>]</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>notCheckedInUsers</strong></td>
-<td valign="top">[<a href="#user">User</a>]</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>schedule</strong></td>
-<td valign="top"><a href="#string">String</a></td>
+<td colspan="2" valign="top"><strong>studsYear</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>location</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>privateDescription</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -796,18 +628,18 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>date</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
+<td colspan="2" valign="top"><strong>privateDescription</strong></td>
+<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>beforeSurveys</strong></td>
-<td valign="top">[<a href="#string">String</a>]</td>
+<td colspan="2" valign="top"><strong>beforeSurvey</strong></td>
+<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>afterSurveys</strong></td>
-<td valign="top">[<a href="#string">String</a>]</td>
+<td colspan="2" valign="top"><strong>afterSurvey</strong></td>
+<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
@@ -818,6 +650,21 @@ Add a contact request
 <tr>
 <td colspan="2" valign="top"><strong>published</strong></td>
 <td valign="top"><a href="#boolean">Boolean</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>responsible</strong></td>
+<td valign="top"><a href="#user">User</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#company">Company</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#statustype">StatusType</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -841,6 +688,16 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>createdAt</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>edited</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td></td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>id</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
@@ -855,14 +712,39 @@ Add a contact request
 <td valign="top"><a href="#user">User</a></td>
 <td></td>
 </tr>
+</tbody>
+</table>
+
+### StatusType
+
+<table>
+<thead>
 <tr>
-<td colspan="2" valign="top"><strong>createdAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>name</strong></td>
+<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>edited</strong></td>
-<td valign="top"><a href="#boolean">Boolean</a></td>
+<td colspan="2" valign="top"><strong>priority</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>amount</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>salesComments</strong></td>
+<td valign="top">[<a href="#salescomment">SalesComment</a>]</td>
 <td></td>
 </tr>
 </tbody>
@@ -882,7 +764,22 @@ Add a contact request
 <tbody>
 <tr>
 <td colspan="2" valign="top"><strong>id</strong></td>
+<td valign="top"><a href="#id">ID</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>firstName</strong></td>
 <td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>lastName</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>year</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 <tr>
@@ -893,11 +790,6 @@ Add a contact request
 <tr>
 <td colspan="2" valign="top"><strong>permissions</strong></td>
 <td valign="top">[<a href="#string">String</a>]</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>cv</strong></td>
-<td valign="top"><a href="#cv">CV</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -916,42 +808,17 @@ Add a contact request
 </thead>
 <tbody>
 <tr>
+<td colspan="2" valign="top"><strong>role</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>email</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>userRole</strong></td>
-<td valign="top"><a href="#userrole">UserRole</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>picture</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>alternativePicture</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>companyName</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>firstName</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>lastName</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>position</strong></td>
+<td colspan="2" valign="top"><strong>phone</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -966,7 +833,7 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>phone</strong></td>
+<td colspan="2" valign="top"><strong>master</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -976,13 +843,38 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>master</strong></td>
+<td colspan="2" valign="top"><strong>picture</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>resumeEmail</strong></td>
-<td valign="top"><a href="#string">String</a></td>
+<td colspan="2" valign="top"><strong>cv</strong></td>
+<td valign="top"><a href="#cv">CV</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### YearResponsible
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>year</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>user</strong></td>
+<td valign="top"><a href="#user">User</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -1094,7 +986,7 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>phoneNumber</strong></td>
+<td colspan="2" valign="top"><strong>phone</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -1157,17 +1049,17 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>schedule</strong></td>
-<td valign="top"><a href="#string">String</a></td>
+<td colspan="2" valign="top"><strong>date</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>studsYear</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>location</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>privateDescription</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -1177,18 +1069,18 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>date</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
+<td colspan="2" valign="top"><strong>privateDescription</strong></td>
+<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>beforeSurveys</strong></td>
-<td valign="top">[<a href="#string">String</a>]</td>
+<td colspan="2" valign="top"><strong>beforeSurvey</strong></td>
+<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>afterSurveys</strong></td>
-<td valign="top">[<a href="#string">String</a>]</td>
+<td colspan="2" valign="top"><strong>afterSurvey</strong></td>
+<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
@@ -1216,17 +1108,12 @@ Add a contact request
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>firstName</strong></td>
+<td colspan="2" valign="top"><strong>email</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>lastName</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>position</strong></td>
+<td colspan="2" valign="top"><strong>phone</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -1241,22 +1128,12 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>phone</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>allergies</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>master</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>resumeEmail</strong></td>
+<td colspan="2" valign="top"><strong>allergies</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -1311,6 +1188,10 @@ Add a contact request
 The `Boolean` scalar type represents `true` or `false`.
 
 ### DateTime
+
+### ID
+
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
 
 ### Int
 
