@@ -3,10 +3,12 @@ import * as mongoose from 'mongoose'
 import * as models from '../models'
 
 export type UserDocument = mongoose.Document & models.User & {
-  email: string,
-  password: string,
-  passwordResetToken: string | undefined,
-  passwordResetExpires: number | undefined,
+    info: {
+        email: string,
+        password: string,
+        passwordResetToken: string | undefined,
+        passwordResetExpires: number | undefined,
+    }
 
   comparePassword:
     (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void,
@@ -42,12 +44,12 @@ userSchema.pre('save', function save(this: UserDocument, next) {
   bcrypt.genSalt(10, (err, salt) => {
     if (err) { return next(err) }
     bcrypt.hash(
-      user.password,
+      user.info.password,
       salt,
       undefined!,
       (err: mongoose.Error, hash: any) => {
       if (err) { return next(err) }
-      user.password = hash
+      user.info.password = hash
       next()
     })
   })
@@ -57,7 +59,7 @@ userSchema.methods.comparePassword =
   function (candidatePassword: string, cb: (err: any, isMatch: any) => {}) {
     bcrypt.compare(
       candidatePassword,
-      this.password,
+      this.info.password,
       (err: mongoose.Error, isMatch: boolean) => {
         cb(err, isMatch)
     })
