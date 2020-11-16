@@ -1,9 +1,7 @@
-import { String } from "aws-sdk/clients/cloudtrail";
-
 export interface User {
   readonly id: string
   firstName: string
-  lastName: String
+  lastName: string
   studsYear: number
   info: UserInfo
   permissions: Permission[]

@@ -32,7 +32,7 @@ export class UserActionsImpl implements UserActions {
           if (err) {
             reject(Error(`Error occured when authenticating user: ${err}`))
           }
-          if(!userRole && !studsYear) {
+          if (!userRole && !studsYear) {
             resolve(mongodb.User.find({}).exec())
           }
           else if (!userRole) {
