@@ -8,6 +8,7 @@ export interface Event {
   readonly privateDescription: string
   readonly publicDescription: string
   readonly date: Date
+  readonly studsYear: number
   readonly beforeSurvey: string
   readonly afterSurvey: string
   readonly pictures: string[]

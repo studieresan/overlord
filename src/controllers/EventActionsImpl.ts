@@ -33,7 +33,8 @@ export class EventActionsImpl implements EventActions {
                 'publicDescription': true,
                 'date': true,
                 'pictures': true,
-                'published': true,
+				'published': true,
+				'studsYear': true
               }
             ).populate('company')
              .populate('responsible')
