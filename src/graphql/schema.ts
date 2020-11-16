@@ -5,8 +5,6 @@ import {
   CVActionsImpl,
   EventActions,
   EventActionsImpl,
-  CompanySalesStatusActions,
-  CompanySalesStatusActionsImpl,
   CompanyActions,
   CompanyActionsImpl,
   SalesCommentActions,
@@ -24,7 +22,6 @@ import {
 } from './GraphQLUserProfile'
 import { CVType, CVInputType } from './GraphQLCV'
 import { EventType, EventInputType } from './GraphQLEvent'
-import { CompanySalesStatus } from './GraphQLECompanySalesStatus'
 import { Company, CompanyInput } from './GraphQLCompany'
 import {
   GraphQLList,
@@ -42,7 +39,6 @@ import { ContactRequest } from './GraphQLContactRequest'
 const userCtrl: UserActions = new UserActionsImpl()
 const cvCtrl: CVActions = new CVActionsImpl()
 const eventCtrl: EventActions = new EventActionsImpl()
-const companySalesStatusCtrl: CompanySalesStatusActions = new CompanySalesStatusActionsImpl()
 const companyCtrl: CompanyActions = new CompanyActionsImpl()
 const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
 const companyContactCtrl: CompanyContactActions = new CompanyContactActionsImpl()
@@ -150,18 +146,6 @@ const schema = new GraphQLSchema({
         async resolve(a, { fields }, { req, res }) {
           return await requireAuth(req, res, () =>
             userCtrl.updateUserProfile(req.user.id, fields)
-          )
-        },
-      },
-      createSalesStatus: {
-        description: 'Create a company sales status with name',
-        type: CompanySalesStatus,
-        args: {
-          name: { type: GraphQLString },
-        },
-        async resolve(a, { name }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companySalesStatusCtrl.createSalesStatus(name)
           )
         },
       },
