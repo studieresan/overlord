@@ -13,18 +13,15 @@ export type UserDocument = mongoose.Document & models.User & {
 }
 
 const userSchema: mongoose.Schema = new mongoose.Schema({
-  email: { type: String, unique: true },
-  password: String,
-  passwordResetToken: String,
-  passwordResetExpires: Number,
-
-  permissions: [String],
-  profile: {
+  firstName: String,
+  lastName: String,
+  studsYear: Number,
+  userRole: String,
+  info: {
+    password: String,
+    passwordResetToken: String,
+    passwordResetExpires: Number,
     email: String,
-    firstName: String,
-    lastName: String,
-    profile: String,
-    alternativePicture: String,
     position: String,
     linkedIn: String,
     github: String,
@@ -32,9 +29,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     picture: String,
     allergies: String,
     master: String,
-    userRole: String,
-    studsYear: Number,
-    resumeEmail: String,
+    permissions: [String],
   },
 }, { timestamps: true })
 
