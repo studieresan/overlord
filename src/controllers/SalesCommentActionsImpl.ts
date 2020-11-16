@@ -22,7 +22,7 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
          .populate('user')
          .exec()
          .then(listOfComments =>
-          listOfComments.filter(comment => comment.user.profile.studsYear == studsYear))
+          listOfComments.filter(comment => comment.user.studsYear == studsYear))
         )
     })
   }

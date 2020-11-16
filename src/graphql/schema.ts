@@ -16,10 +16,10 @@ import {
 } from './../controllers'
 import { UserType } from './GraphQLUser'
 import {
-  UserProfileType,
-  UserProfileInputType,
+  UserInfoType,
+  UserInfoInputType,
   UserRole,
-} from './GraphQLUserProfile'
+} from './GraphQLUserInfo'
 import { CVType, CVInputType } from './GraphQLCV'
 import { EventType, EventInputType } from './GraphQLEvent'
 import { Company, CompanyInput } from './GraphQLCompany'
@@ -137,15 +137,15 @@ const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'RootMutationType',
     fields: {
-      updateProfile: {
+      updateInfo: {
         description: 'Update the profile of the currently logged in user',
-        type: UserProfileType,
+        type: UserInfoType,
         args: {
-          fields: { type: UserProfileInputType },
+          fields: { type: UserInfoInputType },
         },
         async resolve(a, { fields }, { req, res }) {
           return await requireAuth(req, res, () =>
-            userCtrl.updateUserProfile(req.user.id, fields)
+            userCtrl.updateUserInfo(req.user.id, fields)
           )
         },
       },

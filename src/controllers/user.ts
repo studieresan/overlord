@@ -90,15 +90,14 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
   }
 
   const user = new User({
-    email: req.body.email,
-    password: await generateRandomPassword(),
-    permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
-    profile: {
-      email: req.body.email,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      userRole: req.body.user_role,
-      studsYear: process.env.STUDS_YEAR,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    userRole: req.body.user_role,
+    studsYear: process.env.STUDS_YEAR,
+    info: {
+          email: req.body.email,
+        password: await generateRandomPassword(),
+        permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
     },
   })
 
@@ -158,7 +157,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
         from: 'studs-kommunikation@d.kth.se',
         subject: 'Welcome to Studieresan!',
         text:
-          `Hi ${user.profile.firstName}!\n\n` +
+          `Hi ${user.firstName}!\n\n` +
           // tslint:disable-next-line:max-line-length
           `You are receiving this email because you've been given an account at Studieresan. ` +
           // tslint:disable-next-line:max-line-length

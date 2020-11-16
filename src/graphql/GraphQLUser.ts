@@ -1,6 +1,6 @@
 import {
-  UserProfileType,
-} from './GraphQLUserProfile'
+    UserInfoType,
+} from './GraphQLUserInfo'
 import {
   GraphQLObjectType,
   GraphQLList,
@@ -17,7 +17,7 @@ export const UserType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     year: { type: GraphQLInt },
-    profile: { type: UserProfileType },
+    info: { type: UserInfoType },
     permissions: { type: new GraphQLList(GraphQLString) },
   },
 })

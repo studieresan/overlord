@@ -1,27 +1,27 @@
 import * as mongodb from '../mongodb/User'
 import * as passport from 'passport'
 import { UserActions } from './UserActions'
-import { User, UserProfile, UserRole } from '../models'
+import { User, UserInfo, UserRole } from '../models'
 import { merge } from 'ramda'
 import { rejectIfNull } from './util'
 
 export class UserActionsImpl implements UserActions {
 
-  getUserProfile(id: string): Promise<UserProfile> {
-    return mongodb.User.findById(id, { profile: 1 })
+  getUserInfo(id: string): Promise<UserInfo> {
+    return mongodb.User.findById(id, { info: 1 })
       .then(rejectIfNull('No user matches id'))
-      .then(user => user.profile)
+      .then(user => user.info)
   }
 
-  updateUserProfile(id: string, newFields: Partial<UserProfile>):
-    Promise<UserProfile> {
+  updateUserInfo(id: string, newFields: Partial<UserInfo>):
+    Promise<UserInfo> {
     return mongodb.User.findById(id)
       .then(rejectIfNull('No user matches id'))
       .then(user => {
-        const newProfile = merge(user.profile, newFields)
-        user.profile = newProfile
+        const newInfo = merge(user.info, newFields)
+        user.info = newInfo
         return user.save()
-          .then(user => user.profile)
+          .then(user => user.info)
       })
   }
 
@@ -32,14 +32,17 @@ export class UserActionsImpl implements UserActions {
           if (err) {
             reject(Error(`Error occured when authenticating user: ${err}`))
           }
-          if (!userRole) {
-            // All profiles
+          if(!userRole && !studsYear) {
+            resolve(mongodb.User.find({}).exec())
+          }
+          else if (!userRole) {
+            // All infos
             resolve(mongodb.User.find(
-              {'profile.studsYear': studsYear}, {}
+              {'studsYear': studsYear}, {}
             ).exec())
           } else {
             resolve(mongodb.User.find(
-              { 'profile.userRole': userRole, 'profile.studsYear': studsYear }, {}
+              { 'info.userRole': userRole, 'studsYear': studsYear }, {}
             ).exec())
           }
         }

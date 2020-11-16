@@ -7,11 +7,11 @@ import {
 import {
   CVType,
 } from './GraphQLCV'
-import * as models from './../models'
+import * as models from '../models'
 import {
   CVActions,
   CVActionsImpl,
-} from './../controllers'
+} from '../controllers'
 import * as passport from 'passport'
 
 
@@ -31,7 +31,7 @@ function getCV(req: any, res: any, requestedUser: any) {
   })
 }
 
-const MutableProfileFields = {
+const MutableInfoFields = {
   email: { type: GraphQLString },
   phone: { type: GraphQLString },
   linkedIn: { type: GraphQLString },
@@ -53,11 +53,11 @@ export const UserRole = new GraphQLEnumType({
   },
 })
 
-export const UserProfileType = new GraphQLObjectType({
-  name : 'UserProfile',
+export const UserInfoType = new GraphQLObjectType({
+  name : 'UserInfo',
   fields : {
     role: { type: GraphQLString },
-    ...MutableProfileFields,
+    ...MutableInfoFields,
     picture: { type: GraphQLString },
     cv: {
       type: CVType,
@@ -69,7 +69,7 @@ export const UserProfileType = new GraphQLObjectType({
 })
 
 // This type represents the fields that a user can change about themselves
-export const UserProfileInputType = new GraphQLInputObjectType({
-  name : 'UserProfileInput',
-  fields : MutableProfileFields,
+export const UserInfoInputType = new GraphQLInputObjectType({
+  name : 'UserInfoInput',
+  fields : MutableInfoFields,
 })

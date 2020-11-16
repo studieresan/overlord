@@ -1,26 +1,25 @@
+import { String } from "aws-sdk/clients/cloudtrail";
+
 export interface User {
   readonly id: string
-  profile: UserProfile
+  firstName: string
+  lastName: String
+  studsYear: number
+  info: UserInfo
   permissions: Permission[]
 }
 
-export type UserProfile = StudsProfile
+export type UserInfo = StudsInfo
 
-export interface StudsProfile {
+export interface StudsInfo {
   readonly userRole: UserRole
-  readonly studsYear: number
   readonly email: string
-  readonly firstName: string
-  readonly lastName: string
-  readonly position?: string
   readonly linkedIn?: string
   readonly github?: string
   readonly phone?: string
   readonly picture?: string
-  readonly alternativePicture?: string
   readonly allergies?: string
   readonly master?: string
-  readonly resumeEmail: string
 }
 
 export enum UserRole {
