@@ -21,27 +21,11 @@ Start the server
 ## API
 The api documentation can be found in [API.md](API.md)
 
-## Create local account
+> The API was generated with [graphql-markdown](https://github.com/exogen/graphql-markdown) by running the server locally and running `graphql-markdown http://localhost:5040/graphql > API.md`
 
-Right now we're not making any difference in the account creation process from
-running locally or in production. Therefore; after you've created a user below
-you will receive an email requesting you to choose your password.
+## Create account
 
-You will therefore need a SendGrid API key before proceeding.
-
-So:
-
-1. Ask the Head of IT to provide you with the SendGrid API key.
-
-2. Create a studs member account through `curl`. Be sure to specify the correct
-email address.
-
-```
-curl -H "Content-Type: application/json" -X POST -d '{"email":"<your-email-here>","firstName":"<your-firstname>","lastName":"<your-lastname>","user_role":"project_manager","token":"asdf"}' http://localhost:5040/signup
-```
-
-3. Open the email you received and proceed with setting your password to what
-you want it to be.
+To create an account in the database, either have a member of Studs create one for you on the website (project leader or IT bossman) or create a new document in the user collection with similar content as other users (copy-paste) and set the password do something arbitrary. Then on studs.se, press "forgot password" to reset the password and voíla! You can also add permissions for yourself in the document directly.
 
 ---
 
