@@ -3,20 +3,42 @@ import {
   GraphQLInputObjectType,
   GraphQLEnumType,
   GraphQLString,
-  GraphQLInt,
+  // GraphQLInt,
 } from 'graphql'
+import {
+  CVType,
+} from './GraphQLCV'
 import * as models from './../models'
+import {
+  CVActions,
+  CVActionsImpl,
+} from './../controllers'
+import * as passport from 'passport'
+
+
+
+const cvCtrl: CVActions = new CVActionsImpl()
+
+function getCV(req: any, res: any, requestedUser: any) {
+  return new Promise(resolve => {
+    passport.authenticate('jwt', { session: false },
+      (err: any, user: any, info: any) => {
+        if (err || !user) {
+          resolve(undefined)
+        }
+        resolve(cvCtrl.getCV(requestedUser.id))
+      }
+    )(req, res, () => {})
+  })
+}
 
 const MutableProfileFields = {
-  firstName: { type: GraphQLString },
-  lastName: { type: GraphQLString },
-  position: { type: GraphQLString },
+  email: { type: GraphQLString },
+  phone: { type: GraphQLString },
   linkedIn: { type: GraphQLString },
   github: { type: GraphQLString },
-  phone: { type: GraphQLString },
-  allergies: { type: GraphQLString },
   master: { type: GraphQLString },
-  resumeEmail: { type: GraphQLString },
+  allergies: { type: GraphQLString },
 }
 
 export const UserRole = new GraphQLEnumType({
@@ -35,13 +57,15 @@ export const UserRole = new GraphQLEnumType({
 export const UserProfileType = new GraphQLObjectType({
   name : 'UserProfile',
   fields : {
-    email:  { type: GraphQLString },
-    userRole:  { type: UserRole },
-    studsYear: {type: GraphQLInt},
-    picture:  { type: GraphQLString },
-    alternativePicture:  { type: GraphQLString },
-    companyName: { type: GraphQLString },
+    role: { type: GraphQLString },
     ...MutableProfileFields,
+    picture: { type: GraphQLString },
+    cv: {
+      type: CVType,
+      async resolve(requestedUser, b, { req, res }) {
+        return await getCV(req, res, requestedUser)
+      },
+    },
   },
 })
 

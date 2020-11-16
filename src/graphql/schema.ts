@@ -35,7 +35,6 @@ import {
   GraphQLInt,
 } from 'graphql'
 import * as passportConfig from '../config/passport'
-import { SalesComment } from './GraphQLSalesComment'
 import * as User from '../models/User'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
 import { ContactRequest } from './GraphQLContactRequest'
@@ -94,62 +93,6 @@ const schema = new GraphQLSchema({
           return await userCtrl.getUsers(req, res, userRole, studsYear)
         },
       },
-      cvs: {
-        description: 'Get all current user cvs',
-        type: new GraphQLList(CVType),
-        async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res, () => cvCtrl.getAllCVs(req.user))
-        },
-      },
-      allEvents: {
-        description: 'Get all events as a list',
-        type: new GraphQLList(EventType),
-        async resolve(a, b, { req, res }) {
-          return await eventCtrl.getEvents(req, res)
-        },
-      },
-      event: {
-        description: 'Get a specific event',
-        type: EventType,
-        args: {
-          eventId: { type: GraphQLString },
-        },
-        async resolve(a, { eventId }, { req, res }) {
-          return await eventCtrl.getEvent(eventId)
-        },
-      },
-      oldEvents: {
-        description: 'Get all old events as a list',
-        type: new GraphQLList(EventType),
-        async resolve() {
-          return await eventCtrl.getOldEvents()
-        },
-      },
-      allCompanySalesStatuses: {
-        description: 'Get all events as a list',
-        type: new GraphQLList(CompanySalesStatus),
-        async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companySalesStatusCtrl.getCompanySalesStatuses(req, res)
-          )
-        },
-      },
-      companies: {
-        description: 'Get all companies as a list specified by a year',
-        type: new GraphQLList(Company),
-        async resolve(root, b, { req, res }) {
-          return await requireAuth(req, res, () => companyCtrl.getCompanies())
-        },
-      },
-      soldCompanies: {
-        description: 'Get all sold companies as a list',
-        type: new GraphQLList(Company),
-        async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyCtrl.getSoldCompanies()
-          )
-        },
-      },
       company: {
         description: 'Get company information specified by an id',
         type: Company,
@@ -162,18 +105,28 @@ const schema = new GraphQLSchema({
           )
         },
       },
-      comments: {
-        description:
-          'Get all comment for the company specified by an id and studs year',
-        type: new GraphQLList(SalesComment),
-        args: {
-          companyId: { type: GraphQLString },
-          studsYear: { type: GraphQLInt },
+      companies: {
+        description: 'Get all companies as a list specified by a year',
+        type: new GraphQLList(Company),
+        async resolve(root, b, { req, res }) {
+          return await requireAuth(req, res, () => companyCtrl.getCompanies())
         },
-        async resolve(root, { companyId, studsYear }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            salesCommentCtrl.getComments(companyId, studsYear)
-          )
+      },
+      event: {
+        description: 'Get a specific event',
+        type: EventType,
+        args: {
+          eventId: { type: GraphQLString },
+        },
+        async resolve(a, { eventId }, { req, res }) {
+          return await eventCtrl.getEvent(eventId)
+        },
+      },
+      events: {
+        description: 'Get all events as a list',
+        type: new GraphQLList(EventType),
+        async resolve(a, b, { req, res }) {
+          return await eventCtrl.getEvents(req, res)
         },
       },
       userRoles: {
@@ -181,27 +134,6 @@ const schema = new GraphQLSchema({
         type: new GraphQLList(UserRole),
         async resolve(a, b, { req, res }) {
           return await requireAuth(req, res, () => getUserRoles())
-        },
-      },
-      contacts: {
-        description: 'Get all contacts for the company specified by an id',
-        type: new GraphQLList(CompanyContact),
-        args: {
-          companyId: { type: GraphQLString },
-        },
-        async resolve(root, { companyId }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyContactCtrl.getContacts(companyId)
-          )
-        },
-      },
-      contactRequests: {
-        description: 'Get all contact requests',
-        type: new GraphQLList(ContactRequest),
-        async resolve(root, {}, { req, res }) {
-          return await requireAuth(req, res, () =>
-            contactRequestCrtl.getContactRequests()
-          )
         },
       },
     },
@@ -323,33 +255,33 @@ const schema = new GraphQLSchema({
           )
         },
       },
-      createComment: {
-        description:
-          'Create new comment for a company specified by the company ID',
-        type: SalesComment,
-        args: {
-          companyId: { type: GraphQLString },
-          text: { type: GraphQLString },
-        },
-        async resolve(a, { companyId, text }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            salesCommentCtrl.createComment(req.user, companyId, text)
-          )
-        },
-      },
-      updateComment: {
-        description: 'Update the comment with the given ID',
-        type: SalesComment,
-        args: {
-          id: { type: GraphQLString },
-          text: { type: GraphQLString },
-        },
-        async resolve(a, { id, text }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            salesCommentCtrl.updateComment(req.user, id, text)
-          )
-        },
-      },
+      // createComment: {
+      //   description:
+      //     'Create new comment for a company specified by the company ID',
+      //   type: SalesComment,
+      //   args: {
+      //     companyId: { type: GraphQLString },
+      //     text: { type: GraphQLString },
+      //   },
+      //   async resolve(a, { companyId, text }, { req, res }) {
+      //     return await requireAuth(req, res, () =>
+      //       salesCommentCtrl.createComment(req.user, companyId, text)
+      //     )
+      //   },
+      // },
+      // updateComment: {
+      //   description: 'Update the comment with the given ID',
+      //   type: SalesComment,
+      //   args: {
+      //     id: { type: GraphQLString },
+      //     text: { type: GraphQLString },
+      //   },
+      //   async resolve(a, { id, text }, { req, res }) {
+      //     return await requireAuth(req, res, () =>
+      //       salesCommentCtrl.updateComment(req.user, id, text)
+      //     )
+      //   },
+      // },
       removeComment: {
         description: 'Remove comment with a given contact ID',
         type: GraphQLBoolean,
