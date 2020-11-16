@@ -320,36 +320,95 @@
 			"required": true
 		}
 	},
-	"cvs": {
+	"cvs": {},
+	"users": {
 		"_id": {
 			"primaryKey": true,
 			"type": "Object",
 			"required": true
 		},
-		"userId": {
-			"foreignKey": true,
-			"references": "users",
+		"firstName": {
 			"type": "string",
 			"required": true
 		},
-		"name": {
+		"lastName": {
 			"type": "string",
+			"required": true
+		},
+		"studsYear": {
+			"type": "number",
+			"required": true
+		},
+		"userRole": {
+			"key": true,
+			"type": "string",
+			"required": true
+		},
+		"createdAt": {
+			"type": "Date",
 			"required": true
 		},
 		"updatedAt": {
 			"type": "Date",
 			"required": true
 		},
-		"sections": {
-			"type": "Array",
-			"required": true
-		},
 		"__v": {
 			"type": "number",
 			"required": true
 		},
-		"createdAt": {
-			"type": "Date",
+		"info": {
+			"type": "Object",
+			"structure": {
+				"permissions": {
+					"type": "Array",
+					"required": true
+				},
+				"password": {
+					"type": "string",
+					"required": true
+				},
+				"email": {
+					"type": "string",
+					"required": true
+				},
+				"picture": {
+					"type": "string",
+					"required": false
+				},
+				"position": {
+					"type": "undefined",
+					"required": false
+				},
+				"linkedIn": {
+					"type": "string",
+					"required": false
+				},
+				"github": {
+					"type": "undefined",
+					"required": false
+				},
+				"phone": {
+					"key": true,
+					"type": "string",
+					"required": true
+				},
+				"allergies": {
+					"type": "undefined",
+					"required": false
+				},
+				"master": {
+					"type": "string",
+					"required": true
+				},
+				"passwordResetToken": {
+					"type": "string",
+					"required": true
+				},
+				"passwordResetExpires": {
+					"type": "number",
+					"required": true
+				}
+			},
 			"required": true
 		}
 	},
@@ -415,8 +474,7 @@
 			"required": true
 		},
 		"responsible": {
-			"foreignKey": true,
-			"references": "users",
+			"key": true,
 			"type": "Object",
 			"required": true
 		},
@@ -474,120 +532,6 @@
 		},
 		"__v": {
 			"type": "number",
-			"required": true
-		}
-	},
-	"users": {
-		"_id": {
-			"primaryKey": true,
-			"type": "Object",
-			"required": true
-		},
-		"updatedAt": {
-			"type": "Date",
-			"required": true
-		},
-		"createdAt": {
-			"type": "Date",
-			"required": true
-		},
-		"email": {
-			"key": true,
-			"type": "string",
-			"required": true
-		},
-		"password": {
-			"type": "string",
-			"required": true
-		},
-		"profile": {
-			"type": "Object",
-			"structure": {
-				"resumeEmail": {
-					"type": "string",
-					"required": false
-				},
-				"userRole": {
-					"key": true,
-					"type": "string",
-					"required": true
-				},
-				"master": {
-					"key": true,
-					"type": "string",
-					"required": true
-				},
-				"allergies": {
-					"type": "string",
-					"required": false
-				},
-				"picture": {
-					"type": "string",
-					"required": false
-				},
-				"alternativePicture": {
-					"type": "string",
-					"required": false
-				},
-				"phone": {
-					"key": true,
-					"type": "string",
-					"required": false
-				},
-				"github": {
-					"type": "string",
-					"required": false
-				},
-				"linkedIn": {
-					"type": "string",
-					"required": false
-				},
-				"position": {
-					"type": "string",
-					"required": false
-				},
-				"profile": {
-					"type": "undefined",
-					"required": false
-				},
-				"lastName": {
-					"type": "string",
-					"required": true
-				},
-				"firstName": {
-					"type": "string",
-					"required": true
-				},
-				"email": {
-					"key": true,
-					"type": "string",
-					"required": true
-				},
-				"studsYear": {
-					"type": "number",
-					"required": true
-				}
-			},
-			"required": true
-		},
-		"permissions": {
-			"type": "Array",
-			"required": true
-		},
-		"studsYear": {
-			"type": "number",
-			"required": true
-		},
-		"__v": {
-			"type": "number",
-			"required": true
-		},
-		"passwordResetExpires": {
-			"type": "number",
-			"required": true
-		},
-		"passwordResetToken": {
-			"type": "string",
 			"required": true
 		}
 	}

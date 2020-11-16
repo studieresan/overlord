@@ -16,7 +16,7 @@
     * [SalesComment](#salescomment)
     * [StatusType](#statustype)
     * [User](#user)
-    * [UserProfile](#userprofile)
+    * [UserInfo](#userinfo)
     * [YearResponsible](#yearresponsible)
   * [Inputs](#inputs)
     * [CVInput](#cvinput)
@@ -25,7 +25,7 @@
     * [CompanyContactInput](#companycontactinput)
     * [CompanyInput](#companyinput)
     * [EventInput](#eventinput)
-    * [UserProfileInput](#userprofileinput)
+    * [UserInfoInput](#userinfoinput)
   * [Enums](#enums)
     * [UserRole](#userrole)
   * [Scalars](#scalars)
@@ -146,8 +146,8 @@ Get all user roles
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>updateProfile</strong></td>
-<td valign="top"><a href="#userprofile">UserProfile</a></td>
+<td colspan="2" valign="top"><strong>updateInfo</strong></td>
+<td valign="top"><a href="#userinfo">UserInfo</a></td>
 <td>
 
 Update the profile of the currently logged in user
@@ -156,7 +156,7 @@ Update the profile of the currently logged in user
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">fields</td>
-<td valign="top"><a href="#userprofileinput">UserProfileInput</a></td>
+<td valign="top"><a href="#userinfoinput">UserInfoInput</a></td>
 <td></td>
 </tr>
 <tr>
@@ -783,8 +783,8 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>profile</strong></td>
-<td valign="top"><a href="#userprofile">UserProfile</a></td>
+<td colspan="2" valign="top"><strong>info</strong></td>
+<td valign="top"><a href="#userinfo">UserInfo</a></td>
 <td></td>
 </tr>
 <tr>
@@ -795,7 +795,7 @@ Add a contact request
 </tbody>
 </table>
 
-### UserProfile
+### UserInfo
 
 <table>
 <thead>
@@ -1096,7 +1096,7 @@ Add a contact request
 </tbody>
 </table>
 
-### UserProfileInput
+### UserInfoInput
 
 <table>
 <thead>
