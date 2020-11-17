@@ -101,7 +101,7 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
     },
   })
 
-  User.findOne({ email: req.body.email }, (err, existingUser) => {
+  User.findOne({ 'info.email': req.body.email }, (err, existingUser) => {
     if (err) { return next(err) }
     if (existingUser) {
       res.status(400)
@@ -298,7 +298,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       })
     },
     function setRandomToken(token: string, done: Function) {
-      User.findOne({ email: req.body.email }, (err, user: UserDocument) => {
+      User.findOne({ 'info.email': req.body.email }, (err, user: UserDocument) => {
         if (err) { return done(err) }
         if (!user) {
           const ERROR_MSG = 'Could not find account'

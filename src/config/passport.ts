@@ -48,8 +48,10 @@ passport.use(new JWTStrategy({
     passReqToCallback: true,
   },
   (req: any, jwtPayload: any, done: any) => {
-    User.findOne({ email: jwtPayload }, (err, user: any) => {
-      if (err) { return done(err) }
+    User.findOne({ 'info.email': jwtPayload }, (err, user: any) => {
+      if (err) {
+        return done(err)
+      }
       if (!user) {
         return done(
           undefined,

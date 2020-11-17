@@ -11,7 +11,11 @@ export function rejectIfNull<T>(reason: string):
     })
 }
 
-export function hasSufficientPermissions(user: User): boolean {
-  return user.permissions.includes(Permission.Events) ||
-      user.permissions.includes(Permission.Admin)
+export function hasEventOrAdminPermissions(user: User): boolean {
+  return user.info.permissions.includes(Permission.Events) ||
+      user.info.permissions.includes(Permission.Admin)
+}
+
+export function hasAdminPermission(user: User): boolean {
+    return user.info.permissions && user.info.permissions.includes(Permission.Admin)
 }

@@ -6,7 +6,7 @@ export interface UserActions {
 
   // Update the specified fields of a user info,
   // returning the modified info
-  updateUserInfo(id: string, fields: Partial<UserInfo>):
+  updateUserInfo(userID: string, requestUser: User, fields: Partial<UserInfo>):
     Promise<UserInfo>
 
   // Gets all users with the specified user role and year

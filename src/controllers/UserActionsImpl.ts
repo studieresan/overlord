@@ -3,7 +3,7 @@ import * as passport from 'passport'
 import { UserActions } from './UserActions'
 import { User, UserInfo, UserRole } from '../models'
 import { merge } from 'ramda'
-import { rejectIfNull } from './util'
+import { hasAdminPermission, rejectIfNull } from './util'
 
 export class UserActionsImpl implements UserActions {
 
@@ -13,16 +13,26 @@ export class UserActionsImpl implements UserActions {
       .then(user => user.info)
   }
 
-  updateUserInfo(id: string, newFields: Partial<UserInfo>):
+  updateUserInfo(userID: string, requestUser: User, newFields: Partial<UserInfo>):
     Promise<UserInfo> {
-    return mongodb.User.findById(id)
-      .then(rejectIfNull('No user matches id'))
-      .then(user => {
-        const newInfo = merge(user.info, newFields)
-        user.info = newInfo
-        return user.save()
-          .then(user => user.info)
-      })
+
+    return new Promise<UserInfo>((resolve, reject) => {
+        // If the user tries to edit other user, must have admin permission
+        if (!userID) {
+            userID = requestUser.id
+        } else if (userID !== requestUser.id && !hasAdminPermission(requestUser)) {
+            return reject(Error('User not authorized to edit other user'))
+        }
+        return mongodb.User.findById(userID)
+        .then(rejectIfNull('No user matches id'))
+        .then(user => {
+            const newInfo = merge(user.info, newFields)
+            user.info = newInfo
+            return user.save()
+            .then(user => user.info)
+            .then(info => resolve(info))
+        })
+    })
   }
 
   getUsers(req: any, res: any, userRole: UserRole, studsYear: number): Promise<User[]> {

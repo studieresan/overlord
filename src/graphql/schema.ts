@@ -137,16 +137,19 @@ const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'RootMutationType',
     fields: {
-      updateInfo: {
-        description: 'Update the profile of the currently logged in user',
+      updateUser: {
+        description: 'Update user information',
         type: UserInfoType,
         args: {
-          fields: { type: UserInfoInputType },
+            id: { type: GraphQLString },
+            info: {
+                type: UserInfoInputType,
+            },
         },
-        async resolve(a, { fields }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            userCtrl.updateUserInfo(req.user.id, fields)
-          )
+        async resolve(a, { id, info }, { req, res }) {
+            return await requireAuth(req, res, () =>
+              userCtrl.updateUserInfo(id, req.user, info)
+            )
         },
       },
       createCompany: {
