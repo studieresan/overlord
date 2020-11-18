@@ -3,7 +3,6 @@ import {
 } from './GraphQLUserInfo'
 import {
   GraphQLObjectType,
-  GraphQLList,
   GraphQLString,
   GraphQLInt,
   GraphQLID,
@@ -18,6 +17,5 @@ export const UserType = new GraphQLObjectType({
     lastName: { type: GraphQLString },
     studsYear: { type: GraphQLInt },
     info: { type: UserInfoType },
-    permissions: { type: new GraphQLList(GraphQLString) },
   },
 })

@@ -3,6 +3,7 @@ import {
   GraphQLInputObjectType,
   GraphQLEnumType,
   GraphQLString,
+  GraphQLList,
 } from 'graphql'
 import {
     CVInputType,
@@ -68,6 +69,7 @@ export const UserInfoType = new GraphQLObjectType({
             return await getCV(req, res, requestedUser)
         },
     },
+    permissions: { type: new GraphQLList(GraphQLString) },
   },
 })
 
