@@ -16,7 +16,7 @@ export class CompanyActionsImpl implements CompanyActions {
         .exec()
         .then(companies => companies.map(c => {
           const object = {
-            ...c,
+            ...c['_doc'],
             statuses: c.years.map(year => ({
               studsYear: year.studsYear,
               responsibleUser: year.responsibleUser,
@@ -24,6 +24,7 @@ export class CompanyActionsImpl implements CompanyActions {
               statusPriority: year.status && year.status.priority,
             })),
           }
+          console.log(object)
           return object
         }))
     )})
