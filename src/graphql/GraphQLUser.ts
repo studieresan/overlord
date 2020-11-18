@@ -21,4 +21,3 @@ export const UserType = new GraphQLObjectType({
     permissions: { type: new GraphQLList(GraphQLString) },
   },
 })
-

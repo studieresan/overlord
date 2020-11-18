@@ -7,29 +7,11 @@ import {
   GraphQLList,
 } from 'graphql'
 import { CompanyContact } from './GraphQLCompanyContact'
-
-const CompanySaleCommentFields = {
-  content: { type: GraphQLString },
-  author: { type: GraphQLString },
-}
-
-export const CompanySaleComment = new GraphQLObjectType({
-  name: 'CompanySaleComment',
-  fields: () => ({
-    ...CompanySaleCommentFields,
-  }),
-})
-
-export const MutableCompanySaleComment = new GraphQLInputObjectType({
-  name: 'MutableCompanySaleComment',
-  fields: () => ({
-    ...CompanySaleCommentFields,
-  }),
-})
+import { SalesComment, SalesCommentInput } from './GraphQLSalesComment'
 
 const CompanyStudsYearFields = {
   studsYear: { type: GraphQLInt },
-  responsibleUser: { type: GraphQLString },
+  responsibleUser: { type: GraphQLID },
   statusDescription: { type: GraphQLString },
   statusPriority: { type: GraphQLInt },
   amount: { type: GraphQLInt },
@@ -39,7 +21,7 @@ export const CompanyStudsYear = new GraphQLObjectType({
     name: 'CompanyStudsYear',
     fields: () => ({
       ...CompanyStudsYearFields,
-      salesComments: { type: new GraphQLList(CompanySaleComment) },
+      salesComments: { type: new GraphQLList(SalesComment) },
     }),
 })
 
@@ -48,7 +30,7 @@ export const MutableCompanyStudsYear = new GraphQLInputObjectType({
   fields: () => ({
     // Require studsyear as we math the status against it
     ...CompanyStudsYearFields,
-    salesComments: { type: new GraphQLList(MutableCompanySaleComment) },
+    salesComments: { type: new GraphQLList(SalesCommentInput) },
   }),
 })
 
@@ -61,8 +43,8 @@ export const Company = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     ...MutableCompanyFields,
-    years: { type: new GraphQLList(CompanyStudsYear) },
     companyContacts: { type: new GraphQLList(CompanyContact) },
+    statuses: { type: new GraphQLList(CompanyStudsYear) },
   }),
 })
 

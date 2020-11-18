@@ -33,7 +33,6 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
       company: new ObjectID(companyId),
       user: auth,
       text,
-      edited: false,
     })
     return event.save()
   }
@@ -41,7 +40,7 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
   updateComment(auth: User, id: string, text: string): Promise<SalesComment> {
     return mongodb.SalesComment.findOneAndUpdate(
       { _id: id, user: auth },
-      { text, edited: true },
+      { text },
       { new: true }
     ).populate('company')
      .populate('user')

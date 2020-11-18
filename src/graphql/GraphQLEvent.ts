@@ -11,7 +11,6 @@ import {
 import { GraphQLDateTime } from './GraphQLDateTime'
 import { Company } from './GraphQLCompany'
 import { UserType } from './GraphQLUser'
-import { StatusType } from './GraphQLEventStatus'
 
 const MutableEventFields = {
   date: { type: GraphQLDateTime },
@@ -31,7 +30,6 @@ export const EventType: GraphQLObjectType = new GraphQLObjectType({
     ...MutableEventFields,
     responsible: { type: UserType },
     company: { type: Company },
-    status: { type: StatusType },
     studsYear: { type: GraphQLInt },
   }),
 })
