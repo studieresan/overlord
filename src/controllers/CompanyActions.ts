@@ -1,4 +1,4 @@
-import { Company, CompanyYear, User } from '../models'
+import { Company, User } from '../models'
 
 export interface CompanyActions {
   // Get all companies from a specific year

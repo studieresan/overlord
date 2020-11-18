@@ -136,7 +136,7 @@ const schema = new GraphQLSchema({
             )
         },
       },
-      userDelete: {},
+      // userDelete: {},
       eventUpdate: {
         description: 'Update event information of specified ID',
         type: EventType,
@@ -152,8 +152,8 @@ const schema = new GraphQLSchema({
             )
         },
       },
-      eventCreate: {},
-      eventDelete: {},
+      // eventCreate: {},
+      // eventDelete: {},
       companyUpdate: {
         description: 'Update company information of specified ID',
         type: Company,
@@ -168,14 +168,14 @@ const schema = new GraphQLSchema({
               companyCtrl.updateCompany(req.user, id, fields)
             )
         },
-      }
-      companyCreate: {},
-      companyContactUpdate: {},
-      companyContactCreate: {},
-      companyContactDelete: {},
-      salesCommentUpdate: {},
-      salesCommentCreate: {},
-      salesCommentDelete: {},
+      },
+      // companyCreate: {},
+      // companyContactUpdate: {},
+      // companyContactCreate: {},
+      // companyContactDelete: {},
+      // salesCommentUpdate: {},
+      // salesCommentCreate: {},
+      // salesCommentDelete: {},
     //   createCompany: {
     //     description: 'Create a company with name',
     //     type: Company,

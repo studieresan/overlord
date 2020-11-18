@@ -5,9 +5,8 @@ import {
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
-  GraphQLNonNull,
 } from 'graphql'
-import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
+import { CompanyContact } from './GraphQLCompanyContact'
 
 const CompanySaleCommentFields = {
   content: { type: GraphQLString },

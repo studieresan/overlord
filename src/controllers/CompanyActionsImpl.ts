@@ -1,5 +1,5 @@
 import { CompanyActions } from './CompanyActions'
-import { Company, CompanyYear, User } from '../models'
+import { Company, User } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { hasEventOrAdminPermissions, rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
@@ -87,13 +87,15 @@ export class CompanyActionsImpl implements CompanyActions {
     if (!hasEventOrAdminPermissions(user)) {
       return reject(new Error('User not authorized to do this'))
     }
-    return mongodb.Company.findOneAndUpdate(
+    return resolve(mongodb.Company.findOneAndUpdate(
       { _id: companyID },
       { ...fields },
       { new: true })
-      
-      .then(rejectIfNull('Comment does not exist or insufficient persmission'))
-    })
+      .populate('users')
+      .populate('companysalesstatuses')
+      .exec()
+      .then(rejectIfNull('Company does not exist'))
+    )})
   }
 
   setCompaniesStatus(statusId: string): Promise<Company[]> {
