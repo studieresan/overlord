@@ -1,3 +1,4 @@
+import { CreateEvent } from '../models/Event'
 import { Event, User } from '../models'
 export interface EventActions {
 
@@ -11,11 +12,11 @@ export interface EventActions {
   getOldEvents(): Promise<Event[]>
 
   // Create a new event for company name
-  createEvent(auth: User, companyId: string, responsibleUserId: string, fields: Partial<Event>):
+  createEvent(requestUser: User, fields: Partial<CreateEvent>):
     Promise<Event>
 
   // Update the event with given id
-  updateEvent(auth: User, id: string, fields: Partial<Event>): Promise<Event>
+  updateEvent(requestUser: User, id: string, fields: Partial<Event>): Promise<Event>
 
   // Update the event with given id
   deleteEvent(requestUser: User, id: string): Promise<boolean>

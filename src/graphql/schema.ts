@@ -12,7 +12,7 @@ import {
   UserInfoInputType,
   UserRole,
 } from './GraphQLUserInfo'
-import { EventType, EventInputType } from './GraphQLEvent'
+import { EventType, EventInputType, EventCreateType } from './GraphQLEvent'
 import { Company, CompanyInput } from './GraphQLCompany'
 import {
   GraphQLList,
@@ -167,7 +167,18 @@ const schema = new GraphQLSchema({
             )
         },
       },
-      // eventCreate: {},
+      eventCreate: {
+        description: 'Create an event with specified information',
+        type: EventType,
+        args: {
+            fields: { type: EventCreateType },
+        },
+        async resolve(a, { fields }, { req, res }) {
+            return await requireAuth(req, res, () =>
+              eventCtrl.createEvent(req.user, fields)
+            )
+        },
+      },
       eventDelete: {
         description: 'Delete an event specified by eventID',
         type: GraphQLBoolean,

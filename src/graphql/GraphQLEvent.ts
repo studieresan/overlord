@@ -6,6 +6,7 @@ import {
   GraphQLInt,
   GraphQLID,
   GraphQLBoolean,
+  GraphQLNonNull,
 } from 'graphql'
 import { GraphQLDateTime } from './GraphQLDateTime'
 import { Company } from './GraphQLCompany'
@@ -35,6 +36,17 @@ export const EventType: GraphQLObjectType = new GraphQLObjectType({
   }),
 })
 
+export const EventCreateType = new GraphQLInputObjectType({
+  name: 'EventCreateType',
+  fields: () => ({
+    responsibleUserID: { type: GraphQLString },
+    companyID: { type: new GraphQLNonNull(GraphQLString) },
+    studsYear: { type: new GraphQLNonNull(GraphQLInt) },
+    ...MutableEventFields,
+  }),
+})
+
+// TODO: Make status editable
 export const EventInputType = new GraphQLInputObjectType({
   name: 'EventInput',
   fields: () => ({
