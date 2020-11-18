@@ -8,7 +8,7 @@ import { ObjectID } from 'mongodb'
 
 export class EventActionsImpl implements EventActions {
 
-  getEvents(req: any, res: any): Promise<Event[]> {
+  getEvents(req: any, res: any, studsYear: number): Promise<Event[]> {
     return new Promise<Event[]>((resolve, reject) => {
       passport.authenticate('jwt', { session: false },
         (err: any, user: any, info: any) => {
@@ -16,16 +16,18 @@ export class EventActionsImpl implements EventActions {
             reject(Error(`Error occured when authenticating user: ${err}`))
           }
 
+          const searchFilter = studsYear ? { studsYear: studsYear } : {}
+
           if (user) {
             // All fields
-            resolve(mongodb.Event.find()
+            resolve(mongodb.Event.find(searchFilter)
             .populate('company')
             .populate('responsible')
             .sort([['date', 'descending']])
             .exec())
           } else {
             // Public event
-            resolve(mongodb.Event.find({},
+            resolve(mongodb.Event.find(searchFilter,
               {
                 'id': true,
                 'company': true,
@@ -93,10 +95,13 @@ export class EventActionsImpl implements EventActions {
     ).then(rejectIfNull('No event exists for given id'))
   }
 
-  removeEvent(id: string): Promise<boolean> {
+  deleteEvent(requestUser: User, id: string): Promise<boolean> {
+    if(!hasEventOrAdminPermissions(requestUser)) {
+      return Promise.reject(new Error('User not authotized'))
+    }
     return mongodb.Event.findOneAndRemove({ _id: id })
       .then(event => {
-        return (event != undefined)
+        return (event !== undefined)
       })
   }
 

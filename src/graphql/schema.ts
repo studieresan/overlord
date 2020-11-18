@@ -20,6 +20,7 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLInt,
+  GraphQLBoolean,
 } from 'graphql'
 import * as passportConfig from '../config/passport'
 import * as User from '../models/User'
@@ -105,8 +106,11 @@ const schema = new GraphQLSchema({
       events: {
         description: 'Get all events as a list',
         type: new GraphQLList(EventType),
-        async resolve(a, b, { req, res }) {
-          return await eventCtrl.getEvents(req, res)
+        args: {
+          studsYear: { type: GraphQLInt },
+        },
+        async resolve(a, { studsYear }, { req, res }) {
+          return await eventCtrl.getEvents(req, res, studsYear)
         },
       },
       userRoles: {
@@ -164,7 +168,18 @@ const schema = new GraphQLSchema({
         },
       },
       // eventCreate: {},
-      // eventDelete: {},
+      eventDelete: {
+        description: 'Delete an event specified by eventID',
+        type: GraphQLBoolean,
+        args: {
+            id: { type: GraphQLString },
+        },
+        async resolve(a, { id }, { req, res }) {
+            return await requireAuth(req, res, () =>
+              eventCtrl.deleteEvent(req.user, id)
+            )
+        },
+      },
       companyUpdate: {
         description: 'Update company information of specified ID',
         type: Company,
