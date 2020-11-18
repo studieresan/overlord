@@ -1,5 +1,5 @@
-import { CompanyContact, SalesComment, User } from '.'
-import { CompanySalesStatus } from './CompanySalesStatus';
+import { CompanyContact, User } from '.'
+import { CompanySalesStatus } from './CompanySalesStatus'
 
 // TODO: Typ rimligt?
 export interface Company {
