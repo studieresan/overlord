@@ -216,7 +216,18 @@ const schema = new GraphQLSchema({
             )
         },
       },
-      // companyCreate: {},
+      companyCreate: {
+        description: 'Create company',
+        type: Company,
+        args: {
+            name: { type: GraphQLString },
+        },
+        async resolve(a, { name }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.createCompany(name)
+          )
+        },
+      },
       companyContactCreate: {
         description: 'Create new contact for a company specified by the company ID',
         type: CompanyContact,
@@ -338,8 +349,6 @@ const schema = new GraphQLSchema({
     //       )
     //     },
     //   },
-    
-
     //   updateCV: {
     //     description: 'Update the CV of the currently logged in user',
     //     type: CVType,
