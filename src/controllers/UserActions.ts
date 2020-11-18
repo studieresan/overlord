@@ -9,6 +9,10 @@ export interface UserActions {
   updateUserInfo(userID: string, requestUser: User, fields: Partial<UserInfo>):
     Promise<UserInfo>
 
+  // Deletes the user info of a user from the database.
+  // It is not possible to delete yourself
+  deleteUser(userID: string, requestUser: User): Promise<User>
+
   // Gets all users with the specified user role and year
   getUsers(req: any, res: any, type: UserRole, studsYear: number): Promise<User[]>
 

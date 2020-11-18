@@ -136,7 +136,18 @@ const schema = new GraphQLSchema({
             )
         },
       },
-      // userDelete: {},
+      userDelete: {
+        description: 'Delete user information of user with ID',
+        type: UserType,
+        args: {
+            id: { type: GraphQLString },
+        },
+        async resolve(a, { id }, { req, res }) {
+            return await requireAuth(req, res, () =>
+              userCtrl.deleteUser(id, req.user)
+            )
+        },
+      },
       eventUpdate: {
         description: 'Update event information of specified ID',
         type: EventType,
