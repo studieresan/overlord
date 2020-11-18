@@ -11,20 +11,20 @@
     * [CVSection](#cvsection)
     * [Company](#company)
     * [CompanyContact](#companycontact)
-    * [ContactRequest](#contactrequest)
+    * [CompanyStudsYear](#companystudsyear)
     * [Event](#event)
     * [SalesComment](#salescomment)
-    * [StatusType](#statustype)
     * [User](#user)
     * [UserInfo](#userinfo)
-    * [YearResponsible](#yearresponsible)
   * [Inputs](#inputs)
     * [CVInput](#cvinput)
     * [CVItemInput](#cviteminput)
     * [CVSectionInput](#cvsectioninput)
     * [CompanyContactInput](#companycontactinput)
     * [CompanyInput](#companyinput)
+    * [EventCreateType](#eventcreatetype)
     * [EventInput](#eventinput)
+    * [SalesCommentInput](#salescommentinput)
     * [UserInfoInput](#userinfoinput)
   * [Enums](#enums)
     * [UserRole](#userrole)
@@ -123,6 +123,11 @@ Get all events as a list
 </td>
 </tr>
 <tr>
+<td colspan="2" align="right" valign="top">studsYear</td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>userRoles</strong></td>
 <td valign="top">[<a href="#userrole">UserRole</a>]</td>
 <td>
@@ -146,25 +151,110 @@ Get all user roles
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>updateInfo</strong></td>
+<td colspan="2" valign="top"><strong>userUpdate</strong></td>
 <td valign="top"><a href="#userinfo">UserInfo</a></td>
 <td>
 
-Update the profile of the currently logged in user
+Update user information of user with ID or logged in user
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">info</td>
+<td valign="top"><a href="#userinfoinput">UserInfoInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>userDelete</strong></td>
+<td valign="top"><a href="#user">User</a></td>
+<td>
+
+Delete user information of user with ID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>eventUpdate</strong></td>
+<td valign="top"><a href="#event">Event</a></td>
+<td>
+
+Update event information of specified ID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">fields</td>
+<td valign="top"><a href="#eventinput">EventInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>eventCreate</strong></td>
+<td valign="top"><a href="#event">Event</a></td>
+<td>
+
+Create an event with specified information
 
 </td>
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">fields</td>
-<td valign="top"><a href="#userinfoinput">UserInfoInput</a></td>
+<td valign="top"><a href="#eventcreatetype">EventCreateType</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>createCompany</strong></td>
+<td colspan="2" valign="top"><strong>eventDelete</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td>
+
+Delete an event specified by eventID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>companyUpdate</strong></td>
 <td valign="top"><a href="#company">Company</a></td>
 <td>
 
-Create a company with name
+Update company information of specified ID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">fields</td>
+<td valign="top"><a href="#companyinput">CompanyInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>companyCreate</strong></td>
+<td valign="top"><a href="#company">Company</a></td>
+<td>
+
+Create company
 
 </td>
 </tr>
@@ -174,64 +264,7 @@ Create a company with name
 <td></td>
 </tr>
 <tr>
-<td colspan="2" align="right" valign="top">statusId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>createCompanies</strong></td>
-<td valign="top">[<a href="#company">Company</a>]</td>
-<td>
-
-Create companies with specified names
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">names</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>updateCompany</strong></td>
-<td valign="top"><a href="#company">Company</a></td>
-<td>
-
-Update the company with the given ID for the given year
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">year</td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">fields</td>
-<td valign="top"><a href="#companyinput">CompanyInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>setAllCompaniesStatus</strong></td>
-<td valign="top">[<a href="#company">Company</a>]</td>
-<td>
-
-Update the status of all companies without any
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>createContact</strong></td>
+<td colspan="2" valign="top"><strong>companyContactCreate</strong></td>
 <td valign="top"><a href="#companycontact">CompanyContact</a></td>
 <td>
 
@@ -240,17 +273,17 @@ Create new contact for a company specified by the company ID
 </td>
 </tr>
 <tr>
-<td colspan="2" align="right" valign="top">companyId</td>
-<td valign="top"><a href="#string">String</a></td>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" align="right" valign="top">fields</td>
+<td colspan="2" align="right" valign="top">input</td>
 <td valign="top"><a href="#companycontactinput">CompanyContactInput</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>updateContact</strong></td>
+<td colspan="2" valign="top"><strong>companyContactUpdate</strong></td>
 <td valign="top"><a href="#companycontact">CompanyContact</a></td>
 <td>
 
@@ -260,16 +293,16 @@ Update the contact with the given ID
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#string">String</a></td>
+<td valign="top"><a href="#id">ID</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" align="right" valign="top">fields</td>
+<td colspan="2" align="right" valign="top">input</td>
 <td valign="top"><a href="#companycontactinput">CompanyContactInput</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>removeContact</strong></td>
+<td colspan="2" valign="top"><strong>companyContactDelete</strong></td>
 <td valign="top"><a href="#boolean">Boolean</a></td>
 <td>
 
@@ -283,7 +316,35 @@ Remove contact with a given contact ID
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>removeComment</strong></td>
+<td colspan="2" valign="top"><strong>salesCommentUpdate</strong></td>
+<td valign="top"><a href="#salescomment">SalesComment</a></td>
+<td>
+
+Create new comment for a company specified by the company ID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">input</td>
+<td valign="top"><a href="#salescommentinput">SalesCommentInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>salesCommentCreate</strong></td>
+<td valign="top"><a href="#salescomment">SalesComment</a></td>
+<td>
+
+Create new comment for a company specified by the company ID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">input</td>
+<td valign="top"><a href="#salescommentinput">SalesCommentInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>salesCommentDelete</strong></td>
 <td valign="top"><a href="#boolean">Boolean</a></td>
 <td>
 
@@ -293,101 +354,7 @@ Remove comment with a given contact ID
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>updateCV</strong></td>
-<td valign="top"><a href="#cv">CV</a></td>
-<td>
-
-Update the CV of the currently logged in user
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">fields</td>
-<td valign="top"><a href="#cvinput">CVInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>createEvent</strong></td>
-<td valign="top"><a href="#event">Event</a></td>
-<td>
-
-Create new event tied to company name
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">companyId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">fields</td>
-<td valign="top"><a href="#eventinput">EventInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>updateEvent</strong></td>
-<td valign="top"><a href="#event">Event</a></td>
-<td>
-
-Update the event with given event ID
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">eventId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">fields</td>
-<td valign="top"><a href="#eventinput">EventInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>removeEvent</strong></td>
-<td valign="top"><a href="#boolean">Boolean</a></td>
-<td>
-
-Remove an event with the given ID
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">eventId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>checkIn</strong></td>
-<td valign="top"><a href="#boolean">Boolean</a></td>
-<td>
-
-Check in user to the given event
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">eventId</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>addContactRequest</strong></td>
-<td valign="top"><a href="#contactrequest">ContactRequest</a></td>
-<td>
-
-Add a contact request
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">email</td>
-<td valign="top"><a href="#string">String</a></td>
+<td valign="top"><a href="#id">ID</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -508,13 +475,8 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>responsibleUsers</strong></td>
-<td valign="top">[<a href="#yearresponsible">YearResponsible</a>]</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>events</strong></td>
-<td valign="top">[<a href="#event">Event</a>]</td>
+<td colspan="2" valign="top"><strong>statuses</strong></td>
+<td valign="top">[<a href="#companystudsyear">CompanyStudsYear</a>]</td>
 <td></td>
 </tr>
 </tbody>
@@ -560,7 +522,7 @@ Add a contact request
 </tbody>
 </table>
 
-### ContactRequest
+### CompanyStudsYear
 
 <table>
 <thead>
@@ -573,18 +535,33 @@ Add a contact request
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>email</strong></td>
+<td colspan="2" valign="top"><strong>studsYear</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>responsibleUser</strong></td>
+<td valign="top"><a href="#id">ID</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>statusDescription</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>id</strong></td>
-<td valign="top"><a href="#string">String</a></td>
+<td colspan="2" valign="top"><strong>statusPriority</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>createdAt</strong></td>
-<td valign="top"><a href="#datetime">DateTime</a></td>
+<td colspan="2" valign="top"><strong>amount</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>salesComments</strong></td>
+<td valign="top">[<a href="#salescomment">SalesComment</a>]</td>
 <td></td>
 </tr>
 </tbody>
@@ -610,11 +587,6 @@ Add a contact request
 <tr>
 <td colspan="2" valign="top"><strong>date</strong></td>
 <td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>studsYear</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 <tr>
@@ -649,7 +621,7 @@ Add a contact request
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>published</strong></td>
-<td valign="top"><a href="#boolean">Boolean</a>!</td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
 <td></td>
 </tr>
 <tr>
@@ -663,8 +635,8 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>status</strong></td>
-<td valign="top"><a href="#statustype">StatusType</a></td>
+<td colspan="2" valign="top"><strong>studsYear</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -683,6 +655,11 @@ Add a contact request
 </thead>
 <tbody>
 <tr>
+<td colspan="2" valign="top"><strong>id</strong></td>
+<td valign="top"><a href="#id">ID</a></td>
+<td></td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>text</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
@@ -693,58 +670,8 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>edited</strong></td>
-<td valign="top"><a href="#boolean">Boolean</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>id</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>company</strong></td>
-<td valign="top"><a href="#company">Company</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>user</strong></td>
 <td valign="top"><a href="#user">User</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-### StatusType
-
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>name</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>priority</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>amount</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>salesComments</strong></td>
-<td valign="top">[<a href="#salescomment">SalesComment</a>]</td>
 <td></td>
 </tr>
 </tbody>
@@ -778,7 +705,7 @@ Add a contact request
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>year</strong></td>
+<td colspan="2" valign="top"><strong>studsYear</strong></td>
 <td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
@@ -850,31 +777,6 @@ Add a contact request
 <tr>
 <td colspan="2" valign="top"><strong>cv</strong></td>
 <td valign="top"><a href="#cv">CV</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-### YearResponsible
-
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong>year</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>user</strong></td>
-<td valign="top"><a href="#user">User</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -1010,29 +912,14 @@ Add a contact request
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>responsibleUser</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>status</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>name</strong></td>
 <td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>amount</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 </tbody>
 </table>
 
-### EventInput
+### EventCreateType
 
 <table>
 <thead>
@@ -1044,18 +931,23 @@ Add a contact request
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>responsibleUserId</strong></td>
+<td colspan="2" valign="top"><strong>responsibleUserID</strong></td>
 <td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>companyID</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>studsYear</strong></td>
+<td valign="top"><a href="#int">Int</a>!</td>
 <td></td>
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>date</strong></td>
 <td valign="top"><a href="#datetime">DateTime</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>studsYear</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
 <td></td>
 </tr>
 <tr>
@@ -1090,7 +982,95 @@ Add a contact request
 </tr>
 <tr>
 <td colspan="2" valign="top"><strong>published</strong></td>
-<td valign="top"><a href="#boolean">Boolean</a>!</td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### EventInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>responsibleUserId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>date</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>location</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>publicDescription</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>privateDescription</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>beforeSurvey</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>afterSurvey</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>pictures</strong></td>
+<td valign="top">[<a href="#string">String</a>]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>published</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### SalesCommentInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>text</strong></td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>user</strong></td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>company</strong></td>
+<td valign="top"><a href="#id">ID</a>!</td>
 <td></td>
 </tr>
 </tbody>
@@ -1135,6 +1115,16 @@ Add a contact request
 <tr>
 <td colspan="2" valign="top"><strong>allergies</strong></td>
 <td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>picture</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>cv</strong></td>
+<td valign="top"><a href="#cvinput">CVInput</a></td>
 <td></td>
 </tr>
 </tbody>
