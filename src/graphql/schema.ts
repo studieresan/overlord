@@ -13,7 +13,7 @@ import {
   UserRole,
 } from './GraphQLUserInfo'
 import { EventType, EventInputType } from './GraphQLEvent'
-import { Company } from './GraphQLCompany'
+import { Company, CompanyInput } from './GraphQLCompany'
 import {
   GraphQLList,
   GraphQLObjectType,
@@ -121,7 +121,7 @@ const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'RootMutationType',
     fields: {
-      updateUser: {
+      userUpdate: {
         description: 'Update user information of user with ID or logged in user',
         type: UserInfoType,
         args: {
@@ -136,7 +136,8 @@ const schema = new GraphQLSchema({
             )
         },
       },
-      updateEvent: {
+      userDelete: {},
+      eventUpdate: {
         description: 'Update event information of specified ID',
         type: EventType,
         args: {
@@ -151,6 +152,30 @@ const schema = new GraphQLSchema({
             )
         },
       },
+      eventCreate: {},
+      eventDelete: {},
+      companyUpdate: {
+        description: 'Update company information of specified ID',
+        type: Company,
+        args: {
+            id: { type: GraphQLString },
+            fields: {
+                type: CompanyInput,
+            },
+        },
+        async resolve(a, { id, fields }, { req, res }) {
+            return await requireAuth(req, res, () =>
+              companyCtrl.updateCompany(req.user, id, fields)
+            )
+        },
+      }
+      companyCreate: {},
+      companyContactUpdate: {},
+      companyContactCreate: {},
+      companyContactDelete: {},
+      salesCommentUpdate: {},
+      salesCommentCreate: {},
+      salesCommentDelete: {},
     //   createCompany: {
     //     description: 'Create a company with name',
     //     type: Company,

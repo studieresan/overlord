@@ -22,5 +22,7 @@ export const CompanyContact = new GraphQLObjectType({
 
 export const CompanyContactInput = new GraphQLInputObjectType({
   name: 'CompanyContactInput',
-  fields: MutableCompanyContactFields,
+  fields: {
+    ...MutableCompanyContactFields,
+  },
 })

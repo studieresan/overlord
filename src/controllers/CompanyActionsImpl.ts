@@ -1,9 +1,10 @@
 import { CompanyActions } from './CompanyActions'
-import { Company, CompanyYear } from '../models'
+import { Company, CompanyYear, User } from '../models'
 import * as mongodb from '../mongodb/Company'
-import { rejectIfNull } from './util'
+import { hasEventOrAdminPermissions, rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
 
+// TODO: Check. years: true??
 export class CompanyActionsImpl implements CompanyActions {
   getCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
@@ -78,46 +79,21 @@ export class CompanyActionsImpl implements CompanyActions {
   }
 
   updateCompany(
-    id: string,
-    year: number,
-    fields: Partial<Company> & Partial<CompanyYear>
+    user: User,
+    companyID: string,
+    fields: Partial<Company>
   ): Promise<Company> {
-    return mongodb.Company.findById(new ObjectID(id))
-      .then(rejectIfNull('No company exists for given id'))
-      .then((company) => {
-        if (fields.name) {
-          company.name = fields.name
-        }
-        delete fields['name']
-        const companyFields = fields as CompanyYear
-
-        const yearToEdit = company.years.find((y) => y.year === year)
-        if (yearToEdit) {
-          for (const key in companyFields) {
-            // Typescript does not realize that yearToEdit and companyFields are
-            // both of type CompanyYear, and thus have the same keys...
-            // @ts-ignore: Unreachable code error
-            yearToEdit[key] = companyFields[key]
-          }
-        } else {
-          const newYear = {
-            ...companyFields,
-            year: year,
-          }
-          if (!newYear.status) {
-            newYear.status = process.env.DEFAULT_STATUS_ID
-          }
-          company.years = company.years.concat([newYear])
-        }
-        return company
-          .save()
-          .then((newCompany) =>
-            newCompany
-              .populate('years.status')
-              .populate('years.responsibleUser')
-              .execPopulate()
-          )
-      })
+    return new Promise<Company>((resolve, reject) => {
+    if (!hasEventOrAdminPermissions(user)) {
+      return reject(new Error('User not authorized to do this'))
+    }
+    return mongodb.Company.findOneAndUpdate(
+      { _id: companyID },
+      { ...fields },
+      { new: true })
+      
+      .then(rejectIfNull('Comment does not exist or insufficient persmission'))
+    })
   }
 
   setCompaniesStatus(statusId: string): Promise<Company[]> {
