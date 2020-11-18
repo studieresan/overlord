@@ -44,19 +44,17 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
         return res.status(401).json({ error: 'Wrong email or password.' })
       }
 
-      const token = jwt.sign(user.email, process.env.JWT_SECRET)
-      console.log(token)
+      const token = jwt.sign(user.info.email, process.env.JWT_SECRET)
       res.status(200)
       res.setHeader('Authorization', `Bearer ${token}`)
       res.json({
         id: user.id,
-        email: user.email,
+        email: user.info.email,
         token,
-        name: `${user.profile.firstName} ${user.profile.lastName}`,
-        position: user.profile.position || undefined,
-        phone: user.profile.phone || undefined,
-        picture: user.profile.picture || undefined,
-        permissions: user.permissions,
+        name: `${user.firstName} ${user.lastName}`,
+        phone: user.info.phone || undefined,
+        picture: user.info.picture || undefined,
+        permissions: user.info.permissions,
       })
       res.end()
     })(req, res, next)
@@ -92,19 +90,18 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
   }
 
   const user = new User({
-    email: req.body.email,
-    password: await generateRandomPassword(),
-    permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
-    profile: {
-      email: req.body.email,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      userRole: req.body.user_role,
-      studsYear: process.env.STUDS_YEAR,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    userRole: req.body.user_role,
+    studsYear: process.env.STUDS_YEAR,
+    info: {
+          email: req.body.email,
+        password: await generateRandomPassword(),
+        permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
     },
   })
 
-  User.findOne({ email: req.body.email }, (err, existingUser) => {
+  User.findOne({ 'info.email': req.body.email }, (err, existingUser) => {
     if (err) { return next(err) }
     if (existingUser) {
       res.status(400)
@@ -131,8 +128,8 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
       })
     },
     function setRandomToken(token: string, user: UserDocument, done: Function) {
-      user.passwordResetToken = token
-      user.passwordResetExpires = Date.now() + 1000 * 60 * 60 * 72 // 72 hours
+      user.info.passwordResetToken = token
+      user.info.passwordResetExpires = Date.now() + 1000 * 60 * 60 * 72 // 72 hours
       user.save((err: WriteError) => {
         done(err, token, user)
       })
@@ -146,7 +143,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
           res.status(201)
           res.json({
             id: user.id,
-            email: user.email,
+            email: user.info.email,
           })
           res.end()
           done(err, token, user)
@@ -156,18 +153,18 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
     // tslint:disable-line:max-line-length
     function sendAccountCreatedEmail(token: String, user: UserDocument) {
       const mailOptions = {
-        to: user.email,
+        to: user.info.email,
         from: 'studs-kommunikation@d.kth.se',
         subject: 'Welcome to Studieresan!',
         text:
-          `Hi ${user.profile.firstName}!\n\n` +
+          `Hi ${user.firstName}!\n\n` +
           // tslint:disable-next-line:max-line-length
           `You are receiving this email because you've been given an account at Studieresan. ` +
           // tslint:disable-next-line:max-line-length
           `Please proceed to the following link to complete the process: ${host}/password-reset/${token}\n\n` +
           // tslint:disable-next-line:max-line-length
           `The link is valid for 72 hours. After that you will have to manually reset your password at ${host}/user/forgot-password.\n\n` +
-          `Your username is ${user.email}.\n\n` +
+          `Your username is ${user.info.email}.\n\n` +
           `Thank you!\n` +
           `Studieresan\n`,
       }
@@ -201,7 +198,7 @@ export const putUpdatePassword =
 
     User.findById(req.user.id, (err, user: UserDocument) => {
       if (err) { return next(err) }
-      user.password = req.body.password
+      user.info.password = req.body.password
       user.save((err: WriteError) => {
         if (err) { return next(err) }
         res.status(200)
@@ -244,9 +241,9 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
             res.status(400).json({ error: ERROR_MSG }).end()
             return
           }
-          user.password = req.body.password
-          user.passwordResetToken = undefined
-          user.passwordResetExpires = undefined
+          user.info.password = req.body.password
+          user.info.passwordResetToken = undefined
+          user.info.passwordResetExpires = undefined
           user.save((err: WriteError) => {
             if (err) { return next(err) }
             req.logIn(user, (err) => {
@@ -257,12 +254,12 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
     },
     function sendResetPasswordEmail(user: UserDocument, done: Function) {
       const mailOptions = {
-        to: user.email,
+        to: user.info.email,
         from: 'studs-kommunikation@d.kth.se',
         subject: 'Your password has been changed',
         text: `Hello,`
           + `\n\nThis is a confirmation that the password for your `
-          + `account ${user.email} has just been changed.\n`,
+          + `account ${user.info.email} has just been changed.\n`,
       }
       sgMail.send(mailOptions).then(() => done()).catch(done)
     },
@@ -301,15 +298,15 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       })
     },
     function setRandomToken(token: string, done: Function) {
-      User.findOne({ email: req.body.email }, (err, user: UserDocument) => {
+      User.findOne({ 'info.email': req.body.email }, (err, user: UserDocument) => {
         if (err) { return done(err) }
         if (!user) {
           const ERROR_MSG = 'Could not find account'
           res.status(400).json({ error: ERROR_MSG }).end()
           return
         }
-        user.passwordResetToken = token
-        user.passwordResetExpires = Date.now() + 3600000 // 1 hour
+        user.info.passwordResetToken = token
+        user.info.passwordResetExpires = Date.now() + 3600000 // 1 hour
         user.save((err: WriteError) => {
           done(err, token, user)
         })
@@ -318,7 +315,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
     function sendForgotPasswordEmail(
       token: string, user: UserDocument, done: Function) {
       const mailOptions = {
-        to: user.email,
+        to: user.info.email,
         from: 'studs-kommunikation@d.kth.se',
         subject: 'Reset your password on Studieresan.se',
         text:

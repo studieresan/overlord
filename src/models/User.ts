@@ -1,26 +1,26 @@
+import { CV } from './CV'
+
 export interface User {
   readonly id: string
-  profile: UserProfile
-  permissions: Permission[]
+  firstName: string
+  lastName: string
+  studsYear: number
+  info: UserInfo
 }
 
-export type UserProfile = StudsProfile
+export type UserInfo = StudsInfo
 
-export interface StudsProfile {
+export interface StudsInfo {
   readonly userRole: UserRole
-  readonly studsYear: number
   readonly email: string
-  readonly firstName: string
-  readonly lastName: string
-  readonly position?: string
   readonly linkedIn?: string
   readonly github?: string
   readonly phone?: string
   readonly picture?: string
-  readonly alternativePicture?: string
   readonly allergies?: string
-  readonly master?: string
-  readonly resumeEmail: string
+  readonly master?: string,
+  readonly cv?: CV,
+  readonly permissions: Permission[]
 }
 
 export enum UserRole {

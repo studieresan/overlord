@@ -1,4 +1,4 @@
-import { Company, CompanyYear } from '../models'
+import { Company, User } from '../models'
 
 export interface CompanyActions {
   // Get all companies from a specific year
@@ -18,9 +18,9 @@ export interface CompanyActions {
 
   // Update a company with id and year
   updateCompany(
-    id: string,
-    year: number,
-    fields: Partial<Company> & Partial<CompanyYear>
+    user: User,
+    companyID: string,
+    fields: Partial<Company>
   ): Promise<Company>
 
   // Set default company status to all companies

@@ -50,6 +50,8 @@ const options = {
   promiseLibrary: global.Promise,
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
 }
 
 mongoose.connect(process.env.MONGODB_URI, options)

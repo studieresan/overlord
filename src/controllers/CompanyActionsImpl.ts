@@ -1,26 +1,32 @@
 import { CompanyActions } from './CompanyActions'
-import { Company, CompanyYear } from '../models'
+import { Company, User } from '../models'
 import * as mongodb from '../mongodb/Company'
-import { rejectIfNull } from './util'
+import { hasEventOrAdminPermissions, rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
 
+// TODO: Fix sales tool
 export class CompanyActionsImpl implements CompanyActions {
+
   getCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
       return resolve(
-        mongodb.Company.find(
-          {},
-          {
-            name: true,
-            id: true,
-            years: true,
+        mongodb.Company.find()
+        .populate('years.status')
+        .populate('years.responsibleUser')
+        .exec()
+        .then(companies => companies.map(c => {
+          const object = {
+            ...c,
+            statuses: c.years.map(year => ({
+              studsYear: year.studsYear,
+              responsibleUser: year.responsibleUser,
+              statusDescription: year.status && year.status.description,
+              statusPriority: year.status && year.status.priority,
+            })),
           }
-        )
-          .populate('years.status')
-          .populate('years.responsibleUser')
-          .exec()
-      )
-    })
+          return object
+        }))
+    )})
   }
 
   getSoldCompanies(): Promise<Company[]> {
@@ -78,46 +84,23 @@ export class CompanyActionsImpl implements CompanyActions {
   }
 
   updateCompany(
-    id: string,
-    year: number,
-    fields: Partial<Company> & Partial<CompanyYear>
+    user: User,
+    companyID: string,
+    fields: Partial<Company>
   ): Promise<Company> {
-    return mongodb.Company.findById(new ObjectID(id))
-      .then(rejectIfNull('No company exists for given id'))
-      .then((company) => {
-        if (fields.name) {
-          company.name = fields.name
-        }
-        delete fields['name']
-        const companyFields = fields as CompanyYear
-
-        const yearToEdit = company.years.find((y) => y.year === year)
-        if (yearToEdit) {
-          for (const key in companyFields) {
-            // Typescript does not realize that yearToEdit and companyFields are
-            // both of type CompanyYear, and thus have the same keys...
-            // @ts-ignore: Unreachable code error
-            yearToEdit[key] = companyFields[key]
-          }
-        } else {
-          const newYear = {
-            ...companyFields,
-            year: year,
-          }
-          if (!newYear.status) {
-            newYear.status = process.env.DEFAULT_STATUS_ID
-          }
-          company.years = company.years.concat([newYear])
-        }
-        return company
-          .save()
-          .then((newCompany) =>
-            newCompany
-              .populate('years.status')
-              .populate('years.responsibleUser')
-              .execPopulate()
-          )
-      })
+    return new Promise<Company>((resolve, reject) => {
+    if (!hasEventOrAdminPermissions(user)) {
+      return reject(new Error('User not authorized to do this'))
+    }
+    return resolve(mongodb.Company.findOneAndUpdate(
+      { _id: companyID },
+      { ...fields },
+      { new: true })
+      .populate('users')
+      .populate('companysalesstatuses')
+      .exec()
+      .then(rejectIfNull('Company does not exist'))
+    )})
   }
 
   setCompaniesStatus(statusId: string): Promise<Company[]> {

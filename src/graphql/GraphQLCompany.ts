@@ -6,35 +6,51 @@ import {
   GraphQLInt,
   GraphQLList,
 } from 'graphql'
-import { UserType } from './GraphQLUser'
 import { CompanyContact } from './GraphQLCompanyContact'
-import { EventType } from './GraphQLEvent'
+import { SalesComment, SalesCommentInput } from './GraphQLSalesComment'
 
-export const YearResponsible = new GraphQLObjectType({
-  name: 'YearResponsible',
+const CompanyStudsYearFields = {
+  studsYear: { type: GraphQLInt },
+  responsibleUser: { type: GraphQLID },
+  statusDescription: { type: GraphQLString },
+  statusPriority: { type: GraphQLInt },
+  amount: { type: GraphQLInt },
+}
+
+export const CompanyStudsYear = new GraphQLObjectType({
+    name: 'CompanyStudsYear',
+    fields: () => ({
+      ...CompanyStudsYearFields,
+      salesComments: { type: new GraphQLList(SalesComment) },
+    }),
+})
+
+export const MutableCompanyStudsYear = new GraphQLInputObjectType({
+  name: 'MutableCompanyStudsYear',
   fields: () => ({
-    year: { type: GraphQLInt },
-    user: { type: UserType },
+    // Require studsyear as we math the status against it
+    ...CompanyStudsYearFields,
+    salesComments: { type: new GraphQLList(SalesCommentInput) },
   }),
 })
+
+const MutableCompanyFields = {
+  name: { type: GraphQLString },
+}
 
 export const Company = new GraphQLObjectType({
   name: 'Company',
   fields: () => ({
     id: { type: GraphQLID },
-    name: { type: GraphQLString },
+    ...MutableCompanyFields,
     companyContacts: { type: new GraphQLList(CompanyContact) },
-    responsibleUsers: { type: new GraphQLList(YearResponsible) },
-    events: { type: new GraphQLList(EventType) },
+    statuses: { type: new GraphQLList(CompanyStudsYear) },
   }),
 })
 
 export const CompanyInput = new GraphQLInputObjectType({
   name: 'CompanyInput',
   fields: () => ({
-    responsibleUser: { type: GraphQLString },
-    status: { type: GraphQLString },
-    name: { type: GraphQLString },
-    amount: { type: GraphQLInt },
+    ...MutableCompanyFields,
   }),
 })

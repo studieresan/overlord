@@ -1,9 +1,7 @@
-import { Company, User } from '.'
+import { User } from '.'
 
 export interface SalesComment {
-    readonly text: String
+    content: String
     readonly createdAt: Date
-    readonly company: Company
-    readonly user: User
-    readonly edited: Boolean
-  }
+    author: User
+}

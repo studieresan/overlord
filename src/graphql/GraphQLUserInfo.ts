@@ -3,15 +3,17 @@ import {
   GraphQLInputObjectType,
   GraphQLEnumType,
   GraphQLString,
+  GraphQLList,
 } from 'graphql'
 import {
+    CVInputType,
   CVType,
 } from './GraphQLCV'
-import * as models from './../models'
+import * as models from '../models'
 import {
   CVActions,
   CVActionsImpl,
-} from './../controllers'
+} from '../controllers'
 import * as passport from 'passport'
 
 
@@ -31,15 +33,6 @@ function getCV(req: any, res: any, requestedUser: any) {
   })
 }
 
-const MutableProfileFields = {
-  email: { type: GraphQLString },
-  phone: { type: GraphQLString },
-  linkedIn: { type: GraphQLString },
-  github: { type: GraphQLString },
-  master: { type: GraphQLString },
-  allergies: { type: GraphQLString },
-}
-
 export const UserRole = new GraphQLEnumType({
   name : 'UserRole',
   values: {
@@ -53,23 +46,40 @@ export const UserRole = new GraphQLEnumType({
   },
 })
 
-export const UserProfileType = new GraphQLObjectType({
-  name : 'UserProfile',
+
+const MutableInfoFields = {
+    email: { type: GraphQLString },
+    phone: { type: GraphQLString },
+    linkedIn: { type: GraphQLString },
+    github: { type: GraphQLString },
+    master: { type: GraphQLString },
+    allergies: { type: GraphQLString },
+    picture: { type: GraphQLString },
+}
+
+export const UserInfoType = new GraphQLObjectType({
+  name : 'UserInfo',
   fields : {
     role: { type: GraphQLString },
-    ...MutableProfileFields,
-    picture: { type: GraphQLString },
+    ...MutableInfoFields,
+    // Should not be moved to MutableInfoFields is because CVType is not an InputObjectType
     cv: {
-      type: CVType,
-      async resolve(requestedUser, b, { req, res }) {
-        return await getCV(req, res, requestedUser)
-      },
+        type: CVType,
+        async resolve(requestedUser, b, { req, res }) {
+            return await getCV(req, res, requestedUser)
+        },
     },
+    permissions: { type: new GraphQLList(GraphQLString) },
   },
 })
 
 // This type represents the fields that a user can change about themselves
-export const UserProfileInputType = new GraphQLInputObjectType({
-  name : 'UserProfileInput',
-  fields : MutableProfileFields,
+export const UserInfoInputType = new GraphQLInputObjectType({
+  name : 'UserInfoInput',
+  fields : {
+      ...MutableInfoFields,
+      cv: {
+          type: CVInputType,
+      },
+  },
 })

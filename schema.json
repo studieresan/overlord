@@ -1,38 +1,61 @@
 {
-	"contactrequests": {},
-	"objectlabs-system.admin.collections": {
+	"companycontacts": {
 		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"updatedAt": {
+			"type": "Date",
+			"required": true
+		},
+		"createdAt": {
+			"type": "Date",
+			"required": true
+		},
+		"company": {
+			"foreignKey": true,
+			"references": "companies",
+			"key": true,
+			"type": "Object",
+			"required": true
+		},
+		"name": {
+			"key": true,
 			"type": "string",
 			"required": true
 		},
-		"viewMode": {
+		"email": {
+			"type": "string",
+			"required": true
+		},
+		"phoneNumber": {
+			"key": true,
+			"type": "string",
+			"required": true
+		},
+		"comment": {
+			"type": "string",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		}
+	},
+	"objectlabs-system.admin.collections": {
+		"_id": {
 			"type": "string",
 			"required": true
 		},
 		"tableDocumentView": {
 			"type": "Object",
 			"structure": {
-				"_id": {
-					"type": "string",
-					"required": true
-				},
-				"name": {
-					"type": "string",
-					"required": true
-				},
-				"before": {
-					"type": "string",
-					"required": true
-				},
-				"Company Name": {
-					"type": "string",
-					"required": true
-				},
-				"beforeSurveys": {
-					"type": "string",
-					"required": true
-				},
 				"user": {
+					"type": "string",
+					"required": true
+				},
+				"_id": {
 					"type": "string",
 					"required": true
 				},
@@ -51,8 +74,28 @@
 				"Year": {
 					"type": "string",
 					"required": true
+				},
+				"before": {
+					"type": "string",
+					"required": true
+				},
+				"name": {
+					"type": "string",
+					"required": true
+				},
+				"Company Name": {
+					"type": "string",
+					"required": true
+				},
+				"beforeSurveys": {
+					"type": "string",
+					"required": true
 				}
 			},
+			"required": true
+		},
+		"viewMode": {
+			"type": "string",
 			"required": true
 		},
 		"searches": {
@@ -63,54 +106,6 @@
 					"required": true
 				}
 			},
-			"required": true
-		}
-	},
-	"companies": {
-		"_id": {
-			"primaryKey": true,
-			"type": "Object",
-			"required": true
-		},
-		"name": {
-			"key": true,
-			"type": "string",
-			"required": true
-		},
-		"updatedAt": {
-			"type": "Date",
-			"required": true
-		},
-		"years": {
-			"type": "Array",
-			"required": true
-		},
-		"createdAt": {
-			"type": "Date",
-			"required": true
-		},
-		"__v": {
-			"type": "number",
-			"required": true
-		}
-	},
-	"companysalesstatuses": {
-		"_id": {
-			"primaryKey": true,
-			"type": "Object",
-			"required": true
-		},
-		"name": {
-			"key": true,
-			"type": "string",
-			"required": true
-		},
-		"__v": {
-			"type": "number",
-			"required": true
-		},
-		"priority": {
-			"type": "number",
 			"required": true
 		}
 	},
@@ -144,104 +139,8 @@
 			"type": "string",
 			"required": true
 		},
-		"edited": {
-			"type": "boolean",
-			"required": true
-		},
 		"__v": {
 			"type": "number",
-			"required": true
-		}
-	},
-	"cvs": {},
-	"users": {
-		"_id": {
-			"primaryKey": true,
-			"type": "Object",
-			"required": true
-		},
-		"firstName": {
-			"type": "string",
-			"required": true
-		},
-		"lastName": {
-			"type": "string",
-			"required": true
-		},
-		"studsYear": {
-			"type": "number",
-			"required": true
-		},
-		"userRole": {
-			"key": true,
-			"type": "string",
-			"required": true
-		},
-		"createdAt": {
-			"type": "Date",
-			"required": true
-		},
-		"updatedAt": {
-			"type": "Date",
-			"required": true
-		},
-		"__v": {
-			"type": "number",
-			"required": true
-		},
-		"info": {
-			"type": "Object",
-			"structure": {
-				"permissions": {
-					"type": "Array",
-					"required": true
-				},
-				"password": {
-					"type": "string",
-					"required": true
-				},
-				"email": {
-					"type": "string",
-					"required": true
-				},
-				"picture": {
-					"type": "string",
-					"required": false
-				},
-				"position": {
-					"type": "undefined",
-					"required": false
-				},
-				"linkedIn": {
-					"type": "string",
-					"required": false
-				},
-				"github": {
-					"type": "undefined",
-					"required": false
-				},
-				"phone": {
-					"key": true,
-					"type": "string",
-					"required": true
-				},
-				"allergies": {
-					"type": "undefined",
-					"required": false
-				},
-				"master": {
-					"type": "string",
-					"required": true
-				},
-				"passwordResetToken": {
-					"type": "string",
-					"required": true
-				},
-				"passwordResetExpires": {
-					"type": "number",
-					"required": true
-				}
-			},
 			"required": true
 		}
 	},
@@ -252,6 +151,26 @@
 		},
 		"metaDataEnabled": {
 			"type": "boolean",
+			"required": true
+		}
+	},
+	"companysalesstatuses": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"name": {
+			"key": true,
+			"type": "string",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		},
+		"priority": {
+			"type": "number",
 			"required": true
 		}
 	},
@@ -324,24 +243,10 @@
 			"required": true
 		}
 	},
-	"companycontacts": {
+	"contactrequests": {},
+	"companies": {
 		"_id": {
 			"primaryKey": true,
-			"type": "Object",
-			"required": true
-		},
-		"updatedAt": {
-			"type": "Date",
-			"required": true
-		},
-		"createdAt": {
-			"type": "Date",
-			"required": true
-		},
-		"company": {
-			"foreignKey": true,
-			"references": "companies",
-			"key": true,
 			"type": "Object",
 			"required": true
 		},
@@ -350,22 +255,113 @@
 			"type": "string",
 			"required": true
 		},
-		"email": {
-			"type": "string",
+		"updatedAt": {
+			"type": "Date",
 			"required": true
 		},
-		"phoneNumber": {
-			"key": true,
-			"type": "string",
+		"years": {
+			"type": "Array",
 			"required": true
 		},
-		"comment": {
-			"type": "string",
+		"createdAt": {
+			"type": "Date",
 			"required": true
 		},
 		"__v": {
 			"type": "number",
 			"required": true
 		}
-	}
+	},
+	"users": {
+		"_id": {
+			"primaryKey": true,
+			"type": "Object",
+			"required": true
+		},
+		"firstName": {
+			"type": "string",
+			"required": true
+		},
+		"lastName": {
+			"type": "string",
+			"required": true
+		},
+		"studsYear": {
+			"type": "number",
+			"required": true
+		},
+		"userRole": {
+			"key": true,
+			"type": "string",
+			"required": true
+		},
+		"createdAt": {
+			"type": "Date",
+			"required": true
+		},
+		"updatedAt": {
+			"type": "Date",
+			"required": true
+		},
+		"__v": {
+			"type": "number",
+			"required": true
+		},
+		"info": {
+			"type": "Object",
+			"structure": {
+				"permissions": {
+					"type": "Array",
+					"required": true
+				},
+				"password": {
+					"type": "string",
+					"required": true
+				},
+				"email": {
+					"type": "string",
+					"required": true
+				},
+				"picture": {
+					"type": "string",
+					"required": false
+				},
+				"position": {
+					"type": "undefined",
+					"required": false
+				},
+				"linkedIn": {
+					"type": "string",
+					"required": false
+				},
+				"github": {
+					"type": "string",
+					"required": false
+				},
+				"phone": {
+					"key": true,
+					"type": "string",
+					"required": true
+				},
+				"allergies": {
+					"type": "undefined",
+					"required": false
+				},
+				"master": {
+					"type": "string",
+					"required": true
+				},
+				"passwordResetToken": {
+					"type": "string",
+					"required": false
+				},
+				"passwordResetExpires": {
+					"type": "number",
+					"required": false
+				}
+			},
+			"required": false
+		}
+	},
+	"cvs": {}
 }

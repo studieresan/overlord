@@ -23,6 +23,11 @@ The api documentation can be found in [API.md](API.md)
 
 > The API was generated with [graphql-markdown](https://github.com/exogen/graphql-markdown) by running the server locally and running `graphql-markdown http://localhost:5040/graphql > API.md`
 
+## Database
+A generated documentation for the database schema can be found in the [database](database) directory, with a [JSON fil](database/schema.json) file and a [html diagram](database/schema.html) describing the relation. These are generated from the database and are not written by anyone in Studs, so there may be some variations
+
+> These are generated with [extract-mongo-schema](https://www.npmjs.com/package/extract-mongo-schema) using `extract-mongo-schema -d CONNECTION-STRING -o schema.json -f json` and `extract-mongo-schema -d CONNECTION-STRING -o schema.html -f html-diagram`, where `CONNECTION-STRING` is the connection string to the database, with username and password 
+
 ## Create account
 
 To create an account in the database, either have a member of Studs create one for you on the website (project leader or IT bossman) or create a new document in the user collection with similar content as other users (copy-paste) and set the password do something arbitrary. Then on studs.se, press "forgot password" to reset the password and voíla! You can also add permissions for yourself in the document directly.

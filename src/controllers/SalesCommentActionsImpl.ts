@@ -6,6 +6,7 @@ import { rejectIfNull } from './util'
 
 export class SalesCommentActionsImpl implements SalesCommentActions {
 
+  // TODO: Fix. Company cannot be supplied
   getComments(companyId: string, studsYear: number): Promise<SalesComment[]> {
     return new Promise<SalesComment[]>((resolve, reject) => {
       return resolve(mongodb.SalesComment.find({company: new ObjectID(companyId)},
@@ -19,10 +20,10 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
           }
         ).sort([['createdAt', 'asc']])
          .populate('company')
-         .populate('user')
+         .populate('author')
          .exec()
          .then(listOfComments =>
-          listOfComments.filter(comment => comment.user.profile.studsYear == studsYear))
+          listOfComments.filter(comment => comment.author.studsYear == studsYear))
         )
     })
   }
@@ -32,7 +33,6 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
       company: new ObjectID(companyId),
       user: auth,
       text,
-      edited: false,
     })
     return event.save()
   }
@@ -40,7 +40,7 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
   updateComment(auth: User, id: string, text: string): Promise<SalesComment> {
     return mongodb.SalesComment.findOneAndUpdate(
       { _id: id, user: auth },
-      { text, edited: true },
+      { text },
       { new: true }
     ).populate('company')
      .populate('user')

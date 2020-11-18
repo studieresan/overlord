@@ -3,7 +3,7 @@ import {
     GraphQLString,
     GraphQLID,
     GraphQLInputObjectType,
-  } from 'graphql'
+} from 'graphql'
 
 const MutableCompanyContactFields = {
   name: { type: GraphQLString },
@@ -22,5 +22,7 @@ export const CompanyContact = new GraphQLObjectType({
 
 export const CompanyContactInput = new GraphQLInputObjectType({
   name: 'CompanyContactInput',
-  fields: MutableCompanyContactFields,
+  fields: {
+    ...MutableCompanyContactFields,
+  },
 })

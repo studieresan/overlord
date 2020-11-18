@@ -24,7 +24,7 @@ passport.deserializeUser((id, done) => {
  */
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
+  User.findOne({ 'info.email': email.toLowerCase() }, (err, user: any) => {
     if (err) { return done(err) }
     if (!user) {
       return done(undefined, false, { message: `Email ${email} not found.` })
@@ -48,8 +48,10 @@ passport.use(new JWTStrategy({
     passReqToCallback: true,
   },
   (req: any, jwtPayload: any, done: any) => {
-    User.findOne({ email: jwtPayload }, (err, user: any) => {
-      if (err) { return done(err) }
+    User.findOne({ 'info.email': jwtPayload }, (err, user: any) => {
+      if (err) {
+        return done(err)
+      }
       if (!user) {
         return done(
           undefined,

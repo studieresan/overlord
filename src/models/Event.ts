@@ -1,15 +1,24 @@
 import { Company, User } from '.'
 
-export interface Event {
+interface EventFields {
   readonly id: string
-  readonly company: Company
-  readonly responsible: User
-  readonly location: string
-  readonly privateDescription: string
-  readonly publicDescription: string
-  readonly date: Date
-  readonly beforeSurvey: string
-  readonly afterSurvey: string
-  readonly pictures: string[]
-  readonly published: boolean
+  location: string
+  privateDescription: string
+  publicDescription: string
+  date: Date
+  studsYear: number
+  beforeSurvey: string
+  afterSurvey: string
+  pictures: string[]
+  published: boolean
+}
+
+export interface Event extends EventFields {
+  company: Company
+  responsible: User
+}
+
+export interface CreateEvent extends EventFields {
+  responsibleUserID: string
+  companyID: string
 }
