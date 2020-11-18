@@ -1,4 +1,5 @@
 import { CompanyContact, SalesComment, User } from '.'
+import { CompanySalesStatus } from './CompanySalesStatus';
 
 // TODO: Typ rimligt?
 export interface Company {
@@ -9,10 +10,8 @@ export interface Company {
 }
 
 export interface CompanyYear {
+  status: CompanySalesStatus
   studsYear: number
   responsibleUser: User
-  statusDescription: string
-  statusPriority: number
   amount: number
-  salesComments: SalesComment[]
 }

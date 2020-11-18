@@ -4,8 +4,9 @@ import * as mongodb from '../mongodb/Company'
 import { hasEventOrAdminPermissions, rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
 
-// TODO: Check. years: true??
+// TODO: Fix sales tool
 export class CompanyActionsImpl implements CompanyActions {
+
   getCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
       return resolve(
@@ -13,8 +14,19 @@ export class CompanyActionsImpl implements CompanyActions {
         .populate('years.status')
         .populate('years.responsibleUser')
         .exec()
-      )
-    })
+        .then(companies => companies.map(c => {
+          const object = {
+            ...c,
+            statuses: c.years.map(year => ({
+              studsYear: year.studsYear,
+              responsibleUser: year.responsibleUser,
+              statusDescription: year.status && year.status.description,
+              statusPriority: year.status && year.status.priority,
+            })),
+          }
+          return object
+        }))
+    )})
   }
 
   getSoldCompanies(): Promise<Company[]> {
