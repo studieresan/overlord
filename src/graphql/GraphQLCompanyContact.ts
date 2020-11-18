@@ -3,7 +3,7 @@ import {
     GraphQLString,
     GraphQLID,
     GraphQLInputObjectType,
-  } from 'graphql'
+} from 'graphql'
 
 const MutableCompanyContactFields = {
   name: { type: GraphQLString },

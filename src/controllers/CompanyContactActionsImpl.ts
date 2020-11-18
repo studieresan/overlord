@@ -20,20 +20,20 @@ export class CompanyContactActionsImpl implements CompanyContactActions {
     })
   }
 
-  createContact(companyId: string, fields: Partial<CompanyContact>):
+  createContact(companyId: string, input: Partial<CompanyContact>):
   Promise<CompanyContact> {
     const contact = new mongodb.CompanyContact({
       company: new ObjectID(companyId),
-      ...fields,
+      ...input,
     })
     return contact.save()
   }
 
-  updateContact(id: string, fields: Partial<CompanyContact>):
+  updateContact(id: string, input: Partial<CompanyContact>):
   Promise<CompanyContact> {
     return mongodb.CompanyContact.findOneAndUpdate(
       { _id: id },
-      { ...fields },
+      { ...input },
       { new: true }
     ).then(rejectIfNull('No contact exists for given id'))
   }
