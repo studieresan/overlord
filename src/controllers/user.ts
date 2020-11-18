@@ -232,8 +232,8 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
   async.waterfall([
     function resetPassword(done: Function) {
       User
-        .findOne({ passwordResetToken: req.params.token })
-        .where('passwordResetExpires').gt(Date.now())
+        .findOne({ 'info.passwordResetToken': req.params.token })
+        .where('info.passwordResetExpires').gt(Date.now())
         .exec((err, user: UserDocument) => {
           if (err) { return next(err) }
           if (!user) {
