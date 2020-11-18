@@ -9,17 +9,10 @@ export class CompanyActionsImpl implements CompanyActions {
   getCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
       return resolve(
-        mongodb.Company.find(
-          {},
-          {
-            name: true,
-            id: true,
-            years: true,
-          }
-        )
-          .populate('years.status')
-          .populate('years.responsibleUser')
-          .exec()
+        mongodb.Company.find()
+        .populate('years.status')
+        .populate('years.responsibleUser')
+        .exec()
       )
     })
   }
