@@ -86,7 +86,9 @@ export class EventActionsImpl implements EventActions {
       return Promise.reject('Insufficient permissions')
     return mongodb.Event.findOneAndUpdate(
       { _id: id },
-      { ...fields },
+      {
+         ...fields,
+    },
       { new: true }
     ).then(rejectIfNull('No event exists for given id'))
   }

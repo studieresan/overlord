@@ -6,7 +6,6 @@ import {
   GraphQLInt,
   GraphQLID,
   GraphQLBoolean,
-  GraphQLNonNull,
 } from 'graphql'
 import { GraphQLDateTime } from './GraphQLDateTime'
 import { Company } from './GraphQLCompany'
@@ -15,14 +14,13 @@ import { StatusType } from './GraphQLEventStatus'
 
 const MutableEventFields = {
   date: { type: GraphQLDateTime },
-  studsYear: { type: GraphQLInt },
   location: { type: GraphQLString },
   publicDescription: { type: GraphQLString },
   privateDescription: { type: GraphQLString },
   beforeSurvey: { type: GraphQLString },
   afterSurvey: { type: GraphQLString },
   pictures: { type: new GraphQLList(GraphQLString) },
-  published: { type: new GraphQLNonNull(GraphQLBoolean) },
+  published: { type: GraphQLBoolean },
 }
 
 export const EventType: GraphQLObjectType = new GraphQLObjectType({
@@ -33,6 +31,7 @@ export const EventType: GraphQLObjectType = new GraphQLObjectType({
     responsible: { type: UserType },
     company: { type: Company },
     status: { type: StatusType },
+    studsYear: { type: GraphQLInt },
   }),
 })
 
