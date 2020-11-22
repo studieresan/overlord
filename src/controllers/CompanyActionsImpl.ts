@@ -1,4 +1,6 @@
 import { CompanyActions } from './CompanyActions'
+// import { SalesCommentActionsImpl } from './SalesCommentActionsImpl'
+// import * as salesCommentMongo from '../mongodb/SalesComment'
 import { Company, User } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { hasEventOrAdminPermissions, rejectIfNull } from './util'
@@ -15,21 +17,33 @@ export class CompanyActionsImpl implements CompanyActions {
         .populate('years.responsibleUser')
         .exec()
         .then(companies => companies.map(c => {
-          const object = {
-            ...c['_doc'],
-            statuses: c.years.map(year =>  {
-              return	({
-                studsYear: year.studsYear,
-                responsibleUser: year.responsibleUser,
-                statusDescription: year.status && year.status.name,
-                statusPriority: year.status && year.status.priority,
-              })
-            }),
-          }
-          return object
-        }))
-    )})
-  }
+            const object = {
+              ...c['_doc'],
+              id: c['_id'],
+              statuses: c.years.map(year =>  {
+                return	({
+                  studsYear: year.studsYear,
+                  responsibleUser: year.responsibleUser,
+                  statusDescription: year.status && year.status.name,
+                  statusPriority: year.status && year.status.priority,
+                })
+              },
+            }
+
+            return object
+        })
+        )
+        //   // salesCommentMongo.SalesComment.find({'company': c['_id']})
+        //     // .then(comments => {
+                
+        //     //       }),
+          
+          
+          )
+        )
+      }
+      )
+    }
 
   getSoldCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
