@@ -8,10 +8,10 @@ import {
 } from 'graphql'
 import { CompanyContact } from './GraphQLCompanyContact'
 import { SalesComment, SalesCommentInput } from './GraphQLSalesComment'
+import { UserType } from './GraphQLUser'
 
 const CompanyStudsYearFields = {
   studsYear: { type: GraphQLInt },
-  responsibleUser: { type: GraphQLID },
   statusDescription: { type: GraphQLString },
   statusPriority: { type: GraphQLInt },
   amount: { type: GraphQLInt },
@@ -22,6 +22,7 @@ export const CompanyStudsYear = new GraphQLObjectType({
     fields: () => ({
       ...CompanyStudsYearFields,
       salesComments: { type: new GraphQLList(SalesComment) },
+      responsibleUser: { type: UserType },
     }),
 })
 

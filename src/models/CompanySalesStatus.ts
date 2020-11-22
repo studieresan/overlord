@@ -43,7 +43,7 @@
 
 export interface CompanySalesStatus {
   readonly id: string
-  readonly description: string
+  readonly name: string
   readonly priority: number
 }
 

@@ -17,14 +17,15 @@ export class CompanyActionsImpl implements CompanyActions {
         .then(companies => companies.map(c => {
           const object = {
             ...c['_doc'],
-            statuses: c.years.map(year => ({
-              studsYear: year.studsYear,
-              responsibleUser: year.responsibleUser,
-              statusDescription: year.status && year.status.description,
-              statusPriority: year.status && year.status.priority,
-            })),
+            statuses: c.years.map(year =>  {
+              return	({
+                studsYear: year.studsYear,
+                responsibleUser: year.responsibleUser,
+                statusDescription: year.status && year.status.name,
+                statusPriority: year.status && year.status.priority,
+              })
+            }),
           }
-          console.log(object)
           return object
         }))
     )})

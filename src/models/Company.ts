@@ -1,7 +1,6 @@
 import { CompanyContact, User } from '.'
 import { CompanySalesStatus } from './CompanySalesStatus'
 
-// TODO: Typ rimligt?
 export interface Company {
   readonly id: string
   name: string
