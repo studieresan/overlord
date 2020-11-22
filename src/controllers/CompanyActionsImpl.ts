@@ -16,34 +16,23 @@ export class CompanyActionsImpl implements CompanyActions {
         .populate('years.status')
         .populate('years.responsibleUser')
         .exec()
-        .then(companies => companies.map(c => {
-            const object = {
-              ...c['_doc'],
-              id: c['_id'],
-              statuses: c.years.map(year =>  {
-                return	({
-                  studsYear: year.studsYear,
-                  responsibleUser: year.responsibleUser,
-                  statusDescription: year.status && year.status.name,
-                  statusPriority: year.status && year.status.priority,
-                })
-              },
-            }
-
-            return object
-        })
-        )
+        .then(companies => companies.map(c => ({
+            ...c['_doc'],
+            id: c['_id'],
+            statuses: c.years.map(year => ({
+                studsYear: year.studsYear,
+                responsibleUser: year.responsibleUser,
+                statusDescription: year.status && year.status.name,
+                statusPriority: year.status && year.status.priority,
+            })),
+          })
+        ))
         //   // salesCommentMongo.SalesComment.find({'company': c['_id']})
         //     // .then(comments => {
-                
         //     //       }),
-          
-          
-          )
-        )
-      }
       )
-    }
+    })
+  }
 
   getSoldCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
