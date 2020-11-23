@@ -25,6 +25,25 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
     })
   }
 
+  getCommentsOfCompany(companyId: string): Promise<SalesComment[]> {
+    return new Promise<SalesComment[]>((resolve, reject) => {
+      return resolve(mongodb.SalesComment.find({company: companyId},
+          {
+            'text': true,
+            'id': true,
+            'company': true,
+            'user': true,
+            'edited': true,
+            'createdAt': true,
+          }
+        ).sort([['createdAt', 'asc']])
+         .populate('company')
+         .populate('user')
+         .exec()
+        )
+    })
+  }
+
   createComment(auth: User, companyId: string, text: string): Promise<SalesComment> {
     const event = new mongodb.SalesComment({
       company: new ObjectID(companyId),

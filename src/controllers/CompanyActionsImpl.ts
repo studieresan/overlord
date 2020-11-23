@@ -1,12 +1,12 @@
 import { CompanyActions } from './CompanyActions'
 import { SalesCommentActionsImpl } from './SalesCommentActionsImpl'
-// import * as salesCommentMongo from '../mongodb/SalesComment'
 import { Company, User } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { hasEventOrAdminPermissions, rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
 
-// TODO: Fix sales tool
+// TODO: Modularize how salesComments are populated. Now they are being populated similarly
+// in getCompanies and getCompany
 export class CompanyActionsImpl implements CompanyActions {
   getCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
@@ -47,32 +47,22 @@ export class CompanyActionsImpl implements CompanyActions {
     })
   }
 
-  getSoldCompanies(): Promise<Company[]> {
-    return new Promise<Company[]>((resolve, reject) => {
-      return resolve(
-        mongodb.Company.find(
-          {
-            status: process.env.DEFAULT_SOLD_STATUS_ID,
-          },
-          {
-            name: true,
-            id: true,
-            status: true,
-            responsibleUser: true,
-          }
-        )
-          .populate('status')
-          .populate('responsibleUser')
-          .exec()
-      )
-    })
-  }
-
   getCompany(companyId: string): Promise<Company> {
     return mongodb.Company.findById(new ObjectID(companyId))
       .populate('years.status')
       .populate('years.responsibleUser')
       .then(rejectIfNull('No company matches id'))
+      .then(company => ({
+          ...company['_doc'],
+          id: company['_id'],
+          statuses: company.years.map(year => ({
+            studsYear: year.studsYear,
+            responsibleUser: year.responsibleUser,
+            statusDescription: year.status && year.status.name,
+            statusPriority: year.status && year.status.priority,
+            salesComments: new SalesCommentActionsImpl().getCommentsOfCompany(company['_id']),
+          })),
+      }))
   }
 
   createCompany(name: string): Promise<Company> {
@@ -87,18 +77,6 @@ export class CompanyActionsImpl implements CompanyActions {
           .populate('years.responsibleUser')
           .execPopulate()
       )
-  }
-
-  bulkCreateCompanies(names: string): Promise<Boolean> {
-    const namest: string[] = names.split(',')
-    const companies: Company[] = []
-    namest.forEach((name) => {
-      const n = name.slice(1, -1)
-      companies.push(new mongodb.Company({ name: n }))
-    })
-    return mongodb.Company.collection.insertMany(companies).then((t) => {
-      return t != undefined
-    })
   }
 
   updateCompany(
@@ -122,16 +100,5 @@ export class CompanyActionsImpl implements CompanyActions {
           .then(rejectIfNull('Company does not exist'))
       )
     })
-  }
-
-  setCompaniesStatus(statusId: string): Promise<Company[]> {
-    return mongodb.Company.update(
-      { status: undefined },
-      { status: statusId },
-      { multi: true }
-    )
-      .populate('status')
-      .populate('responsibleUser')
-      .exec()
   }
 }

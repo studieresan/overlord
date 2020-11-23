@@ -5,6 +5,9 @@ export interface SalesCommentActions {
   // Get all comments
   getComments(): Promise<SalesComment[]>
 
+  // Get all comments of a company
+  getCommentsOfCompany(companyId: string): Promise<SalesComment[]>
+
   // Create a comment for a company with given id
   createComment(auth: User, companyId: string, text: string): Promise<SalesComment>
 
