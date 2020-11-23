@@ -1,4 +1,4 @@
-import { CompanyContact, User } from '.'
+import { CompanyContact, SalesComment, User } from '.'
 import { CompanySalesStatus } from './CompanySalesStatus'
 
 export interface Company {
@@ -13,4 +13,5 @@ export interface CompanyYear {
   studsYear: number
   responsibleUser: User
   amount: number
+  comments: SalesComment[]
 }
