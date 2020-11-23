@@ -4,12 +4,13 @@ import { Company, SalesComment, User } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { hasEventOrAdminPermissions, rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
+import { CompanyContactActionsImpl } from './CompanyContactActionsImpl'
 
 // Populate the return object of companies with the GraphQL definitions instead of the mongo one
 const populateCompany = (mongoCompany: mongodb.CompanyDocument, comments: SalesComment[]) => {
   return {
     ...mongoCompany['_doc'],
-    id: mongoCompany['_id'],
+    id: mongoCompany.id,
     statuses: mongoCompany.years.map(year => ({
       studsYear: year.studsYear,
       responsibleUser: year.responsibleUser,
@@ -17,6 +18,13 @@ const populateCompany = (mongoCompany: mongodb.CompanyDocument, comments: SalesC
       statusPriority: year.status && year.status.priority,
       salesComments: comments,
     })),
+    companyContacts: new CompanyContactActionsImpl()
+      .getContacts(mongoCompany.id)
+      .then(contacts => contacts
+        .map(contact => {
+          contact['phone'] = contact.phoneNumber
+          return contact
+        })),
   }
 }
 
