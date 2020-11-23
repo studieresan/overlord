@@ -1,12 +1,25 @@
 import { CompanyActions } from './CompanyActions'
 import { SalesCommentActionsImpl } from './SalesCommentActionsImpl'
-import { Company, User } from '../models'
+import { Company, SalesComment, User } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { hasEventOrAdminPermissions, rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
 
-// TODO: Modularize how salesComments are populated. Now they are being populated similarly
-// in getCompanies and getCompany
+// Populate the return object of companies with the GraphQL definitions instead of the mongo one
+const populateCompany = (mongoCompany: mongodb.CompanyDocument, comments: SalesComment[]) => {
+  return {
+    ...mongoCompany['_doc'],
+    id: mongoCompany['_id'],
+    statuses: mongoCompany.years.map(year => ({
+      studsYear: year.studsYear,
+      responsibleUser: year.responsibleUser,
+      statusDescription: year.status && year.status.name,
+      statusPriority: year.status && year.status.priority,
+      salesComments: comments,
+    })),
+  }
+}
+
 export class CompanyActionsImpl implements CompanyActions {
   getCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
@@ -29,17 +42,7 @@ export class CompanyActionsImpl implements CompanyActions {
 
             return Promise.all(
               companies.map(async (c) => {
-                return {
-                  ...c['_doc'],
-                  id: c['_id'],
-                  statuses: c.years.map(year => ({
-                    studsYear: year.studsYear,
-                    responsibleUser: year.responsibleUser,
-                    statusDescription: year.status && year.status.name,
-                    statusPriority: year.status && year.status.priority,
-                    salesComments: companyComments[c['_id']],
-                  })),
-                }
+                return populateCompany(c, companyComments[c['_id']])
               })
             )
           })
@@ -52,17 +55,12 @@ export class CompanyActionsImpl implements CompanyActions {
       .populate('years.status')
       .populate('years.responsibleUser')
       .then(rejectIfNull('No company matches id'))
-      .then(company => ({
-          ...company['_doc'],
-          id: company['_id'],
-          statuses: company.years.map(year => ({
-            studsYear: year.studsYear,
-            responsibleUser: year.responsibleUser,
-            statusDescription: year.status && year.status.name,
-            statusPriority: year.status && year.status.priority,
-            salesComments: new SalesCommentActionsImpl().getCommentsOfCompany(company['_id']),
-          })),
-      }))
+      .then(async company =>
+        populateCompany(
+          company,
+          await new SalesCommentActionsImpl().getCommentsOfCompany(company['_id'])
+        )
+      )
   }
 
   createCompany(name: string): Promise<Company> {
