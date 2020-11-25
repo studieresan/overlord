@@ -1,7 +1,6 @@
-import { CompanyContact, User } from '.'
+import { CompanyContact, SalesComment, User } from '.'
 import { CompanySalesStatus } from './CompanySalesStatus'
 
-// TODO: Typ rimligt?
 export interface Company {
   readonly id: string
   name: string
@@ -14,4 +13,5 @@ export interface CompanyYear {
   studsYear: number
   responsibleUser: User
   amount: number
+  comments: SalesComment[]
 }

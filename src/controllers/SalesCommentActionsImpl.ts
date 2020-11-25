@@ -6,10 +6,9 @@ import { rejectIfNull } from './util'
 
 export class SalesCommentActionsImpl implements SalesCommentActions {
 
-  // TODO: Fix. Company cannot be supplied
-  getComments(companyId: string, studsYear: number): Promise<SalesComment[]> {
+  getComments(): Promise<SalesComment[]> {
     return new Promise<SalesComment[]>((resolve, reject) => {
-      return resolve(mongodb.SalesComment.find({company: new ObjectID(companyId)},
+      return resolve(mongodb.SalesComment.find({},
           {
             'text': true,
             'id': true,
@@ -20,10 +19,27 @@ export class SalesCommentActionsImpl implements SalesCommentActions {
           }
         ).sort([['createdAt', 'asc']])
          .populate('company')
-         .populate('author')
+         .populate('user')
          .exec()
-         .then(listOfComments =>
-          listOfComments.filter(comment => comment.author.studsYear == studsYear))
+        )
+    })
+  }
+
+  getCommentsOfCompany(companyId: string): Promise<SalesComment[]> {
+    return new Promise<SalesComment[]>((resolve, reject) => {
+      return resolve(mongodb.SalesComment.find({company: companyId},
+          {
+            'text': true,
+            'id': true,
+            'company': true,
+            'user': true,
+            'edited': true,
+            'createdAt': true,
+          }
+        ).sort([['createdAt', 'asc']])
+         .populate('company')
+         .populate('user')
+         .exec()
         )
     })
   }

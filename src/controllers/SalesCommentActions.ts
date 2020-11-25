@@ -2,8 +2,11 @@ import { SalesComment, User } from '../models'
 
 export interface SalesCommentActions {
 
-  // Get all comments for a company with given id and year
-  getComments(companyId: string, studsYear: number): Promise<SalesComment[]>
+  // Get all comments
+  getComments(): Promise<SalesComment[]>
+
+  // Get all comments of a company
+  getCommentsOfCompany(companyId: string): Promise<SalesComment[]>
 
   // Create a comment for a company with given id
   createComment(auth: User, companyId: string, text: string): Promise<SalesComment>

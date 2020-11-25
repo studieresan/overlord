@@ -1,52 +1,59 @@
 import { CompanyActions } from './CompanyActions'
-import { Company, User } from '../models'
+import { SalesCommentActionsImpl } from './SalesCommentActionsImpl'
+import { Company, SalesComment, User } from '../models'
 import * as mongodb from '../mongodb/Company'
 import { hasEventOrAdminPermissions, rejectIfNull } from './util'
 import { ObjectID } from 'mongodb'
+import { CompanyContactActionsImpl } from './CompanyContactActionsImpl'
 
-// TODO: Fix sales tool
+// Populate the return object of companies with the GraphQL definitions instead of the mongo one
+const populateCompany = (mongoCompany: mongodb.CompanyDocument, comments: SalesComment[]) => {
+  return {
+    ...mongoCompany['_doc'],
+    id: mongoCompany.id,
+    statuses: mongoCompany.years.map(year => ({
+      studsYear: year.studsYear,
+      responsibleUser: year.responsibleUser,
+      statusDescription: year.status && year.status.name,
+      statusPriority: year.status && year.status.priority,
+      salesComments: comments,
+    })),
+    companyContacts: new CompanyContactActionsImpl()
+      .getContacts(mongoCompany.id)
+      .then(contacts => contacts
+        .map(contact => {
+          contact['phone'] = contact.phoneNumber
+          return contact
+        })),
+  }
+}
+
 export class CompanyActionsImpl implements CompanyActions {
-
   getCompanies(): Promise<Company[]> {
     return new Promise<Company[]>((resolve, reject) => {
       return resolve(
         mongodb.Company.find()
-        .populate('years.status')
-        .populate('years.responsibleUser')
-        .exec()
-        .then(companies => companies.map(c => {
-          const object = {
-            ...c['_doc'],
-            statuses: c.years.map(year => ({
-              studsYear: year.studsYear,
-              responsibleUser: year.responsibleUser,
-              statusDescription: year.status && year.status.description,
-              statusPriority: year.status && year.status.priority,
-            })),
-          }
-          console.log(object)
-          return object
-        }))
-    )})
-  }
-
-  getSoldCompanies(): Promise<Company[]> {
-    return new Promise<Company[]>((resolve, reject) => {
-      return resolve(
-        mongodb.Company.find(
-          {
-            status: process.env.DEFAULT_SOLD_STATUS_ID,
-          },
-          {
-            name: true,
-            id: true,
-            status: true,
-            responsibleUser: true,
-          }
-        )
-          .populate('status')
-          .populate('responsibleUser')
+          .populate('years.status')
+          .populate('years.responsibleUser')
           .exec()
+          .then(async (companies) => {
+            const allComments = await new SalesCommentActionsImpl().getComments()
+
+            // Make a dictionary of companyID -> comments. Faster to find all comments of a company
+            const companyComments = {}
+            allComments.forEach(comment => {
+              const companyID = comment.company.id
+              if (!companyComments[companyID])
+                companyComments[companyID] = []
+              companyComments[companyID].push(comment)
+            })
+
+            return Promise.all(
+              companies.map(async (c) => {
+                return populateCompany(c, companyComments[c['_id']])
+              })
+            )
+          })
       )
     })
   }
@@ -56,6 +63,12 @@ export class CompanyActionsImpl implements CompanyActions {
       .populate('years.status')
       .populate('years.responsibleUser')
       .then(rejectIfNull('No company matches id'))
+      .then(async company =>
+        populateCompany(
+          company,
+          await new SalesCommentActionsImpl().getCommentsOfCompany(company['_id'])
+        )
+      )
   }
 
   createCompany(name: string): Promise<Company> {
@@ -72,46 +85,26 @@ export class CompanyActionsImpl implements CompanyActions {
       )
   }
 
-  bulkCreateCompanies(names: string): Promise<Boolean> {
-    const namest: string[] = names.split(',')
-    const companies: Company[] = []
-    namest.forEach((name) => {
-      const n = name.slice(1, -1)
-      companies.push(new mongodb.Company({ name: n }))
-    })
-    return mongodb.Company.collection.insertMany(companies).then((t) => {
-      return t != undefined
-    })
-  }
-
   updateCompany(
     user: User,
     companyID: string,
     fields: Partial<Company>
   ): Promise<Company> {
     return new Promise<Company>((resolve, reject) => {
-    if (!hasEventOrAdminPermissions(user)) {
-      return reject(new Error('User not authorized to do this'))
-    }
-    return resolve(mongodb.Company.findOneAndUpdate(
-      { _id: companyID },
-      { ...fields },
-      { new: true })
-      .populate('users')
-      .populate('companysalesstatuses')
-      .exec()
-      .then(rejectIfNull('Company does not exist'))
-    )})
-  }
-
-  setCompaniesStatus(statusId: string): Promise<Company[]> {
-    return mongodb.Company.update(
-      { status: undefined },
-      { status: statusId },
-      { multi: true }
-    )
-      .populate('status')
-      .populate('responsibleUser')
-      .exec()
+      if (!hasEventOrAdminPermissions(user)) {
+        return reject(new Error('User not authorized to do this'))
+      }
+      return resolve(
+        mongodb.Company.findOneAndUpdate(
+          { _id: companyID },
+          { ...fields },
+          { new: true }
+        )
+          .populate('users')
+          .populate('companysalesstatuses')
+          .exec()
+          .then(rejectIfNull('Company does not exist'))
+      )
+    })
   }
 }
