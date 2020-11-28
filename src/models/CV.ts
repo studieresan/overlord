@@ -1,20 +1,20 @@
 export interface CV {
-  readonly userId: string
-  readonly sections: CVSection[]
+  userId?: string
+  sections?: CVSection[]
 }
 
 export interface CVSection {
-  readonly title: string
-  readonly description: string
-  readonly items: CVItem[]
+  title?: string
+  description?: string
+  items?: CVItem[]
 }
 
 export interface CVItem {
-  readonly title: string
-  readonly description: string
-  readonly when: string
-  readonly organization: string
-  readonly city: string
+  title?: string
+  description?: string
+  when?: string
+  organization?: string
+  city?: string
 }
 
 export function createDefaultCV(userId: string): CV {

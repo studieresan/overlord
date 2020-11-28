@@ -7,6 +7,7 @@ import {
   GraphQLInt,
   GraphQLID,
 } from 'graphql'
+import { CVType } from './GraphQLCV'
 
 
 export const UserType = new GraphQLObjectType({
@@ -16,6 +17,7 @@ export const UserType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     studsYear: { type: GraphQLInt },
-    info: { type: UserInfoType },
+		info: { type: UserInfoType },
+		cv: { type: CVType },
   },
 })

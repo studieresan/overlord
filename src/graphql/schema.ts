@@ -68,7 +68,10 @@ const schema = new GraphQLSchema({
         description: 'Get the currently logged in user',
         type: UserType,
         async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res, () => req.user)
+          return await requireAuth(req, res, () => {
+            console.log('USER: ', req.user)
+            return req.user
+          })
         },
       },
       users: {

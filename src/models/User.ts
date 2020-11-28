@@ -11,16 +11,16 @@ export interface User {
 export type UserInfo = StudsInfo
 
 export interface StudsInfo {
-  readonly userRole: UserRole
-  readonly email: string
-  readonly linkedIn?: string
-  readonly github?: string
-  readonly phone?: string
-  readonly picture?: string
-  readonly allergies?: string
-  readonly master?: string,
-  readonly cv?: CV,
-  readonly permissions: Permission[]
+  userRole: UserRole
+  email: string
+  linkedIn?: string
+  github?: string
+  phone?: string
+  picture?: string
+  allergies?: string
+  master?: string,
+  cv?: CV,
+  permissions: Permission[]
 }
 
 export enum UserRole {

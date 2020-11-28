@@ -14,24 +14,22 @@ import {
   CVActions,
   CVActionsImpl,
 } from '../controllers'
-import * as passport from 'passport'
-
-
+// import * as passport from 'passport'
 
 const cvCtrl: CVActions = new CVActionsImpl()
 
-function getCV(req: any, res: any, requestedUser: any) {
-  return new Promise(resolve => {
-    passport.authenticate('jwt', { session: false },
-      (err: any, user: any, info: any) => {
-        if (err || !user) {
-          resolve(undefined)
-        }
-        resolve(cvCtrl.getCV(requestedUser.id))
-      }
-    )(req, res, () => {})
-  })
-}
+// function getCV(req: any, res: any, requestedUser: any) {
+//   return new Promise(resolve => {
+//     passport.authenticate('jwt', { session: false },
+//       (err: any, user: any, info: any) => {
+//         if (err || !user) {
+//           resolve(undefined)
+//         }
+//         resolve(cvCtrl.getCV(requestedUser.id))
+//       }
+//     )(req, res, () => {})
+//   })
+// }
 
 export const UserRole = new GraphQLEnumType({
   name : 'UserRole',
@@ -65,8 +63,8 @@ export const UserInfoType = new GraphQLObjectType({
     // Should not be moved to MutableInfoFields is because CVType is not an InputObjectType
     cv: {
         type: CVType,
-        async resolve(requestedUser, b, { req, res }) {
-            return await getCV(req, res, requestedUser)
+        async resolve(a, b, { req, res }) {
+            return await cvCtrl.getCV(req.user.id)
         },
     },
     permissions: { type: new GraphQLList(GraphQLString) },

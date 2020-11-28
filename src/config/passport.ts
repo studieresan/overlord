@@ -4,6 +4,7 @@ import * as passportJWT from 'passport-jwt'
 
 import { User } from '../mongodb/User'
 import { Request, Response, NextFunction } from 'express'
+import { UserActionsImpl } from '../controllers'
 
 const LocalStrategy = passportLocal.Strategy
 const JWTStrategy = passportJWT.Strategy
@@ -48,22 +49,14 @@ passport.use(new JWTStrategy({
     passReqToCallback: true,
   },
   (req: any, jwtPayload: any, done: any) => {
-    User.findOne({ 'info.email': jwtPayload }, (err, user: any) => {
-      if (err) {
-        return done(err)
-      }
-      if (!user) {
-        return done(
-          undefined,
-          false,
-          { message: 'Provided user not found.' }
-        )
-      }
+    new UserActionsImpl().getUserOfEmail(jwtPayload).then(user => {
+      console.log('JWT USER: ', user)
       req.user = user
+      console.log("Req user", user)
       return done(undefined, user)
     })
-  }
-))
+  })
+)
 
 export let authenticate = passport.authenticate('jwt', { session: false })
 
