@@ -28,8 +28,8 @@ export const CVItemInputType = new GraphQLInputObjectType ({
 })
 
 const MutableCVSectionFields = {
-	title: { type: GraphQLString },
-	description: { type: GraphQLString },
+  title: { type: GraphQLString },
+  description: { type: GraphQLString },
 }
 
 export const CVSectionType = new GraphQLObjectType({

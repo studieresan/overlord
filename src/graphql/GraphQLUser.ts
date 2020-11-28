@@ -17,7 +17,7 @@ export const UserType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     studsYear: { type: GraphQLInt },
-		info: { type: UserInfoType },
-		cv: { type: CVType },
+    info: { type: UserInfoType },
+    cv: { type: CVType },
   },
 })
