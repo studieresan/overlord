@@ -10,20 +10,21 @@ export class UserActionsImpl implements UserActions {
   getUserInfo(id: string): Promise<UserInfo> {
     return mongodb.User.findById(id)
     .then(rejectIfNull('No user matches email'))
-    .then(user => new CVActionsImpl().getCV(user.id).then(cv => {
-      user.info.cv = cv
-      return user.info
-    }))
+    .then(user => user.info)
+    // .then(user => new CVActionsImpl().getCV(user.id).then(cv => {
+    //   user.info.cv = cv
+    //   return user.info
+    // }))
   }
 
   // This should be able to be removed when JWT uses ID instead of email
   getUserOfEmail(email: string): Promise<User> {
     return mongodb.User.findOne({ 'info.email': email })
     .then(rejectIfNull('No user matches email'))
-    .then(user => new CVActionsImpl().getCV(user.id).then(cv => {
-      user.info.cv = cv
-      return user
-    }))
+    // .then(user => new CVActionsImpl().getCV(user.id).then(cv => {
+    //   user.info.cv = cv
+    //   return user
+    // }))
   }
 
   deleteUser(userID: string, requestUser: User): Promise<User> {
