@@ -18,7 +18,6 @@ export class CVActionsImpl implements CVActions {
         { userId },
         fields
     ).then(cv => {
-      console.log('CV', cv)
       if (cv) // If CV exist, just continue. Else create new CV
         return cv
       return mongodb.CV.create({
@@ -26,23 +25,6 @@ export class CVActionsImpl implements CVActions {
         ...fields,
       })
     })
-      // return mongodb.CV.findOne({ userId }).then(cv => {
-      // 	if (!cv) {
-      // 		const newCV = createDefaultCV(userId)
-      // 		console.log('Created new CV', newCV)
-      // 		return mongodb.CV.create(newCV)
-      // 			.then(() => newCV)
-      // 	}
-      // 	console.log('CV not null')
-      // 	return cv.update({
-      // 		...cv,
-      // 		...fields,
-      // 	})
-      // }).then(cv => {
-      // 	console.log('CV UPDATED')
-      // 	return cv
-
-      // })
   }
 
   getAllCVs(auth: User): Promise<CV[]> {

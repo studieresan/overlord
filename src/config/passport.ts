@@ -50,9 +50,7 @@ passport.use(new JWTStrategy({
   },
   (req: any, jwtPayload: any, done: any) => {
     new UserActionsImpl().getUserOfEmail(jwtPayload).then(user => {
-      console.log('JWT USER: ', user)
       req.user = user
-      console.log("Req user", user)
       return done(undefined, user)
     })
   })

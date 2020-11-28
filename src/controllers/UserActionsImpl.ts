@@ -11,7 +11,6 @@ export class UserActionsImpl implements UserActions {
     return mongodb.User.findById(id)
     .then(rejectIfNull('No user matches email'))
     .then(user => new CVActionsImpl().getCV(user.id).then(cv => {
-      console.log('Got cv ', cv)
       user.info.cv = cv
       return user.info
     }))
@@ -22,12 +21,7 @@ export class UserActionsImpl implements UserActions {
     return mongodb.User.findOne({ 'info.email': email })
     .then(rejectIfNull('No user matches email'))
     .then(user => new CVActionsImpl().getCV(user.id).then(cv => {
-      user.info.cv = {
-        sections: [{
-          title: "Hej"
-        }]
-      }
-      console.log('EMAIL THINGIER', cv, user)
+      user.info.cv = cv
       return user
     }))
   }
