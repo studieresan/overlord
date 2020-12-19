@@ -54,7 +54,7 @@ const options = {
   useCreateIndex: true,
 }
 
-mongoose.connect(process.env.MONGODB_URI, options)
+mongoose.connect(process.env.MONGODB_URI!, options)
 
 mongoose.connection.on('error', () => {
   console.log('MongoDB connection error. Please make sure MongoDB is running.')
@@ -137,7 +137,7 @@ app.use('/graphql', (req, res) =>
   graphqlHTTP({
      schema: graphQLSchema,
      context: { req: req, res: res },
-     graphiql: process.env.DEV,
+     graphiql: process.env.DEV === 'true',
   })(req, res)
 )
 

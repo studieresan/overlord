@@ -44,7 +44,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
         return res.status(401).json({ error: 'Wrong email or password.' })
       }
 
-      const token = jwt.sign(user.info.email, process.env.JWT_SECRET)
+      const token = jwt.sign(user.info.email, process.env.JWT_SECRET!)
       res.status(200)
       res.setHeader('Authorization', `Bearer ${token}`)
       res.json({

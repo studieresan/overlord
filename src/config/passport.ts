@@ -14,7 +14,7 @@ passport.serializeUser<any, any>((user, done) => {
 })
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
+  User.findById(<any>id, (err, user) => {
     done(err, user!)
   })
 })
