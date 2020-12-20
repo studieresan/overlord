@@ -116,10 +116,10 @@
   resolved "https://registry.yarnpkg.com/@types/async/-/async-3.2.5.tgz#febca3166039b8946eb162a14a91e8de9a373ebc"
   integrity sha512-fdtHUdfIxSfU6crUgUOEb6vxdquAOa75bh1sQVL/ePkmQDNo8Aj1056eGGI9cPls5tLRhnAyfoXljEk+hmhbxg==
 
-"@types/bcrypt-nodejs@0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@types/bcrypt-nodejs/-/bcrypt-nodejs-0.0.30.tgz#4cdd96b49293b3932122e4b7e29543e35e6bae58"
-  integrity sha1-TN2WtJKTs5MhIuS34pVD415rrlg=
+"@types/bcrypt-nodejs@0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@types/bcrypt-nodejs/-/bcrypt-nodejs-0.0.31.tgz#c2912b47e66242f2d0d2c43cdd62918c8f990dac"
+  integrity sha512-0J4tuZnKpVyHc5EIKTeIUIo6yBSjt7F004mifvqGPAQsETho7iHubjyBD8p1YENNWNYb1vfPhgjCsRH8zy84XQ==
 
 "@types/bluebird@^3.4.0":
   version "3.5.16"
