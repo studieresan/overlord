@@ -14,7 +14,7 @@ import * as errorHandler from 'errorhandler'
 import * as lusca from 'lusca'
 import * as mongoose from 'mongoose'
 import * as passport from 'passport'
-import * as graphqlHTTP from 'express-graphql'
+import { graphqlHTTP } from 'express-graphql'
 import { signedUploadRequest } from './imageUpload'
 
 import expressValidator = require('express-validator')
