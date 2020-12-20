@@ -1,8 +1,9 @@
-import { Company, User } from '.'
+import { User } from '.'
+import { ObjectID } from 'mongodb'
 
 export interface SalesComment {
     text: String
     readonly createdAt: Date
     user: User
-    company: Company
+    company: ObjectID
 }

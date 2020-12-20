@@ -42,7 +42,7 @@ export class CompanyActionsImpl implements CompanyActions {
             // Make a dictionary of companyID -> comments. Faster to find all comments of a company
             const companyComments = {}
             allComments.forEach(comment => {
-              const companyID = comment.company.id
+              const companyID = comment.company.toString()
               if (!companyComments[companyID])
                 companyComments[companyID] = []
               companyComments[companyID].push(comment)

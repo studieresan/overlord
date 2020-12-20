@@ -5,6 +5,8 @@ import * as passportJWT from 'passport-jwt'
 import { User } from '../mongodb/User'
 import { Request, Response, NextFunction } from 'express'
 
+import { User as UserModel } from '../models'
+
 const LocalStrategy = passportLocal.Strategy
 const JWTStrategy = passportJWT.Strategy
 const ExtractJWT = passportJWT.ExtractJwt
@@ -72,7 +74,7 @@ export let authenticate = passport.authenticate('jwt', { session: false })
  */
 export let isAuthorized = (req: Request, res: Response, next: NextFunction) => {
   const provider = req.path.split('/').slice(-1)[0]
-  if (req.user.tokens.find((t: any) => t.kind === provider)) {
+  if ((req?.user as UserModel)?.tokens.find((t: any) => t.kind === provider)) {
     next()
   } else {
     res.redirect(`/auth/${provider}`)
