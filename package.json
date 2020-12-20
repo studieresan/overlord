@@ -62,7 +62,7 @@
     "@types/passport-jwt": "^3.0.1",
     "@types/passport-local": "^1.0.33",
     "@types/request": "0.0.45",
-    "async": "^2.1.2",
+    "async": "^3.2.0",
     "aws-sdk": "^2.179.0",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.15.2",
