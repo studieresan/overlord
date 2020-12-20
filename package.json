@@ -61,7 +61,6 @@
     "@types/passport": "^0.3.3",
     "@types/passport-jwt": "^3.0.1",
     "@types/passport-local": "^1.0.33",
-    "@types/ramda": "^0.24.17",
     "@types/request": "0.0.45",
     "async": "^2.1.2",
     "aws-sdk": "^2.179.0",
