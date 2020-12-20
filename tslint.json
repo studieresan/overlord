@@ -28,7 +28,6 @@
       "check-open-brace",
       "check-whitespace"
     ],
-    "no-var-keyword": true,
     "quotemark": [
       true,
       "single",
@@ -70,8 +69,6 @@
     "no-null-keyword": true,
     "prefer-const": true,
     "jsdoc-format": true,
-    "no-unused-variable": true,
-    "prefer-const": true,
     "no-var-keyword": true
   }
 }
