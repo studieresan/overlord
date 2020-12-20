@@ -1903,10 +1903,10 @@ lsmod@1.0.0:
   resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
   integrity sha1-mgD3bco26yP6BTUK/htYXUKZ5ks=
 
-lusca@^1.4.1:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/lusca/-/lusca-1.5.2.tgz#5230a0c635fb60c1f30efbd0d95341bca3ed788e"
-  integrity sha512-E3UQSLC2cJgHPcUr4gXoz2EDB2Y4G3wdww6A6vbulPySkM5+bBlTqK+wwRA17f0+xDuNDJdsiTDykblFk6YfJA==
+lusca@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/lusca/-/lusca-1.6.1.tgz#f7445e50c720030f5ee53d1336e9e53d1786c34f"
+  integrity sha512-+JzvUMH/rsE/4XfHdDOl70bip0beRcHSviYATQM0vtls59uVtdn1JMu4iD7ZShBpAmFG8EnaA+PrYG9sECMIOQ==
   dependencies:
     tsscmp "^1.0.5"
 
