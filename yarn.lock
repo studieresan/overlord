@@ -184,10 +184,10 @@
   dependencies:
     dotenv "*"
 
-"@types/errorhandler@0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@types/errorhandler/-/errorhandler-0.0.30.tgz#5b6c4318695fc11aa2a20f5ba0bcb70c796ee350"
-  integrity sha1-W2xDGGlfwRqiog9boLy3DHlu41A=
+"@types/errorhandler@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@types/errorhandler/-/errorhandler-1.5.0.tgz#2e6be2e419e505130c6342d11b3981867db6de2b"
+  integrity sha512-g5jrn2aofEn7O2OW/T+PlmGUUD/AtrX7DI87zrxz6rK5XIyvQf3FbPJrwgYaVjVOaCyvEkx9yxLd/XlEA43OcA==
   dependencies:
     "@types/express" "*"
 
