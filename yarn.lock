@@ -126,12 +126,12 @@
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.16.tgz#d65dbbf3bc62a0b3dd145f48dc6511b1ed8cc6bb"
   integrity sha512-957wyvA86h7pv69cIGUQ1s5RKWFFuU4EyRQCV33TvL0oeJxM9L4hIKW9iomOf+HSEeKysG4RkNnPlhUvOtbHPg==
 
-"@types/body-parser@^1.16.2":
-  version "1.16.5"
-  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.16.5.tgz#d2b7daefab84e0afa9d3fae0935bc7355b6320af"
-  integrity sha512-iGYVwwFznpBzqwS3QOoaop3mEbW8vAuqnPN2/pi2/HTREHeFTT+xX4hp5OImpQ7q4bE3a96JsDgBUccsx0fL/A==
+"@types/body-parser@^1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.0.tgz#0685b3c47eb3006ffed117cdd55164b61f80538f"
+  integrity sha512-W98JrE0j2K78swW4ukqMleo8R7h/pFETjM2DQ90MF6XK2i4LO4W3gQ71Lt4w3bfm2EvVSyWHplECvB5sK22yFQ==
   dependencies:
-    "@types/express" "*"
+    "@types/connect" "*"
     "@types/node" "*"
 
 "@types/bson@*":
@@ -148,10 +148,10 @@
   dependencies:
     "@types/express" "*"
 
-"@types/connect@^3.4.32":
-  version "3.4.32"
-  resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.32.tgz#aa0e9616b9435ccad02bc52b5b454ffc2c70ba28"
-  integrity sha512-4r8qa0quOvh7lGD0pre62CAb1oni1OO6ecJLGCezTmhQ8Fz50Arx9RUszryR8KlgK6avuSXvviL6yWyViQABOg==
+"@types/connect@*", "@types/connect@^3.4.34":
+  version "3.4.34"
+  resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.34.tgz#170a40223a6d666006d93ca128af2beb1d9b1901"
+  integrity sha512-ePPA/JuI+X0vb+gSWlPKOY0NdNAie/rPUqX2GUPpbZwiKTkSPhjXWuee47E4MtE54QVzGCQMQkAL6JhV2E1+cQ==
   dependencies:
     "@types/node" "*"
 
@@ -231,12 +231,12 @@
     "@types/mongodb" "*"
     "@types/node" "*"
 
-"@types/morgan@^1.7.32":
-  version "1.7.33"
-  resolved "https://registry.yarnpkg.com/@types/morgan/-/morgan-1.7.33.tgz#149a1f07335d3e51d01753493e6d7173f94f4766"
-  integrity sha512-HBsWVjFJWDbH79Aug/Pyxsc5KWyZs2vkxn7qbo+9a7w2jVur6egGsyJeacDW5Pb5cO+fUl+X5kZaDct8asYp1w==
+"@types/morgan@^1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@types/morgan/-/morgan-1.9.2.tgz#450f958a4d3fb0694a3ba012b09c8106f9a2885e"
+  integrity sha512-edtGMEdit146JwwIeyQeHHg9yID4WSolQPxpEorHmN3KuytuCHyn2ELNr5Uxy8SerniFbbkmgKMrGM933am5BQ==
   dependencies:
-    "@types/express" "*"
+    "@types/node" "*"
 
 "@types/node@*":
   version "7.0.43"
