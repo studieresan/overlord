@@ -2,7 +2,6 @@ import * as mongodb from '../mongodb/User'
 import * as passport from 'passport'
 import { UserActions } from './UserActions'
 import { User, UserInfo, UserRole } from '../models'
-import { merge } from 'ramda'
 import { hasAdminPermission, rejectIfNull } from './util'
 
 export class UserActionsImpl implements UserActions {
@@ -49,7 +48,7 @@ export class UserActionsImpl implements UserActions {
       return mongodb.User.findById(userID)
         .then(rejectIfNull('No user matches id'))
         .then((user) => {
-          const newInfo = merge(user.info, newFields)
+          const newInfo = {...user.info, ...newFields}
           user.info = newInfo
           return user
             .save()
