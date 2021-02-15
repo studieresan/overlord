@@ -228,6 +228,18 @@ const schema = new GraphQLSchema({
           )
         },
       },
+			companyDelete: {
+        description: 'Create company',
+        type: GraphQLBoolean,
+        args: {
+            id: { type: GraphQLString },
+        },
+        async resolve(a, { id }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.deleteCompany(id)
+          )
+        },
+      },
       companyContactCreate: {
         description: 'Create new contact for a company specified by the company ID',
         type: CompanyContact,

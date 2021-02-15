@@ -107,4 +107,11 @@ export class CompanyActionsImpl implements CompanyActions {
       )
     })
   }
+
+	deleteCompany(id: string): Promise<boolean> {
+    return mongodb.Company.findOneAndRemove({ _id: id })
+      .then(company => {
+        return (company !== undefined)
+      })
+  }
 }
