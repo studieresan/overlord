@@ -54,12 +54,14 @@ const options = {
   useCreateIndex: true,
 }
 
-mongoose.connect(process.env.MONGODB_URI!, options)
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(process.env.MONGODB_URI!, options)
 
-mongoose.connection.on('error', () => {
-  console.log('MongoDB connection error. Please make sure MongoDB is running.')
-  process.exit()
-})
+  mongoose.connection.on('error', () => {
+    console.log('MongoDB connection error. Please make sure MongoDB is running.')
+    process.exit()
+  })
+}
 
 app.use(function(req, res, next) {
   const allowedOrigins = [
@@ -144,14 +146,15 @@ app.use('/graphql', (req, res) =>
 /**
  * Start Express server.
  */
-app.listen(app.get('port'), () => {
-  console.log(
-    ('  App is running at http://localhost:%d in %s mode'),
-    app.get('port'),
-    app.get('env')
-  )
-  console.log('  Press CTRL-C to stop\n')
-})
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(app.get('port'), () => {
+    console.log(
+      ('  App is running at http://localhost:%d in %s mode'),
+      app.get('port'),
+      app.get('env')
+    )
+    console.log('  Press CTRL-C to stop\n')
+  })
+}
 
-module.exports = app
-
+export { app }
