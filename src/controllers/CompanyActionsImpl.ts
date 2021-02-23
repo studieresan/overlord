@@ -7,11 +7,14 @@ import { ObjectID } from 'mongodb'
 import { CompanyContactActionsImpl } from './CompanyContactActionsImpl'
 
 // Populate the return object of companies with the GraphQL definitions instead of the mongo one
-const populateCompany = (mongoCompany: mongodb.CompanyDocument, comments: SalesComment[]) => {
+const populateCompany = (
+  mongoCompany: mongodb.CompanyDocument,
+  comments: SalesComment[]
+) => {
   return {
     ...mongoCompany['_doc'],
     id: mongoCompany.id,
-    statuses: mongoCompany.years.map(year => ({
+    statuses: mongoCompany.years.map((year) => ({
       studsYear: year.studsYear,
       responsibleUser: year.responsibleUser,
       statusDescription: year.status && year.status.name,
@@ -20,11 +23,12 @@ const populateCompany = (mongoCompany: mongodb.CompanyDocument, comments: SalesC
     })),
     companyContacts: new CompanyContactActionsImpl()
       .getContacts(mongoCompany.id)
-      .then(contacts => contacts
-        .map(contact => {
+      .then((contacts) =>
+        contacts.map((contact) => {
           contact['phone'] = contact.phoneNumber
           return contact
-        })),
+        })
+      ),
   }
 }
 
@@ -41,7 +45,7 @@ export class CompanyActionsImpl implements CompanyActions {
 
             // Make a dictionary of companyID -> comments. Faster to find all comments of a company
             const companyComments = {}
-            allComments.forEach(comment => {
+            allComments.forEach((comment) => {
               const companyID = comment.company.id
               if (!companyComments[companyID])
                 companyComments[companyID] = []
@@ -50,7 +54,10 @@ export class CompanyActionsImpl implements CompanyActions {
 
             return Promise.all(
               companies.map(async (c) => {
-                return populateCompany(c, companyComments[c['_id']])
+                return populateCompany(
+                  c,
+                  companyComments[c['_id']]
+                )
               })
             )
           })
@@ -63,10 +70,12 @@ export class CompanyActionsImpl implements CompanyActions {
       .populate('years.status')
       .populate('years.responsibleUser')
       .then(rejectIfNull('No company matches id'))
-      .then(async company =>
+      .then(async (company) =>
         populateCompany(
           company,
-          await new SalesCommentActionsImpl().getCommentsOfCompany(company['_id'])
+          await new SalesCommentActionsImpl().getCommentsOfCompany(
+            company['_id']
+          )
         )
       )
   }
@@ -108,10 +117,9 @@ export class CompanyActionsImpl implements CompanyActions {
     })
   }
 
-	deleteCompany(id: string): Promise<boolean> {
-    return mongodb.Company.findOneAndRemove({ _id: id })
-      .then(company => {
-        return (company !== undefined)
-      })
+  deleteCompany(id: string): Promise<boolean> {
+    return mongodb.Company.findOneAndRemove({ _id: id }).then((company) => {
+      return company !== undefined
+    })
   }
 }

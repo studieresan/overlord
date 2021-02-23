@@ -91,9 +91,9 @@ export class EventActionsImpl implements EventActions {
     },
       { new: true }
     )
-		.populate('company')
+    .populate('company')
     .populate('responsible')
-		.then(rejectIfNull('No event exists for given id'))
+    .then(rejectIfNull('No event exists for given id'))
   }
 
   deleteEvent(requestUser: User, id: string): Promise<boolean> {
