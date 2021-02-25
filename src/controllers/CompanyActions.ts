@@ -16,4 +16,7 @@ export interface CompanyActions {
     companyID: string,
     fields: Partial<Company>
   ): Promise<Company>
+
+  // Delete company by id
+  deleteCompany(id: string): Promise<boolean>
 }

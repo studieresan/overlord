@@ -254,12 +254,26 @@ Update company information of specified ID
 <td valign="top"><a href="#company">Company</a></td>
 <td>
 
-Create company
+Create company with given name
 
 </td>
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">name</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>companyDelete</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td>
+
+Delete a company with given ID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -540,11 +554,6 @@ Remove comment with a given contact ID
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>responsibleUser</strong></td>
-<td valign="top"><a href="#id">ID</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>statusDescription</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
@@ -562,6 +571,11 @@ Remove comment with a given contact ID
 <tr>
 <td colspan="2" valign="top"><strong>salesComments</strong></td>
 <td valign="top">[<a href="#salescomment">SalesComment</a>]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>responsibleUser</strong></td>
+<td valign="top"><a href="#user">User</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -714,11 +728,6 @@ Remove comment with a given contact ID
 <td valign="top"><a href="#userinfo">UserInfo</a></td>
 <td></td>
 </tr>
-<tr>
-<td colspan="2" valign="top"><strong>permissions</strong></td>
-<td valign="top">[<a href="#string">String</a>]</td>
-<td></td>
-</tr>
 </tbody>
 </table>
 
@@ -777,6 +786,11 @@ Remove comment with a given contact ID
 <tr>
 <td colspan="2" valign="top"><strong>cv</strong></td>
 <td valign="top"><a href="#cv">CV</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>permissions</strong></td>
+<td valign="top">[<a href="#string">String</a>]</td>
 <td></td>
 </tr>
 </tbody>
