@@ -1,6 +1,13 @@
 const supertest = require("supertest")
-import {app} from '../src/server'
+import { app } from '../src/server'
 import { mockDatabase, closeDatabase } from './utillity/mockDatabase'
+import {
+    getEventByIDQuery,
+    badEventQuery,
+    validPublicQuery,
+    publicQuery2021,
+    badEventsQuery,
+} from './utillity/eventQueries'
 
 let server: any
 let request: any
@@ -30,90 +37,78 @@ afterAll(async () => {
     await server.close()
 });
 
+describe('event', () => {
+    it('returns the event with the specified eventID', async (done) => {
+        request
+            .post("/graphql")
+            .send({
+                query: getEventByIDQuery
+            })
+            .set("Accept", "application/json")
+            .expect("Content-Type", /json/)
+            .expect(200)
+            .end((err: any, res: any) => {
+                if (err) {
+                    console.error(res.body)
+                    return done(err)
+                };
+                expect(res.body).toBeInstanceOf(Object)
+                expect(res.body.data.event).toBeInstanceOf(Object)
+                expect(res.body.data.event.id).toBe('200000000000000000000001')
+                expect(res.body.data.event.date).toBe('2020-12-24T00:00:00.000Z')
+                expect(res.body.data.event.location).toBe('location')
+                expect(res.body.data.event.publicDescription).toBe('publicDescription')
+                expect(res.body.data.event.privateDescription).toBe('privateDescription')
+                expect(res.body.data.event.beforeSurvey).toBe('linkto/beforeSurvey')
+                expect(res.body.data.event.afterSurvey).toBe('linkto/afterSurvey')
+                expect(res.body.data.event.pictures).toBeInstanceOf(Array)
+                expect(res.body.data.event.pictures[0]).toBe('linkto/picture-1')
+                expect(res.body.data.event.pictures[1]).toBe('linkto/picture-2')
+                expect(typeof res.body.data.event.published).toBe('boolean')
+                expect(res.body.data.event.published).toBe(true)
+                expect(res.body.data.event.responsible).toBeInstanceOf(Object)
+                expect(res.body.data.event.responsible.id).toBe('000000000000000000000001')
+                expect(res.body.data.event.responsible.firstName).toBe('Test')
+                expect(res.body.data.event.responsible.lastName).toBe('Testsson')
+                expect(res.body.data.event.company).toBeInstanceOf(Object)
+                expect(res.body.data.event.company.id).toBe('100000000000000000000001')
+                expect(res.body.data.event.company.name).toBe('Test Company')
+                expect(res.body.data.event.studsYear).toBe(2020)
+                return done()
+            })
+    })
 
-const validPublicQuery = `
-{
-    events {
-        id
-        date
-        studsYear
-        publicDescription
-        pictures
-        company { 
-            id, 
-            name 
-        }
-    }
-}`
+    it('responds with 400 on a bad request', async (done) => {
+        request
+            .post("/graphql")
+            .send({
+                query: badEventQuery
+            })
+            .set("Accept", "application/json")
+            .expect("Content-Type", /json/)
+            .expect(400)
+            .end(done)
+    })
 
-const invalidPublicQuery = `
-{
-    events {
-        id
-        location
-        privateDescription
-        beforeSurvey
-        afterSurvey
-        pictures
-        published
-        responsible { 
-            id
-            name
-        }
-    }
-}`
+    it('responds with 400 on eventId not in database', async (done) => {
+        request
+            .post("/graphql")
+            .send({
+                query: '{event(eventId: "220000000000000000000001"){id}}'
+            })
+            .set("Accept", "application/json")
+            .expect("Content-Type", /json/)
+            .expect(200)
+            .end((err, res) => {
+                if(err) return done(err)
+                expect(res.body.errors.length).toBe(1)
+                return done()
+            })
+    })
+})
 
-const publicQuery2021 = `
-{
-    events(studsYear: 2021) {
-        id
-        date
-        studsYear
-        publicDescription
-        pictures
-        company { 
-            id, 
-            name 
-        }
-    }
-}`
-
-const singleEventByIDQuery = `{
-    event(eventId: "200000000000000000000001") {
-        id
-        date
-        studsYear
-        publicDescription
-        pictures
-        company { 
-            id, 
-            name 
-        }
-    }
-}`
-
-const badQuery1 = `
-{
-    events {
-        id
-        thisIsNotAThing
-        location
-        privateDescription
-        beforeSurvey
-        afterSurvey
-        pictures
-        published
-        responsible { 
-            id
-            name
-        }
-    }
-}`
-
-
-
-describe('event query', () => {
-    it('returns list of public events', async (done) => {
+describe('events', () => {
+    it('returns a list of all public events in database', async (done) => {
         request
             .post("/graphql")
             .send({
@@ -160,7 +155,7 @@ describe('event query', () => {
                 return done();
             })
     })
-    it('returns only events with specified studsYear', async (done) => {
+    it('returns only events with the specified studsYear', async (done) => {
         request
             .post("/graphql")
             .send({
@@ -178,36 +173,16 @@ describe('event query', () => {
                 expect(res.body.data.events).toBeInstanceOf(Array);
                 expect(res.body.data.events.length).toBe(1)
                 expect(res.body.data.events[0].id).toBe('200000000000000000000002')
+                expect(res.body.data.events[0].studsYear).toBe(2021)
                 return done();
             })
     })
 
-    it('returns the event with eventID', async (done) => {
+    it('responds with 400 on a bad request', async (done) => {
         request
             .post("/graphql")
             .send({
-                query: singleEventByIDQuery
-            })
-            .set("Accept", "application/json")
-            .expect("Content-Type", /json/)
-            .expect(200)
-            .end((err: any, res: any) => {
-                if (err) {
-                    console.error(res.body)
-                    return done(err)
-                };
-                expect(res.body).toBeInstanceOf(Object);
-                expect(res.body.data.event).toBeInstanceOf(Object);
-                expect(res.body.data.event.id).toBe('200000000000000000000001')
-                return done();
-            })
-    })
-
-    it('responds with 400 on bad request', async (done) => {
-        request
-            .post("/graphql")
-            .send({
-                query: badQuery1
+                query: badEventsQuery
             })
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
