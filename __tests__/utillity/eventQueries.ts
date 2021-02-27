@@ -1,4 +1,4 @@
-export const getEventByIDQuery = `{
+export const getEventByIdQuery = `{
     event(eventId: "200000000000000000000001") {
         id
         date
@@ -102,8 +102,8 @@ export const badEventsQuery = `
 export const eventCreateValid = `
 mutation {
     eventCreate(fields: {
-        responsibleUserID: "000000000000000000000002"
-        companyID: "100000000000000000000001"
+        responsibleUserId: "000000000000000000000002"
+        companyId: "100000000000000000000001"
         studsYear: 2001
         date: "2001-02-03"
         location: "On The New Location"

@@ -11,9 +11,9 @@ export class UserActionsImpl implements UserActions {
       .then((user) => user.info)
   }
 
-  deleteUser(userID: string, requestUser: User): Promise<User> {
+  deleteUser(userId: string, requestUser: User): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      if (userID === requestUser.id) {
+      if (userId === requestUser.id) {
         return reject('Cannot delete yourself')
       } else if (!hasAdminPermission(requestUser)) {
         return reject('User is not authorized to perform this')
@@ -21,7 +21,7 @@ export class UserActionsImpl implements UserActions {
 
       return resolve(
         mongodb.User.findOneAndUpdate(
-          { _id: userID },
+          { _id: userId },
           { info: undefined },
           { new: true })
           .exec()
@@ -31,21 +31,21 @@ export class UserActionsImpl implements UserActions {
   }
 
   updateUserInfo(
-    userID: string,
+    userId: string,
     requestUser: User,
     newFields: Partial<UserInfo>
   ): Promise<UserInfo> {
     return new Promise<UserInfo>((resolve, reject) => {
       // If the user tries to edit other user, must have admin permission
-      if (!userID) {
-        userID = requestUser.id
+      if (!userId) {
+        userId = requestUser.id
       } else if (
-        userID !== requestUser.id &&
+        userId !== requestUser.id &&
         !hasAdminPermission(requestUser)
       ) {
         return reject(Error('User not authorized to edit other user'))
       }
-      return mongodb.User.findById(userID)
+      return mongodb.User.findById(userId)
         .then(rejectIfNull('No user matches id'))
         .then((user) => {
           const newInfo = {...user.info, ...newFields}

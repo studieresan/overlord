@@ -61,15 +61,15 @@ export class EventActionsImpl implements EventActions {
     Promise<Event> {
     if (!hasEventOrAdminPermissions(requestUser))
       return Promise.reject('Insufficient permissions')
-    if (!fields.companyID)
+    if (!fields.companyId)
       return Promise.reject('No company ID')
 
-    return companyMongo.Company.findById(fields.companyID!)
+    return companyMongo.Company.findById(fields.companyId!)
       .then(rejectIfNull('No company with ID'))
       .then(() => {
         const event = new eventMongo.Event({
-          company: new ObjectID(fields.companyID),
-          responsible: fields.responsibleUserID ? new ObjectID(fields.responsibleUserID)
+          company: new ObjectID(fields.companyId),
+          responsible: fields.responsibleUserId ? new ObjectID(fields.responsibleUserId)
             : undefined,
           ...fields,
         })

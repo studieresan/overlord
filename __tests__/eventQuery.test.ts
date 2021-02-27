@@ -2,7 +2,7 @@ const supertest = require("supertest")
 import { app } from '../src/server'
 import { mockDatabase, closeDatabase } from './utillity/mockDatabase'
 import {
-    getEventByIDQuery,
+    getEventByIdQuery,
     badEventQuery,
     validPublicQuery,
     publicQuery2021,
@@ -38,11 +38,11 @@ afterAll(async () => {
 });
 
 describe('event', () => {
-    it('returns the event with the specified eventID', async (done) => {
+    it('returns the event with the specified eventId', async (done) => {
         request
             .post("/graphql")
             .send({
-                query: getEventByIDQuery
+                query: getEventByIdQuery
             })
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
