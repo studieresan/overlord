@@ -40,6 +40,7 @@ describe('/login', () => {
             .expect(200)
             .end((err: any, res: any) => {
                 if(err) return done(err)
+                console.log(res.body)
                 expect(res.body.id).toBe('000000000000000000000002')
                 expect(res.body.name).toBe('John Doe')
                 expect(res.body.email).toBe('johndoe@test.se')
