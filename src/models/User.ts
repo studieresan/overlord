@@ -12,7 +12,7 @@ export interface User {
 export type UserInfo = StudsInfo
 
 export interface StudsInfo {
-  readonly userRole: UserRole
+  readonly role: UserRole
   readonly email: string
   readonly linkedIn?: string
   readonly github?: string
