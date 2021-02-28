@@ -162,6 +162,18 @@ const schema = new GraphQLSchema({
             )
         },
       },
+      eventCreate: {
+        description: 'Create an event with specified information',
+        type: EventType,
+        args: {
+            fields: { type: EventCreateType },
+        },
+        async resolve(a, { fields }, { req, res }) {
+            return await requireAuth(req, res, () =>
+              eventCtrl.createEvent(req.user, fields)
+            )
+        },
+      },
       eventUpdate: {
         description: 'Update event information of specified ID',
         type: EventType,
@@ -177,20 +189,8 @@ const schema = new GraphQLSchema({
             )
         },
       },
-      eventCreate: {
-        description: 'Create an event with specified information',
-        type: EventType,
-        args: {
-            fields: { type: EventCreateType },
-        },
-        async resolve(a, { fields }, { req, res }) {
-            return await requireAuth(req, res, () =>
-              eventCtrl.createEvent(req.user, fields)
-            )
-        },
-      },
       eventDelete: {
-        description: 'Delete an event specified by eventID',
+        description: 'Delete an event specified by id',
         type: GraphQLBoolean,
         args: {
             id: { type: GraphQLString },
@@ -199,6 +199,18 @@ const schema = new GraphQLSchema({
             return await requireAuth(req, res, () =>
               eventCtrl.deleteEvent(req.user, id)
             )
+        },
+      },
+      companyCreate: {
+        description: 'Create company',
+        type: Company,
+        args: {
+            name: { type: GraphQLString },
+        },
+        async resolve(a, { name }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.createCompany(name)
+          )
         },
       },
       companyUpdate: {
@@ -214,18 +226,6 @@ const schema = new GraphQLSchema({
             return await requireAuth(req, res, () =>
               companyCtrl.updateCompany(req.user, id, fields)
             )
-        },
-      },
-      companyCreate: {
-        description: 'Create company',
-        type: Company,
-        args: {
-            name: { type: GraphQLString },
-        },
-        async resolve(a, { name }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyCtrl.createCompany(name)
-          )
         },
       },
       companyContactCreate: {
@@ -266,16 +266,6 @@ const schema = new GraphQLSchema({
           )
         },
       },
-      salesCommentUpdate: {
-        description: 'Create new comment for a company specified by the company ID',
-        type: SalesComment,
-        args: {
-          input: {type: SalesCommentInput},
-        },
-        async resolve(a, { input }, { req, res }) {
-          salesCommentCtrl.updateComment(req.user, input.companyId, input.text)
-        },
-      },
       salesCommentCreate: {
         description: 'Create new comment for a company specified by the company ID',
         type: SalesComment,
@@ -284,6 +274,16 @@ const schema = new GraphQLSchema({
         },
         async resolve(a, { input }, { req, res }) {
           salesCommentCtrl.createComment(req.user, input.companyId, input.text)
+        },
+      },
+      salesCommentUpdate: {
+        description: 'Create new comment for a company specified by the company ID',
+        type: SalesComment,
+        args: {
+          input: {type: SalesCommentInput},
+        },
+        async resolve(a, { input }, { req, res }) {
+          salesCommentCtrl.updateComment(req.user, input.companyId, input.text)
         },
       },
       salesCommentDelete: {
