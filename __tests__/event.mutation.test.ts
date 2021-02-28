@@ -9,7 +9,7 @@ let token: any
 
 beforeAll(async () => {
     await mockDatabase();
-    server = app.listen(2024);
+    server = app.listen(2026);
     request = await supertest(server);
 });
 
@@ -93,6 +93,12 @@ describe('eventUpdate', () => {
                                 id
                                 location
                                 publicDescription
+                                responsible {
+                                    id
+                                }
+                                company {
+                                    id
+                                }
                             }
                         }
                     `
@@ -108,6 +114,10 @@ describe('eventUpdate', () => {
                     expect(res.body.data.eventUpdate.id).toBe(eventCreate.id)
                     expect(res.body.data.eventUpdate.location).toBe('Same event on a new location')
                     expect(res.body.data.eventUpdate.publicDescription).toBe('This is a new event description created by me')
+                    expect(res.body.data.eventUpdate.responsible).toBeInstanceOf(Object)
+                    expect(res.body.data.eventUpdate.responsible.id).toBe('000000000000000000000002')
+                    expect(res.body.data.eventUpdate.company).toBeInstanceOf(Object)
+                    expect(res.body.data.eventUpdate.company.id).toBe('100000000000000000000001')
                     return done()
                 })
             )

@@ -87,10 +87,12 @@ export class EventActionsImpl implements EventActions {
     return eventMongo.Event.findOneAndUpdate(
       { _id: id },
       {
-         ...fields,
-    },
-      { new: true }
-    ).then(rejectIfNull('No event exists for given id'))
+        ...fields,
+      },
+      { new: true })
+      .populate('company')
+      .populate('responsible')
+      .then(rejectIfNull('No event exists for given id'))
   }
 
   deleteEvent(requestUser: User, id: string): Promise<boolean> {
