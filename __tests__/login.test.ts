@@ -7,7 +7,7 @@ let request: any
 
 beforeAll(async () => {
     await mockDatabase()
-    server = app.listen(2021)
+    server = app.listen(2020)
     request = supertest(server)
 });
 

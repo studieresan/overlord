@@ -10,7 +10,7 @@ let token: any
 
 beforeAll(async () => {
     await mockDatabase();
-    server = app.listen(2025);
+    server = app.listen(2021);
     request = await supertest(server);
 });
 

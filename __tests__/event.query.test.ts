@@ -15,7 +15,7 @@ let token: any
 
 beforeAll(async () => {
     await mockDatabase();
-    server = app.listen(2023);
+    server = app.listen(2025);
     request = await supertest(server);
 });
 

@@ -8,7 +8,7 @@ let token: any
 
 beforeAll(async () => {
     await mockDatabase();
-    server = app.listen(2026);
+    server = app.listen(2022);
     request = await supertest(server);
 });
 
