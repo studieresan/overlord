@@ -9,14 +9,9 @@ import {
   CompanyContactActionsImpl,
   SalesCommentActions,
   SalesCommentActionsImpl,
-
 } from './../controllers'
 import { UserType } from './GraphQLUser'
-import {
-  UserInfoType,
-  UserInfoInputType,
-  UserRole,
-} from './GraphQLUserInfo'
+import { UserInfoType, UserInfoInputType, UserRole } from './GraphQLUserInfo'
 import { EventType, EventInputType, EventCreateType } from './GraphQLEvent'
 import { Company, CompanyInput } from './GraphQLCompany'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
@@ -81,7 +76,12 @@ const schema = new GraphQLSchema({
           studsYear: { type: GraphQLInt },
         },
         async resolve(a, { userRole, studsYear }, { req, res }) {
-          return await userCtrl.getUsers(req, res, userRole, studsYear)
+          return await userCtrl.getUsers(
+            req,
+            res,
+            userRole,
+            studsYear
+          )
         },
       },
       company: {
@@ -100,7 +100,9 @@ const schema = new GraphQLSchema({
         description: 'Get all companies as a list specified by a year',
         type: new GraphQLList(Company),
         async resolve(root, b, { req, res }) {
-          return await requireAuth(req, res, () => companyCtrl.getCompanies())
+          return await requireAuth(req, res, () =>
+            companyCtrl.getCompanies()
+          )
         },
       },
       event: {
@@ -136,30 +138,31 @@ const schema = new GraphQLSchema({
     name: 'RootMutationType',
     fields: {
       userUpdate: {
-        description: 'Update user information of user with ID or logged in user',
+        description:
+          'Update user information of user with ID or logged in user',
         type: UserInfoType,
         args: {
-            id: { type: GraphQLString },
-            info: {
-                type: UserInfoInputType,
-            },
+          id: { type: GraphQLString },
+          info: {
+            type: UserInfoInputType,
+          },
         },
         async resolve(a, { id, info }, { req, res }) {
-            return await requireAuth(req, res, () =>
-              userCtrl.updateUserInfo(id, req.user, info)
-            )
+          return await requireAuth(req, res, () =>
+            userCtrl.updateUserInfo(id, req.user, info)
+          )
         },
       },
       userDelete: {
         description: 'Delete user information of user with ID',
         type: UserType,
         args: {
-            id: { type: GraphQLString },
+          id: { type: GraphQLString },
         },
         async resolve(a, { id }, { req, res }) {
-            return await requireAuth(req, res, () =>
-              userCtrl.deleteUser(id, req.user)
-            )
+          return await requireAuth(req, res, () =>
+            userCtrl.deleteUser(id, req.user)
+          )
         },
       },
       eventCreate: {
@@ -178,31 +181,31 @@ const schema = new GraphQLSchema({
         description: 'Update event information of specified ID',
         type: EventType,
         args: {
-            id: { type: GraphQLString },
-            fields: {
-                type: EventInputType,
-            },
+          id: { type: GraphQLString },
+          fields: {
+            type: EventInputType,
+          },
         },
         async resolve(a, { id, fields }, { req, res }) {
-            return await requireAuth(req, res, () =>
-              eventCtrl.updateEvent(req.user, id, fields)
-            )
+          return await requireAuth(req, res, () =>
+            eventCtrl.updateEvent(req.user, id, fields)
+          )
         },
       },
       eventDelete: {
         description: 'Delete an event specified by id',
         type: GraphQLBoolean,
         args: {
-            id: { type: GraphQLString },
+          id: { type: GraphQLString },
         },
         async resolve(a, { id }, { req, res }) {
-            return await requireAuth(req, res, () =>
-              eventCtrl.deleteEvent(req.user, id)
-            )
+          return await requireAuth(req, res, () =>
+            eventCtrl.deleteEvent(req.user, id)
+          )
         },
       },
       companyCreate: {
-        description: 'Create company',
+        description: 'Create company with given name',
         type: Company,
         args: {
             name: { type: GraphQLString },
@@ -217,23 +220,36 @@ const schema = new GraphQLSchema({
         description: 'Update company information of specified ID',
         type: Company,
         args: {
-            id: { type: GraphQLString },
-            fields: {
-                type: CompanyInput,
-            },
+          id: { type: GraphQLString },
+          fields: {
+            type: CompanyInput,
+          },
         },
         async resolve(a, { id, fields }, { req, res }) {
-            return await requireAuth(req, res, () =>
-              companyCtrl.updateCompany(req.user, id, fields)
-            )
+          return await requireAuth(req, res, () =>
+            companyCtrl.updateCompany(req.user, id, fields)
+          )
+        },
+      },
+      companyDelete: {
+        description: 'Delete a company with given ID',
+        type: GraphQLBoolean,
+        args: {
+          id: { type: GraphQLString },
+        },
+        async resolve(a, { id }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            companyCtrl.deleteCompany(id)
+          )
         },
       },
       companyContactCreate: {
-        description: 'Create new contact for a company specified by the company ID',
+        description:
+          'Create new contact for a company specified by the company ID',
         type: CompanyContact,
         args: {
           id: { type: GraphQLID },
-          input: {type: CompanyContactInput},
+          input: { type: CompanyContactInput },
         },
         async resolve(a, { companyId, input }, { req, res }) {
           return await requireAuth(req, res, () =>
@@ -246,7 +262,7 @@ const schema = new GraphQLSchema({
         type: CompanyContact,
         args: {
           id: { type: GraphQLID },
-          input: {type: CompanyContactInput},
+          input: { type: CompanyContactInput },
         },
         async resolve(a, { id, input }, { req, res }) {
           return await requireAuth(req, res, () =>
@@ -270,7 +286,7 @@ const schema = new GraphQLSchema({
         description: 'Create new comment for a company specified by the company ID',
         type: SalesComment,
         args: {
-          input: {type: SalesCommentInput},
+          input: { type: SalesCommentInput },
         },
         async resolve(a, { input }, { req, res }) {
           salesCommentCtrl.createComment(req.user, input.companyId, input.text)
@@ -280,7 +296,7 @@ const schema = new GraphQLSchema({
         description: 'Create new comment for a company specified by the company ID',
         type: SalesComment,
         args: {
-          input: {type: SalesCommentInput},
+          input: { type: SalesCommentInput },
         },
         async resolve(a, { input }, { req, res }) {
           salesCommentCtrl.updateComment(req.user, input.companyId, input.text)

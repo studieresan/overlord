@@ -6,8 +6,8 @@ import { rejectIfNull } from './util'
 
 export class SalesCommentActionsImpl implements SalesCommentActions {
 
-  getComments(): Promise<SalesComment[]> {
-    return new Promise<SalesComment[]>((resolve, reject) => {
+  getComments(): Promise<any[]> {
+    return new Promise<any[]>((resolve, reject) => {
       return resolve(mongodb.SalesComment.find({},
           {
             'text': true,
