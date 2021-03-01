@@ -9,6 +9,8 @@ import {
   CompanyContactActionsImpl,
   SalesCommentActions,
   SalesCommentActionsImpl,
+  HappeningActions,
+  HappeningActionsImpl,
 } from './../controllers'
 import { UserType } from './GraphQLUser'
 import { UserInfoType, UserInfoInputType, UserRole } from './GraphQLUserInfo'
@@ -16,6 +18,7 @@ import { EventType, EventInputType, EventCreateType } from './GraphQLEvent'
 import { Company, CompanyInput } from './GraphQLCompany'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
 import { SalesComment, SalesCommentInput } from './GraphQLSalesComment'
+import { HappeningType, HappeningInputType } from './GraphQLHappening'
 import {
   GraphQLList,
   GraphQLObjectType,
@@ -33,6 +36,7 @@ const eventCtrl: EventActions = new EventActionsImpl()
 const companyCtrl: CompanyActions = new CompanyActionsImpl()
 const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
 const companyContactCtrl: CompanyContactActions = new CompanyContactActionsImpl()
+const happeningCtrl: HappeningActions = new HappeningActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise((resolve) => {
@@ -123,6 +127,15 @@ const schema = new GraphQLSchema({
         },
         async resolve(a, { studsYear }, { req, res }) {
           return await eventCtrl.getEvents(req, res, studsYear)
+        },
+      },
+      happenings: {
+        description: 'Get all happenings as a list',
+        type: new GraphQLList(HappeningType),
+        async resolve(a, b, { req, res }) {
+          return await requireAuth(req, res, () =>
+            happeningCtrl.getHappenings()
+          )
         },
       },
       userRoles: {
