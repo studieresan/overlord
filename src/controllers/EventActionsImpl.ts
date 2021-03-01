@@ -81,12 +81,13 @@ export class EventActionsImpl implements EventActions {
     )
   }
 
-  updateEvent(requestUser: User, id: string, fields: Partial<Event>): Promise<Event> {
+  updateEvent(requestUser: User, id: string, fields: any): Promise<Event> {
     if (!hasEventOrAdminPermissions(requestUser))
       return Promise.reject('Insufficient permissions')
     return eventMongo.Event.findOneAndUpdate(
       { _id: id },
       {
+        responsible: fields.responsibleUserId? new ObjectID(fields.responsibleUserId): undefined,
         ...fields,
       },
       { new: true })

@@ -89,6 +89,7 @@ describe('eventUpdate', () => {
                         mutation {
                             eventUpdate(id: "${eventCreate.id}", fields: {
                                 location: "Same event on a new location"
+                                responsibleUserId: "000000000000000000000001"
                             }) {
                                 id
                                 location
@@ -115,7 +116,7 @@ describe('eventUpdate', () => {
                     expect(res.body.data.eventUpdate.location).toBe('Same event on a new location')
                     expect(res.body.data.eventUpdate.publicDescription).toBe('This is a new event description created by me')
                     expect(res.body.data.eventUpdate.responsible).toBeInstanceOf(Object)
-                    expect(res.body.data.eventUpdate.responsible.id).toBe('000000000000000000000002')
+                    expect(res.body.data.eventUpdate.responsible.id).toBe('000000000000000000000001')
                     expect(res.body.data.eventUpdate.company).toBeInstanceOf(Object)
                     expect(res.body.data.eventUpdate.company.id).toBe('100000000000000000000001')
                     return done()
