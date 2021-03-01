@@ -87,7 +87,7 @@ export class EventActionsImpl implements EventActions {
     return eventMongo.Event.findOneAndUpdate(
       { _id: id },
       {
-        responsible: fields.responsibleUserId? new ObjectID(fields.responsibleUserId): undefined,
+        responsible: fields.responsibleUserId ? new ObjectID(fields.responsibleUserId) : undefined,
         ...fields,
       },
       { new: true })
