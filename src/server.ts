@@ -16,6 +16,7 @@ import * as mongoose from 'mongoose'
 import * as passport from 'passport'
 import { graphqlHTTP } from 'express-graphql'
 import { signedUploadRequest } from './imageUpload'
+import { getPDF } from './aws/pdfDownload'
 
 import expressValidator = require('express-validator')
 
@@ -142,6 +143,9 @@ app.use('/graphql', (req, res) =>
      graphiql: process.env.DEV === 'true',
   })(req, res)
 )
+
+app.get('/brochure.pdf', getPDF)
+app.get('/brochure_eng.pdf', getPDF)
 
 /**
  * Start Express server.
