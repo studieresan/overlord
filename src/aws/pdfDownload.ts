@@ -11,10 +11,6 @@ export const getPDF = (req: any, res: any) => {
             : 'sales/Broschyr_3.0_eng.pdf',
     }
 
-    res.setHeader('Content-Security-Policy',
-        `frame-ancestors ${process.env.FRONTEND_ORIGIN
-            || process.env.FRONTEND_ALIAS
-            || process.env.STAGE_ORIGIN
-            || 'http://localhost:3000/'}`)
+    res.setHeader('Content-Security-Policy', 'frame-ancestors *')
     s3.getObject(getParams).createReadStream().pipe(res)
 }
