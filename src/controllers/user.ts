@@ -3,10 +3,10 @@ import * as crypto from 'crypto'
 import * as passport from 'passport'
 import * as jwt from 'jsonwebtoken'
 import { User, UserDocument } from '../mongodb/User'
-import { UserRole, Permission } from '../models'
+import { UserRole, Permission, User as UserType } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
-import { WriteError } from 'mongodb'
+import { CallbackError } from 'mongoose'
 
 const host = process.env.DEV ?
   'http://localhost:3000' :
@@ -44,7 +44,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
         return res.status(401).json({ error: 'Wrong email or password.' })
       }
 
-      const token = jwt.sign(user.info.email, process.env.JWT_SECRET)
+      const token = jwt.sign(user.info.email, process.env.JWT_SECRET!)
       res.status(200)
       res.setHeader('Authorization', `Bearer ${token}`)
       res.json({
@@ -130,7 +130,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
     function setRandomToken(token: string, user: UserDocument, done: Function) {
       user.info.passwordResetToken = token
       user.info.passwordResetExpires = Date.now() + 1000 * 60 * 60 * 72 // 72 hours
-      user.save((err: WriteError) => {
+      user.save((err: CallbackError) => {
         done(err, token, user)
       })
     },
@@ -196,10 +196,10 @@ export const putUpdatePassword =
       return res.json(errors).end()
     }
 
-    User.findById(req.user.id, (err, user: UserDocument) => {
+    User.findById((req?.user as UserType)?.id, (err, user: UserDocument) => {
       if (err) { return next(err) }
       user.info.password = req.body.password
-      user.save((err: WriteError) => {
+      user.save((err: CallbackError) => {
         if (err) { return next(err) }
         res.status(200)
         res.json({}).end()
@@ -234,7 +234,7 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
       User
         .findOne({ 'info.passwordResetToken': req.params.token })
         .where('info.passwordResetExpires').gt(Date.now())
-        .exec((err, user: UserDocument) => {
+        .exec((err: CallbackError, user: UserDocument | null) => {
           if (err) { return next(err) }
           if (!user) {
             const ERROR_MSG = 'Are you sure you have a valid token?'
@@ -244,7 +244,7 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
           user.info.password = req.body.password
           user.info.passwordResetToken = undefined
           user.info.passwordResetExpires = undefined
-          user.save((err: WriteError) => {
+          user.save((err: CallbackError) => {
             if (err) { return next(err) }
             req.logIn(user, (err) => {
               done(err, user)
@@ -307,7 +307,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         }
         user.info.passwordResetToken = token
         user.info.passwordResetExpires = Date.now() + 3600000 // 1 hour
-        user.save((err: WriteError) => {
+        user.save((err: CallbackError) => {
           done(err, token, user)
         })
       })

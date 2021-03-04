@@ -18,8 +18,8 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   studsYear: Number,
-  userRole: String,
   info: {
+    role: String,
     password: String,
     passwordResetToken: String,
     passwordResetExpires: Number,

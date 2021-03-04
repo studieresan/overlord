@@ -61,15 +61,15 @@ export class EventActionsImpl implements EventActions {
     Promise<Event> {
     if (!hasEventOrAdminPermissions(requestUser))
       return Promise.reject('Insufficient permissions')
-    if (!fields.companyID)
+    if (!fields.companyId)
       return Promise.reject('No company ID')
 
-    return companyMongo.Company.findById(fields.companyID!)
+    return companyMongo.Company.findById(fields.companyId!)
       .then(rejectIfNull('No company with ID'))
       .then(() => {
         const event = new eventMongo.Event({
-          company: new ObjectID(fields.companyID),
-          responsible: fields.responsibleUserID ? new ObjectID(fields.responsibleUserID)
+          company: new ObjectID(fields.companyId),
+          responsible: fields.responsibleUserId ? new ObjectID(fields.responsibleUserId)
             : undefined,
           ...fields,
         })
@@ -81,19 +81,19 @@ export class EventActionsImpl implements EventActions {
     )
   }
 
-  updateEvent(requestUser: User, id: string, fields: Partial<Event>): Promise<Event> {
+  updateEvent(requestUser: User, id: string, fields: any): Promise<Event> {
     if (!hasEventOrAdminPermissions(requestUser))
       return Promise.reject('Insufficient permissions')
     return eventMongo.Event.findOneAndUpdate(
       { _id: id },
       {
-         ...fields,
-    },
-      { new: true }
-    )
-    .populate('company')
-    .populate('responsible')
-    .then(rejectIfNull('No event exists for given id'))
+        responsible: fields.responsibleUserId ? new ObjectID(fields.responsibleUserId) : undefined,
+        ...fields,
+      },
+      { new: true })
+      .populate('company')
+      .populate('responsible')
+      .then(rejectIfNull('No event exists for given id'))
   }
 
   deleteEvent(requestUser: User, id: string): Promise<boolean> {

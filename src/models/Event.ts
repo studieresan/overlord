@@ -19,6 +19,6 @@ export interface Event extends EventFields {
 }
 
 export interface CreateEvent extends EventFields {
-  responsibleUserID: string
-  companyID: string
+  responsibleUserId: string
+  companyId: string
 }

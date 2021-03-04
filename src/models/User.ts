@@ -6,12 +6,13 @@ export interface User {
   lastName: string
   studsYear: number
   info: UserInfo
+  tokens: string[]
 }
 
 export type UserInfo = StudsInfo
 
 export interface StudsInfo {
-  readonly userRole: UserRole
+  readonly role: UserRole
   readonly email: string
   readonly linkedIn?: string
   readonly github?: string

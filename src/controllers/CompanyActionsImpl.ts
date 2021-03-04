@@ -43,7 +43,7 @@ export class CompanyActionsImpl implements CompanyActions {
           .then(async (companies) => {
             const allComments = await new SalesCommentActionsImpl().getComments()
 
-            // Make a dictionary of companyID -> comments. Faster to find all comments of a company
+            // Make a dictionary of companyId -> comments. Faster to find all comments of a company
             const companyComments = {}
             allComments.forEach((comment) => {
               const companyID = comment.company.id
@@ -96,7 +96,7 @@ export class CompanyActionsImpl implements CompanyActions {
 
   updateCompany(
     user: User,
-    companyID: string,
+    companyId: string,
     fields: Partial<Company>
   ): Promise<Company> {
     return new Promise<Company>((resolve, reject) => {
@@ -105,7 +105,7 @@ export class CompanyActionsImpl implements CompanyActions {
       }
       return resolve(
         mongodb.Company.findOneAndUpdate(
-          { _id: companyID },
+          { _id: companyId },
           { ...fields },
           { new: true }
         )

@@ -37,3 +37,6 @@ dist/**/*
 
 # Google Cloud
 app.yaml
+
+# jest coverage report
+coverage/

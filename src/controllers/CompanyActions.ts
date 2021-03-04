@@ -13,7 +13,7 @@ export interface CompanyActions {
   // Update a company with id and year
   updateCompany(
     user: User,
-    companyID: string,
+    companyId: string,
     fields: Partial<Company>
   ): Promise<Company>
 

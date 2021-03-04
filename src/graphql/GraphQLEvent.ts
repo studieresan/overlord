@@ -37,8 +37,8 @@ export const EventType: GraphQLObjectType = new GraphQLObjectType({
 export const EventCreateType = new GraphQLInputObjectType({
   name: 'EventCreateType',
   fields: () => ({
-    responsibleUserID: { type: GraphQLString },
-    companyID: { type: new GraphQLNonNull(GraphQLString) },
+    responsibleUserId: { type: GraphQLString },
+    companyId: { type: new GraphQLNonNull(GraphQLString) },
     studsYear: { type: new GraphQLNonNull(GraphQLInt) },
     ...MutableEventFields,
   }),
