@@ -28,6 +28,11 @@ A generated documentation for the database schema can be found in the [database]
 
 > These are generated with [extract-mongo-schema](https://www.npmjs.com/package/extract-mongo-schema) using `extract-mongo-schema -d CONNECTION-STRING -o schema.json -f json` and `extract-mongo-schema -d CONNECTION-STRING -o schema.html -f html-diagram`, where `CONNECTION-STRING` is the connection string to the database, with username and password 
 
+## Testing
+The server is tested using [jest](https://jestjs.io/) and the tests can be run with: `yarn test`.
+
+Running the tests will generate a coverage-report which can be found in a new folder `coverage/` in the project-root. This folder will contain an `index.html` which you should open in your favourite browser of choice.
+
 ## Create account
 
 To create an account in the database, either have a member of Studs create one for you on the website (project leader or IT bossman) or create a new document in the user collection with similar content as other users (copy-paste) and set the password do something arbitrary. Then on studs.se, press "forgot password" to reset the password and voíla! You can also add permissions for yourself in the document directly.
