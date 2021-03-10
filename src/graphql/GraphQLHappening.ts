@@ -4,6 +4,7 @@ import {
     GraphQLInputObjectType,
     GraphQLString,
     GraphQLID,
+    GraphQLInt,
 } from 'graphql'
 import { GraphQLDateTime } from './GraphQLDateTime'
 import { GeoJSONFeatureType, GeoJSONFeatureInputType } from './GraphQLGeoJSON'
@@ -13,8 +14,6 @@ const MutableHappeningFields = {
     title: { type: GraphQLString },
     emoji: { type: GraphQLString },
     description: { type: GraphQLString },
-    participants: { type: new GraphQLList(UserType) },
-    created: { type: GraphQLDateTime },
 }
 
 export const HappeningType: GraphQLObjectType = new GraphQLObjectType({
@@ -22,7 +21,9 @@ export const HappeningType: GraphQLObjectType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLID },
         host: { type: UserType },
+        participants: { type: new GraphQLList(UserType) },
         location: { type: GeoJSONFeatureType },
+        created: { type: GraphQLDateTime },
         ...MutableHappeningFields,
     }),
 })
@@ -30,7 +31,8 @@ export const HappeningType: GraphQLObjectType = new GraphQLObjectType({
 export const HappeningInputType = new GraphQLInputObjectType({
     name: 'HappeningInput',
     fields: () => ({
-        hostId: { type: GraphQLID },
+        host: { type: GraphQLID },
+        participants: { type: new GraphQLList(GraphQLID) },
         location: { type: GeoJSONFeatureInputType },
         ...MutableHappeningFields,
     }),

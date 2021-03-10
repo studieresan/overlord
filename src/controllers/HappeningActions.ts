@@ -1,15 +1,15 @@
 import { Happening } from '../models'
-import { HappeningCreate } from '../models/Happening'
+import { CreateHappening } from '../models/Happening'
 export interface HappeningActions {
     // Get all happenings
     getHappenings(): Promise<Happening[]>
 
-    // // Create a new event for company name
-    // createHappening(fields: Partial<HappeningCreate>): Promise<Happening>
+    // Create a new happening
+    createHappening(fields: Partial<CreateHappening>): Promise<Happening>
 
-    // // Update the event with given id
-    // updateHappening(id: string, fields: Partial<Event>): Promise<Happening>
+    // Update the happening with given id
+    updateHappening(id: string, fields: Partial<Happening>): Promise<Happening>
 
-    // // Update the event with given id
-    // deleteHappening(id: string): Promise<boolean>
+    // Delete the happening with given id
+    deleteHappening(id: string): Promise<boolean>
 }

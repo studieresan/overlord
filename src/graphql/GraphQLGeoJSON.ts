@@ -36,20 +36,20 @@ const GeoJSONPropertiesInputType: GraphQLInputObjectType = new GraphQLInputObjec
     }),
 })
 
-export const GeoJSONFeatureType = new GraphQLObjectType({
+export const GeoJSONFeatureType: GraphQLObjectType = new GraphQLObjectType({
     name: 'GeoJSONFeatureType',
     fields: () => ({
         type: { type: GraphQLString },
         geometry: { type: GeoJSONGeometryType },
         properties: { type: GeoJSONPropertiesType },
     }),
-});
+})
 
 export const GeoJSONFeatureInputType: GraphQLInputObjectType = new GraphQLInputObjectType({
-    name: 'GeoJSONFeatureType',
+    name: 'GeoJSONFeatureInputType',
     fields: () => ({
         type: { type: GraphQLString },
         geometry: { type: GeoJSONGeometryInputType },
         properties: { type: GeoJSONPropertiesInputType },
     }),
-});
+})

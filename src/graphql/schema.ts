@@ -327,6 +327,43 @@ const schema = new GraphQLSchema({
           )
         },
       },
+      happeningCreate: {
+        description: 'Create new happening',
+        type: HappeningType,
+        args: {
+          fields: { type: HappeningInputType },
+        },
+        async resolve(a, { fields }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            happeningCtrl.createHappening(fields)
+          )
+        },
+      },
+      happeningUpdate: {
+        description: 'Update happening with provided id',
+        type: HappeningType,
+        args: {
+          id: { type: GraphQLID },
+          fields: { type: HappeningInputType },
+        },
+        async resolve(a, { id, fields }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            happeningCtrl.updateHappening(id, fields)
+          )
+        },
+      },
+      happeningDelete: {
+        description: 'Remove comment with a given contact ID',
+        type: GraphQLBoolean,
+        args: {
+          id: { type: GraphQLID },
+        },
+        async resolve(a, { id }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            happeningCtrl.deleteHappening(id)
+          )
+        },
+      },
     },
   }),
 })

@@ -19,6 +19,6 @@ const happeningSchema: mongoose.Schema = new mongoose.Schema({
         name: { type: String },
       },
   },
-}, { timestamps: true })
+}, { timestamps: { createdAt: 'created' } })
 
 export const Happening = mongoose.model<HappeningDocument>('Happening', happeningSchema)

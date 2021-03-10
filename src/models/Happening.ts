@@ -15,7 +15,7 @@ export interface Happening extends HappeningFields {
     participants: User[]
 }
 
-export interface HappeningCreate extends HappeningFields {
+export interface CreateHappening extends HappeningFields {
     host: string
     participants: string[]
 }
