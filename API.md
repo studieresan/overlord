@@ -13,6 +13,10 @@
     * [CompanyContact](#companycontact)
     * [CompanyStudsYear](#companystudsyear)
     * [Event](#event)
+    * [GeoJSONFeatureType](#geojsonfeaturetype)
+    * [GeometryType](#geometrytype)
+    * [Happening](#happening)
+    * [PropertiesType](#propertiestype)
     * [SalesComment](#salescomment)
     * [User](#user)
     * [UserInfo](#userinfo)
@@ -24,6 +28,10 @@
     * [CompanyInput](#companyinput)
     * [EventCreateType](#eventcreatetype)
     * [EventInput](#eventinput)
+    * [GeoJSONFeatureInputType](#geojsonfeatureinputtype)
+    * [GeometryInputType](#geometryinputtype)
+    * [HappeningInput](#happeninginput)
+    * [PropertiesInputType](#propertiesinputtype)
     * [SalesCommentInput](#salescommentinput)
     * [UserInfoInput](#userinfoinput)
   * [Enums](#enums)
@@ -31,6 +39,7 @@
   * [Scalars](#scalars)
     * [Boolean](#boolean)
     * [DateTime](#datetime)
+    * [Float](#float)
     * [ID](#id)
     * [Int](#int)
     * [String](#string)
@@ -128,6 +137,15 @@ Get all events as a list
 <td></td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>happenings</strong></td>
+<td valign="top">[<a href="#happening">Happening</a>]</td>
+<td>
+
+Get all happenings as a list
+
+</td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>userRoles</strong></td>
 <td valign="top">[<a href="#userrole">UserRole</a>]</td>
 <td>
@@ -184,6 +202,20 @@ Delete user information of user with ID
 <td></td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>eventCreate</strong></td>
+<td valign="top"><a href="#event">Event</a></td>
+<td>
+
+Create an event with specified information
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">fields</td>
+<td valign="top"><a href="#eventcreatetype">EventCreateType</a></td>
+<td></td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>eventUpdate</strong></td>
 <td valign="top"><a href="#event">Event</a></td>
 <td>
@@ -203,30 +235,30 @@ Update event information of specified ID
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>eventCreate</strong></td>
-<td valign="top"><a href="#event">Event</a></td>
-<td>
-
-Create an event with specified information
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">fields</td>
-<td valign="top"><a href="#eventcreatetype">EventCreateType</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>eventDelete</strong></td>
 <td valign="top"><a href="#boolean">Boolean</a></td>
 <td>
 
-Delete an event specified by eventID
+Delete an event specified by id
 
 </td>
 </tr>
 <tr>
 <td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>companyCreate</strong></td>
+<td valign="top"><a href="#company">Company</a></td>
+<td>
+
+Create company with given name
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">name</td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
@@ -247,20 +279,6 @@ Update company information of specified ID
 <tr>
 <td colspan="2" align="right" valign="top">fields</td>
 <td valign="top"><a href="#companyinput">CompanyInput</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong>companyCreate</strong></td>
-<td valign="top"><a href="#company">Company</a></td>
-<td>
-
-Create company with given name
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">name</td>
-<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
@@ -330,20 +348,6 @@ Remove contact with a given contact ID
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>salesCommentUpdate</strong></td>
-<td valign="top"><a href="#salescomment">SalesComment</a></td>
-<td>
-
-Create new comment for a company specified by the company ID
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">input</td>
-<td valign="top"><a href="#salescommentinput">SalesCommentInput</a></td>
-<td></td>
-</tr>
-<tr>
 <td colspan="2" valign="top"><strong>salesCommentCreate</strong></td>
 <td valign="top"><a href="#salescomment">SalesComment</a></td>
 <td>
@@ -358,7 +362,68 @@ Create new comment for a company specified by the company ID
 <td></td>
 </tr>
 <tr>
+<td colspan="2" valign="top"><strong>salesCommentUpdate</strong></td>
+<td valign="top"><a href="#salescomment">SalesComment</a></td>
+<td>
+
+Create new comment for a company specified by the company ID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">input</td>
+<td valign="top"><a href="#salescommentinput">SalesCommentInput</a></td>
+<td></td>
+</tr>
+<tr>
 <td colspan="2" valign="top"><strong>salesCommentDelete</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td>
+
+Remove comment with a given contact ID
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>happeningCreate</strong></td>
+<td valign="top"><a href="#happening">Happening</a></td>
+<td>
+
+Create new happening
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">fields</td>
+<td valign="top"><a href="#happeninginput">HappeningInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>happeningUpdate</strong></td>
+<td valign="top"><a href="#happening">Happening</a></td>
+<td>
+
+Update happening with provided id
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">id</td>
+<td valign="top"><a href="#id">ID</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">fields</td>
+<td valign="top"><a href="#happeninginput">HappeningInput</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>happeningDelete</strong></td>
 <td valign="top"><a href="#boolean">Boolean</a></td>
 <td>
 
@@ -656,6 +721,136 @@ Remove comment with a given contact ID
 </tbody>
 </table>
 
+### GeoJSONFeatureType
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>geometry</strong></td>
+<td valign="top"><a href="#geometrytype">GeometryType</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>properties</strong></td>
+<td valign="top"><a href="#propertiestype">PropertiesType</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### GeometryType
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>coordinates</strong></td>
+<td valign="top">[<a href="#float">Float</a>]</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### Happening
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>id</strong></td>
+<td valign="top"><a href="#id">ID</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>host</strong></td>
+<td valign="top"><a href="#user">User</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>participants</strong></td>
+<td valign="top">[<a href="#user">User</a>]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>location</strong></td>
+<td valign="top"><a href="#geojsonfeaturetype">GeoJSONFeatureType</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>created</strong></td>
+<td valign="top"><a href="#datetime">DateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>title</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emoji</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>description</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### PropertiesType
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>name</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
 ### SalesComment
 
 <table>
@@ -945,12 +1140,12 @@ Remove comment with a given contact ID
 </thead>
 <tbody>
 <tr>
-<td colspan="2" valign="top"><strong>responsibleUserID</strong></td>
+<td colspan="2" valign="top"><strong>responsibleUserId</strong></td>
 <td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 <tr>
-<td colspan="2" valign="top"><strong>companyID</strong></td>
+<td colspan="2" valign="top"><strong>companyId</strong></td>
 <td valign="top"><a href="#string">String</a>!</td>
 <td></td>
 </tr>
@@ -1056,6 +1251,122 @@ Remove comment with a given contact ID
 <tr>
 <td colspan="2" valign="top"><strong>published</strong></td>
 <td valign="top"><a href="#boolean">Boolean</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### GeoJSONFeatureInputType
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>geometry</strong></td>
+<td valign="top"><a href="#geometryinputtype">GeometryInputType</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>properties</strong></td>
+<td valign="top"><a href="#propertiesinputtype">PropertiesInputType</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### GeometryInputType
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>type</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>coordinates</strong></td>
+<td valign="top">[<a href="#float">Float</a>]</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### HappeningInput
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>host</strong></td>
+<td valign="top"><a href="#id">ID</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>participants</strong></td>
+<td valign="top">[<a href="#id">ID</a>]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>location</strong></td>
+<td valign="top"><a href="#geojsonfeatureinputtype">GeoJSONFeatureInputType</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>title</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>emoji</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>description</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### PropertiesInputType
+
+<table>
+<thead>
+<tr>
+<th colspan="2" align="left">Field</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>name</strong></td>
+<td valign="top"><a href="#string">String</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -1193,13 +1504,17 @@ The `Boolean` scalar type represents `true` or `false`.
 
 ### DateTime
 
+### Float
+
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+
 ### ID
 
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
 
 ### Int
 
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
 
 ### String
 
