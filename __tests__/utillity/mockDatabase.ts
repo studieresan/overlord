@@ -10,6 +10,7 @@ import { CompanyContact } from '../../src/mongodb/CompanyContact'           //Ob
 import { CompanySalesStatus } from '../../src/mongodb/CompanySalesStatus'   //ObjectIDs 4...
 import { SalesComment } from '../../src/mongodb/SalesComment'               //ObjectIDs 5...
 import { CV } from '../../src/mongodb/CV'                                   //ObejctIDs 6...
+import { Happening } from '../../src/mongodb/Happening'                     //ObejctIDs 7...
 
 const addUsers = async () => {
     await new User({
@@ -128,6 +129,32 @@ const addCVs = async () => {
     //TODO
 }
 
+const addHappenings = async () => {
+    await new Happening({
+        _id: new ObjectID('700000000000000000000001'),
+        title: 'A Very Fun Happening',
+        emoji: '🍺🍽',
+        description: 'This is a Very Fun Happening Description',
+        host: new ObjectID('000000000000000000000001'),
+        participants: [new ObjectID('000000000000000000000001'), new ObjectID('000000000000000000000002')],
+        location: {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [125.6, 10.1],
+            },
+            properties: {
+                name: "Dinagat Islands"
+            },
+        },
+    }).save()
+
+    await new Happening({
+        _id: new ObjectID('700000000000000000000002'),
+        title: 'A New Very Fun Happening',
+    }).save()
+}
+
 const mockDatabase = async () => {
     mongoServer = new MongoMemoryServer()
     const options = {
@@ -149,6 +176,7 @@ const mockDatabase = async () => {
     await addSalesComments()
     await addEvents()
     await addCVs()
+    await addHappenings()
 }
 
 const closeDatabase = async () => {

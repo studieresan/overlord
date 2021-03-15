@@ -6,6 +6,7 @@ import { CompanySalesStatus } from './CompanySalesStatus'
 import { SalesComment } from './SalesComment'
 import { CompanyContact } from './CompanyContact'
 import { ContactRequest } from './ContactRequest'
+import { Happening } from './Happening'
 export {
   CV,
   CVSection,
@@ -21,4 +22,5 @@ export {
   SalesComment,
   CompanyContact,
   ContactRequest,
+  Happening,
 }
