@@ -115,19 +115,4 @@ export class EventActionsImpl implements EventActions {
       return (event != undefined)
     })
   }
-
-  getOldEvents(): Promise<Event[]> {
-    return new Promise<Event[]>(resolve => {
-      resolve(eventMongo.OldEvent.find({},
-          {
-            'id': true,
-            'companyName': true,
-            'publicDescription': true,
-            'date': true,
-            'pictures': true,
-            'published': true,
-          }
-      ).exec())
-    })
-  }
 }
