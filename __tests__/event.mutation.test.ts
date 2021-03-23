@@ -68,6 +68,9 @@ describe('eventCreate', () => {
                 return done()
             })
     })
+
+    it.todo('returns error on unsufficient permissions')
+    it.todo('returns error when company does not exist')
 })
 
 describe('eventUpdate', () => {
@@ -124,6 +127,8 @@ describe('eventUpdate', () => {
             )
             .catch(done)
     })
+
+    it.todo('returns error on unsufficient permissions')
 })
 
 describe('eventDelete', () => {
@@ -173,4 +178,6 @@ describe('eventDelete', () => {
             )
             .catch(done)
     })
+
+    it.todo('returns error when not authenticated')
 })

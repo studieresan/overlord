@@ -189,4 +189,8 @@ describe('events', () => {
             .expect(400)
             .end(done)
     })
+
+    it.todo('returns all fields when authenticated');
+    it.todo('responds with error on bad user token');
+    
 })
