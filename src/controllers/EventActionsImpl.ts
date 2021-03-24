@@ -105,17 +105,7 @@ export class EventActionsImpl implements EventActions {
         return (event !== undefined)
       })
   }
-
-  checkIn(auth: User, id: string): Promise<boolean> {
-    return eventMongo.Event.findOneAndUpdate(
-      { _id: id },
-      { $addToSet: {checkedInUsers: auth.id}, $pull: {notCheckedInUsers: auth.id} },
-      { new: true }
-    ).then(rejectIfNull('No event exists for given id')).then(event => {
-      return (event != undefined)
-    })
-  }
-
+  
   getOldEvents(): Promise<Event[]> {
     return new Promise<Event[]>(resolve => {
       resolve(eventMongo.OldEvent.find({},

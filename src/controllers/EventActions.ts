@@ -20,8 +20,4 @@ export interface EventActions {
 
   // Update the event with given id
   deleteEvent(requestUser: User, id: string): Promise<boolean>
-
-  // Checks in user to the event with the given id
-  checkIn(auth: User, id: string): Promise<boolean>
-
 }
