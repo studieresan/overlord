@@ -14,7 +14,7 @@ export type UserDocument = mongoose.Document & models.User & {
     (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void,
 }
 
-const userSchema: mongoose.Schema = new mongoose.Schema({
+const userSchema: mongoose.Schema<UserDocument> = new mongoose.Schema({
   firstName: String,
   lastName: String,
   studsYear: Number,
