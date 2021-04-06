@@ -60,3 +60,27 @@ mutation {
         }
     }
 }`
+
+export const updateLocationMutation = `
+mutation { 
+    happeningUpdate(id: "700000000000000000000001", fields: {
+        location: {
+            properties: {
+                name: "New name of location"
+            }
+        }
+    }) {
+        id
+        description
+        location {
+            type
+            geometry {
+                type
+                coordinates
+            }
+            properties {
+                name
+            }
+        }
+    }
+}`
