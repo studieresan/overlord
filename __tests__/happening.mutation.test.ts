@@ -1,7 +1,7 @@
 const supertest = require("supertest")
 import { app } from '../src/server'
 import { mockDatabase, closeDatabase } from './utillity/mockDatabase'
-import { createHappeningMutation, updateHappeningMutation } from './utillity/happeningQueries'
+import { createHappeningMutation, updateHappeningMutation, updateLocationMutation } from './utillity/happeningQueries'
 
 let server: any
 let request: any
@@ -101,6 +101,39 @@ describe('happeningUpdate', () => {
                 expect(res.body.data.happeningUpdate.participants).toBeInstanceOf(Array)
                 expect(res.body.data.happeningUpdate.participants[0]).toBeInstanceOf(Object)
                 expect(res.body.data.happeningUpdate.participants[0].id).toBe('000000000000000000000002')
+                return done()
+            })
+    })
+
+    it('updates location object without overwriting data', async (done) => {
+        request
+            .post("/graphql")
+            .send({
+                query: updateLocationMutation
+            })
+            .set("Accept", "application/json")
+            .set('credentials', 'include')
+            .set('Authorization', `Bearer ${token}`)
+            .expect("Content-Type", /json/)
+            .expect(200)
+            .end((err: any, res: any) => {
+                if(err){
+                    console.log(res.error)
+                    return done(err)
+                }
+                
+                expect(res.body).toBeInstanceOf(Object)
+                expect(res.body.data.happeningUpdate).toBeInstanceOf(Object)
+                expect(res.body.data.happeningUpdate.id).toBe('700000000000000000000001')
+                expect(res.body.data.happeningUpdate.description).toBe('This is a Very Fun Happening Description')
+                expect(res.body.data.happeningUpdate.location).toBeInstanceOf(Object)
+                expect(res.body.data.happeningUpdate.location.type).toBe('Feature')
+                expect(res.body.data.happeningUpdate.location.geometry).toBeInstanceOf(Object)
+                expect(res.body.data.happeningUpdate.location.geometry.type).toBe('Point')
+                expect(res.body.data.happeningUpdate.location.geometry.coordinates).toBeInstanceOf(Array)
+                expect(res.body.data.happeningUpdate.location.geometry.coordinates).toEqual([125.6, 10.1])
+                expect(res.body.data.happeningUpdate.location.properties).toBeInstanceOf(Object)
+                expect(res.body.data.happeningUpdate.location.properties.name).toBe('New name of location')
                 return done()
             })
     })
