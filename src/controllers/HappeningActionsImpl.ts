@@ -1,4 +1,5 @@
 import * as mongodb from '../mongodb/Happening'
+import * as flatten from 'flat'
 import { HappeningActions } from './HappeningActions'
 import { Happening } from '../models'
 import { CreateHappening } from '../models/Happening'
@@ -29,7 +30,7 @@ export class HappeningActionsImpl implements HappeningActions {
     updateHappening(id: string, fields: Partial<Happening>): Promise<Happening> {
         return mongodb.Happening.findOneAndUpdate(
             { _id: id },
-            { ...fields },
+            { ...flatten(fields) },
             { new: true }
         )
             .populate('host')
