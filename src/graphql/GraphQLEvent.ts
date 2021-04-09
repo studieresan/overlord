@@ -49,6 +49,7 @@ export const EventInputType = new GraphQLInputObjectType({
   name: 'EventInput',
   fields: () => ({
     responsibleUserId: {type: GraphQLString},
+    studsYear: { type: GraphQLInt },
     ...MutableEventFields,
   }),
 })
