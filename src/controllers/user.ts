@@ -95,7 +95,8 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
     userRole: req.body.user_role,
     studsYear: process.env.STUDS_YEAR,
     info: {
-          email: req.body.email,
+        role: req.body.user_role,
+        email: req.body.email,
         password: await generateRandomPassword(),
         permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
     },
