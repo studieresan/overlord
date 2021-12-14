@@ -317,7 +317,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       token: string, user: UserDocument, done: Function) {
       const mailOptions = {
         to: user.info.email,
-        from: 'studs-kommunikation@d.kth.se',
+        from: 'it@studs.se',
         subject: 'Reset your password on Studieresan.se',
         text:
           `You are receiving this email because you have `
