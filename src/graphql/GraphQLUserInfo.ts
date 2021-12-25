@@ -81,5 +81,7 @@ export const UserInfoInputType = new GraphQLInputObjectType({
       cv: {
           type: CVInputType,
       },
+      role: { type: GraphQLString },
+      permissions: { type: new GraphQLList(GraphQLString) },
   },
 })

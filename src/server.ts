@@ -57,6 +57,7 @@ const options = {
 
 if (process.env.NODE_ENV !== 'test') {
   mongoose.connect(process.env.MONGODB_URI!, options)
+  .catch((e) => console.log(e))
 
   mongoose.connection.on('error', () => {
     console.log('MongoDB connection error. Please make sure MongoDB is running.')
