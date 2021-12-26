@@ -72,8 +72,8 @@ app.use(function(req, res, next) {
     process.env.HEROKU_ORIGIN || 'http://localhost:3000',
     process.env.STAGE_ORIGIN || 'http://localhost:3000',
   ]
-  const origin = allowedOrigins.find(origin => origin == req.headers.origin)
-  console.log(origin)
+  let origin = req.get('Origin')
+  origin = allowedOrigins.find(o => o == origin)
   if (origin) {
     res.header('Access-Control-Allow-Origin', origin)
     res.header('Access-Control-Allow-Credentials', 'true')
@@ -87,10 +87,6 @@ app.use(function(req, res, next) {
     return res.end()
   }
 
-  if (!origin) {
-    res.json(req.headers)
-    res.end()
-  }
   next()
 })
 
