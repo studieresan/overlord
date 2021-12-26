@@ -73,6 +73,7 @@ app.use(function(req, res, next) {
     process.env.STAGE_ORIGIN || 'http://localhost:3000',
   ]
   let origin = req.get('Origin')
+  console.log(req.headers)
   origin = allowedOrigins.find(o => o == origin)
   if (origin) {
     res.header('Access-Control-Allow-Origin', origin)
