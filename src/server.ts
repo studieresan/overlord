@@ -82,7 +82,7 @@ app.use(function(req, res, next) {
     )
   }
   // Allow preflight
-  if (req.method === 'OPTIONS'){
+  if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Origin', origin)
     return res.end()
   }
