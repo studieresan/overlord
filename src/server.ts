@@ -73,6 +73,7 @@ app.use(function(req, res, next) {
     process.env.STAGE_ORIGIN || 'http://localhost:3000',
   ]
   const origin = allowedOrigins.find(origin => origin == req.headers.origin)
+  console.log(origin)
   if (origin) {
     res.header('Access-Control-Allow-Origin', origin)
     res.header('Access-Control-Allow-Credentials', 'true')
@@ -83,7 +84,7 @@ app.use(function(req, res, next) {
   }
   // Allow preflight
   if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
     return res.end()
   }
   next()
