@@ -75,8 +75,16 @@ app.use(function(req, res, next) {
   const netlifypreview = /https:\/\/[0-9a-z]+--studs.netlify.app/g
   const origin = req.get('Origin')
   const foundOrigin = allowedOrigins.find(o => o == origin)
-  if (foundOrigin || origin?.match(netlifypreview)) {
+  if (foundOrigin) {
     res.header('Access-Control-Allow-Origin', foundOrigin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    )
+  }
+  else if (origin?.match(netlifypreview)) {
+    res.header('Access-Control-Allow-Origin', origin)
     res.header('Access-Control-Allow-Credentials', 'true')
     res.header(
       'Access-Control-Allow-Headers',
