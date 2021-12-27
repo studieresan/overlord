@@ -72,10 +72,10 @@ app.use(function(req, res, next) {
     process.env.HEROKU_ORIGIN || 'http://localhost:3000',
     process.env.STAGE_ORIGIN || 'http://localhost:3000',
   ]
-  let netlifypreview = /https:\/\/[0-9a-z]+--studs.netlify.app/g
-  let origin = req.get('Origin')
-  let foundOrigin = allowedOrigins.find(o => o == origin)
-  if (foundOrigin || origin?.match(netlifypreview)) {
+  const netlifypreview = /https:\/\/[0-9a-z]+--studs.netlify.app/g
+  const origin = req.get('Origin')
+  const foundOrigin = allowedOrigins.find(o => o == origin)
+  if (foundOrigin || origin?.match(netlifypreview)) {
     res.header('Access-Control-Allow-Origin', foundOrigin)
     res.header('Access-Control-Allow-Credentials', 'true')
     res.header(
