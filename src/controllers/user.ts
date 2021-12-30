@@ -155,7 +155,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
     function sendAccountCreatedEmail(token: String, user: UserDocument) {
       const mailOptions = {
         to: user.info.email,
-        from: 'studs-kommunikation@d.kth.se',
+        from: 'it@studs.se',
         subject: 'Welcome to Studieresan!',
         text:
           `Hi ${user.firstName}!\n\n` +
