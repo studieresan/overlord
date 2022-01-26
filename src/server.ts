@@ -57,6 +57,7 @@ const options = {
 
 if (process.env.NODE_ENV !== 'test') {
   mongoose.connect(process.env.MONGODB_URI!, options)
+  .catch((e) => console.log(e))
 
   mongoose.connection.on('error', () => {
     console.log('MongoDB connection error. Please make sure MongoDB is running.')
@@ -71,8 +72,18 @@ app.use(function(req, res, next) {
     process.env.HEROKU_ORIGIN || 'http://localhost:3000',
     process.env.STAGE_ORIGIN || 'http://localhost:3000',
   ]
-  const origin = allowedOrigins.find(origin => origin == req.headers.origin)
-  if (origin) {
+  const netlifypreview = /https:\/\/[0-9a-z]+--studs.netlify.app/g
+  const origin = req.get('Origin')
+  const foundOrigin = allowedOrigins.find(o => o == origin)
+  if (foundOrigin) {
+    res.header('Access-Control-Allow-Origin', foundOrigin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    )
+  }
+  else if (origin?.match(netlifypreview)) {
     res.header('Access-Control-Allow-Origin', origin)
     res.header('Access-Control-Allow-Credentials', 'true')
     res.header(
@@ -81,8 +92,10 @@ app.use(function(req, res, next) {
     )
   }
   // Allow preflight
-  if (req.method === 'OPTIONS')
+  if (req.method === 'OPTIONS') {
     return res.end()
+  }
+
   next()
 })
 

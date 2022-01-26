@@ -48,8 +48,9 @@ export class UserActionsImpl implements UserActions {
       return mongodb.User.findById(userId)
         .then(rejectIfNull('No user matches id'))
         .then((user) => {
-          const newInfo = {...user.info, ...newFields}
-          user.info = newInfo
+          for (const k in newFields) {
+            user.info[k] = newFields[k]
+          }
           return user
             .save()
             .then((user) => user.info)

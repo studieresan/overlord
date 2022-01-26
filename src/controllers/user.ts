@@ -155,7 +155,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
     function sendAccountCreatedEmail(token: String, user: UserDocument) {
       const mailOptions = {
         to: user.info.email,
-        from: 'studs-kommunikation@d.kth.se',
+        from: 'it@studs.se',
         subject: 'Welcome to Studieresan!',
         text:
           `Hi ${user.firstName}!\n\n` +
@@ -229,7 +229,6 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
     res.status(400).json({ error: ERROR_MSG }).end()
     return
   }
-
   async.waterfall([
     function resetPassword(done: Function) {
       User
@@ -256,7 +255,7 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
     function sendResetPasswordEmail(user: UserDocument, done: Function) {
       const mailOptions = {
         to: user.info.email,
-        from: 'studs-kommunikation@d.kth.se',
+        from: 'it@studs.se',
         subject: 'Your password has been changed',
         text: `Hello,`
           + `\n\nThis is a confirmation that the password for your `
