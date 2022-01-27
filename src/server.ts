@@ -82,8 +82,8 @@ app.use(function(req, res, next) {
       'Access-Control-Allow-Headers',
       'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     )
-    res.header('Access-Control-Allow-Methods', 'POST, PUT, GET, OPTIONS',
-    ) 
+    res.header('Access-Control-Allow-Methods', 'POST, PUT, GET, OPTIONS'
+    )
   }
   else if (origin?.match(netlifypreview)) {
     res.header('Access-Control-Allow-Origin', origin)
