@@ -11,6 +11,8 @@ import {
   SalesCommentActionsImpl,
   HappeningActions,
   HappeningActionsImpl,
+  BlogActions,
+  BlogActionsImpl,
 } from './../controllers'
 import { UserType } from './GraphQLUser'
 import { UserInfoType, UserInfoInputType, UserRole } from './GraphQLUserInfo'
@@ -19,6 +21,7 @@ import { Company, CompanyInput } from './GraphQLCompany'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
 import { SalesComment, SalesCommentInput } from './GraphQLSalesComment'
 import { HappeningType, HappeningInputType } from './GraphQLHappening'
+import { BlogType, BlogInputType } from './GraphQLBlog'
 import {
   GraphQLList,
   GraphQLObjectType,
@@ -37,6 +40,7 @@ const companyCtrl: CompanyActions = new CompanyActionsImpl()
 const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
 const companyContactCtrl: CompanyContactActions = new CompanyContactActionsImpl()
 const happeningCtrl: HappeningActions = new HappeningActionsImpl()
+const blogCtrl: BlogActions = new BlogActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise((resolve) => {
@@ -135,6 +139,15 @@ const schema = new GraphQLSchema({
         async resolve(a, b, { req, res }) {
           return await requireAuth(req, res, () =>
             happeningCtrl.getHappenings()
+          )
+        },
+      },
+      blogPosts: {
+        description: 'Get all blog posts as a list',
+        type: new GraphQLList(BlogType),
+        async resolve(a, b, { req, res }) {
+          return await requireAuth(req, res, () =>
+            blogCtrl.getBlogPosts()
           )
         },
       },
@@ -361,6 +374,18 @@ const schema = new GraphQLSchema({
         async resolve(a, { id }, { req, res }) {
           return await requireAuth(req, res, () =>
             happeningCtrl.deleteHappening(id)
+          )
+        },
+      },
+      blogCreate: {
+        description: 'Create a new blogpost',
+        type: BlogType,
+        args: {
+          fields: { type: BlogInputType },
+        },
+        async resolve(a, { fields }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            blogCtrl.createBlogPost(fields)
           )
         },
       },
