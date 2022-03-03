@@ -37,6 +37,7 @@ export class CompanyActionsImpl implements CompanyActions {
     return new Promise<Company[]>((resolve, reject) => {
       return resolve(
         mongodb.Company.find()
+          .sort({'name': 1})
           .populate('years.status')
           .populate('years.responsibleUser')
           .exec()
@@ -51,7 +52,6 @@ export class CompanyActionsImpl implements CompanyActions {
                 companyComments[companyID] = []
               companyComments[companyID].push(comment)
             })
-
             return Promise.all(
               companies.map(async (c) => {
                 return populateCompany(
