@@ -1,4 +1,4 @@
-import { CreateBlog } from '../models/Blog';
+import { CreateBlog } from '../models/Blog'
 import { Blog } from '../models'
 export interface BlogActions {
     // Get all blogposts

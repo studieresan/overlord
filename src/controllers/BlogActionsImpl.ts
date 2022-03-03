@@ -15,7 +15,7 @@ export class BlogActionsImpl implements BlogActions {
                 .populate('author')
                 .execPopulate()
             )
-        
+
     }
 
     // TODO...
