@@ -5,7 +5,7 @@ export interface BlogFields {
     title: string
     description: string
     date: Date
-    frontPicture; string
+    frontPicture: string
     studsYear: number
     pictures: string[]
     published: boolean

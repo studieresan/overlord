@@ -3,6 +3,7 @@ import * as flatten from 'flat'
 import { BlogActions } from './BlogActions'
 import { Blog } from '../models'
 import { CreateBlog } from '../models/Blog'
+import { rejectIfNull } from './util'
 
 export class BlogActionsImpl implements BlogActions {
 
@@ -18,15 +19,22 @@ export class BlogActionsImpl implements BlogActions {
 
     }
 
-    // TODO...
+    deleteBlogPost(id: string): Promise<boolean> {
+        return mongodb.Blog.findOneAndRemove({ _id: id })
+            .then(post => (post !== undefined))
+        
+    }
 
-    // deleteBlogPost(id: string): Promise<boolean> {
-
-    // }
-
-    // updateBlogPost(id: string, fields: Partial<Blog>): Promise<Blog> {
-    //
-    // }
+    updateBlogPost(id: string, fields: Partial<CreateBlog>): Promise<Blog> {
+            return mongodb.Blog.findOneAndUpdate(
+                { _id: id },
+                { ...flatten(fields) },
+                { new: true })
+                .populate('author')
+                .exec()
+                .then(rejectIfNull('Blog Post does not exist'))
+        
+    }
 
     getBlogPosts(): Promise<Blog[]> {
         return mongodb.Blog.find()

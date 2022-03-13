@@ -8,8 +8,8 @@ export interface BlogActions {
     createBlogPost(fields: Partial<CreateBlog>): Promise<Blog>
 
     // Update the blog with given id
-    // updateBlogPost(id: string, fields: Partial<Blog>): Promise<Blog>
+    updateBlogPost(id: string, fields: Partial<CreateBlog>): Promise<Blog>
 
     // Delete the blog with given id
-    // deleteBlogPost(id: string): Promise<boolean>
+    deleteBlogPost(id: string): Promise<boolean>
 }

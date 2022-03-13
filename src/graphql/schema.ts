@@ -389,6 +389,31 @@ const schema = new GraphQLSchema({
           )
         },
       },
+      blogPostUpdate: {
+        description: 'Update blogpost with provided id',
+        type: BlogType,
+        args: {
+          id: { type: GraphQLID },
+          fields: { type: BlogInputType },
+        },
+        async resolve(a, { id, fields }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            blogCtrl.updateBlogPost(id, fields)
+          )
+        },
+      },
+      blogPostDelete: {
+        description: 'Remove blogpost with provided id',
+        type: GraphQLBoolean,
+        args: {
+          id: { type: GraphQLID },
+        },
+        async resolve(a, { id }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            blogCtrl.deleteBlogPost(id)
+          )
+        },
+      },
     },
   }),
 })

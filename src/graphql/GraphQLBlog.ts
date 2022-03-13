@@ -16,7 +16,7 @@ const MutableBlogFields = {
   description: { type: GraphQLString },
   date: { type: GraphQLDateTime },
   pictures: { type: new GraphQLList(GraphQLString) },
-  frontpicture: { type: GraphQLString },
+  frontPicture: { type: GraphQLString },
   published: { type: GraphQLBoolean },
 }
 
