@@ -22,7 +22,7 @@ export class BlogActionsImpl implements BlogActions {
     deleteBlogPost(id: string): Promise<boolean> {
         return mongodb.Blog.findOneAndRemove({ _id: id })
             .then(post => (post !== undefined))
-        
+
     }
 
     updateBlogPost(id: string, fields: Partial<CreateBlog>): Promise<Blog> {
@@ -33,7 +33,7 @@ export class BlogActionsImpl implements BlogActions {
                 .populate('author')
                 .exec()
                 .then(rejectIfNull('Blog Post does not exist'))
-        
+
     }
 
     getBlogPosts(): Promise<Blog[]> {
