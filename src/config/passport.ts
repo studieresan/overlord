@@ -11,8 +11,8 @@ const LocalStrategy = passportLocal.Strategy
 const JWTStrategy = passportJWT.Strategy
 const ExtractJWT = passportJWT.ExtractJwt
 
-passport.serializeUser<any, any>((user, done) => {
-  done(undefined, user.id)
+passport.serializeUser((user, done) => {
+  done(undefined, user['id'])
 })
 
 passport.deserializeUser((id, done) => {
