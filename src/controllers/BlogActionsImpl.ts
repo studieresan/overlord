@@ -20,6 +20,7 @@ export class BlogActionsImpl implements BlogActions {
     }
 
     deleteBlogPost(id: string): Promise<boolean> {
+        console.log(JSON.stringify(id))
         return mongodb.Blog.findOneAndRemove({ _id: id })
             .then(post => (post !== undefined))
 

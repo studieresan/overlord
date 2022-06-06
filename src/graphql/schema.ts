@@ -146,9 +146,7 @@ const schema = new GraphQLSchema({
         description: 'Get all blog posts as a list',
         type: new GraphQLList(BlogType),
         async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res, () =>
-            blogCtrl.getBlogPosts()
-          )
+          return await blogCtrl.getBlogPosts()
         },
       },
       userRoles: {
