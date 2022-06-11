@@ -48,7 +48,7 @@ and then
 ``sudo chown -R `whoami` /data/db``
 
 Or, if you're running docker because you feel that it's gross to let a Mongo
-server run loose on you're computer you can just run
+server run loose on you're computer you can just run:
 
 ```
 docker run --name studs-mongodb --detach --publish 127.0.0.1:27017:27017 mongo
