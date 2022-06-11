@@ -11,6 +11,8 @@ import {
   SalesCommentActionsImpl,
   HappeningActions,
   HappeningActionsImpl,
+  BlogActions,
+  BlogActionsImpl,
 } from './../controllers'
 import { UserType } from './GraphQLUser'
 import { UserInfoType, UserInfoInputType, UserRole } from './GraphQLUserInfo'
@@ -19,6 +21,7 @@ import { Company, CompanyInput } from './GraphQLCompany'
 import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
 import { SalesComment, SalesCommentInput } from './GraphQLSalesComment'
 import { HappeningType, HappeningInputType } from './GraphQLHappening'
+import { BlogType, BlogInputType } from './GraphQLBlog'
 import {
   GraphQLList,
   GraphQLObjectType,
@@ -37,6 +40,7 @@ const companyCtrl: CompanyActions = new CompanyActionsImpl()
 const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
 const companyContactCtrl: CompanyContactActions = new CompanyContactActionsImpl()
 const happeningCtrl: HappeningActions = new HappeningActionsImpl()
+const blogCtrl: BlogActions = new BlogActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise((resolve) => {
@@ -136,6 +140,13 @@ const schema = new GraphQLSchema({
           return await requireAuth(req, res, () =>
             happeningCtrl.getHappenings()
           )
+        },
+      },
+      blogPosts: {
+        description: 'Get all blog posts as a list',
+        type: new GraphQLList(BlogType),
+        async resolve(a, b, { req, res }) {
+          return await blogCtrl.getBlogPosts()
         },
       },
       userRoles: {
@@ -361,6 +372,43 @@ const schema = new GraphQLSchema({
         async resolve(a, { id }, { req, res }) {
           return await requireAuth(req, res, () =>
             happeningCtrl.deleteHappening(id)
+          )
+        },
+      },
+      blogCreate: {
+        description: 'Create a new blogpost',
+        type: BlogType,
+        args: {
+          fields: { type: BlogInputType },
+        },
+        async resolve(a, { fields }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            blogCtrl.createBlogPost(fields)
+          )
+        },
+      },
+      blogPostUpdate: {
+        description: 'Update blogpost with provided id',
+        type: BlogType,
+        args: {
+          id: { type: GraphQLID },
+          fields: { type: BlogInputType },
+        },
+        async resolve(a, { id, fields }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            blogCtrl.updateBlogPost(id, fields)
+          )
+        },
+      },
+      blogPostDelete: {
+        description: 'Remove blogpost with provided id',
+        type: GraphQLBoolean,
+        args: {
+          id: { type: GraphQLID },
+        },
+        async resolve(a, { id }, { req, res }) {
+          return await requireAuth(req, res, () =>
+            blogCtrl.deleteBlogPost(id)
           )
         },
       },
