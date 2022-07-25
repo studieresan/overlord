@@ -40,6 +40,7 @@ export class BlogActionsImpl implements BlogActions {
     getBlogPosts(): Promise<Blog[]> {
         return mongodb.Blog.find()
         .populate('author')
+        .sort({date: -1})
         .exec()
     }
 }

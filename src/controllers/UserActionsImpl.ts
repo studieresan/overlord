@@ -78,14 +78,14 @@ export class UserActionsImpl implements UserActions {
             )
           }
           if (!userRole && !studsYear) {
-            resolve(mongodb.User.find({}).exec())
+            resolve(mongodb.User.find({}).sort({firstName: 1}).exec())
           } else if (!userRole) {
             // All infos
             resolve(
               mongodb.User.find(
                 { studsYear: studsYear },
                 {}
-              ).exec()
+              ).sort({firstName: 1}).exec()
             )
           } else {
             resolve(
@@ -95,7 +95,7 @@ export class UserActionsImpl implements UserActions {
                   studsYear: studsYear,
                 },
                 {}
-              ).exec()
+              ).sort({firstName: 1}).exec()
             )
           }
         }
