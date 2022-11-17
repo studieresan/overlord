@@ -72,7 +72,7 @@ app.use(function(req, res, next) {
     process.env.HEROKU_ORIGIN || 'http://localhost:3000',
     process.env.STAGE_ORIGIN || 'http://localhost:3000',
   ]
-  const netlifypreview = /https:\/\/[0-9a-z]+--studs.netlify.app/g
+  const netlifypreview = /https:\/\/[0-9a-z-]+--studs.netlify.app/g
   const origin = req.get('Origin')
   const foundOrigin = allowedOrigins.find(o => o == origin)
   if (foundOrigin) {
