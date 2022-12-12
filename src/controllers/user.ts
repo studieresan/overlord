@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { CallbackError } from 'mongoose'
 
-const host = process.env.DEV === "false" ?
+const host = process.env.DEV === 'false' ?
   'https://studieresan.se' :
   'http://localhost:3000'
 
