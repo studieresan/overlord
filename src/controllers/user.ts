@@ -8,9 +8,9 @@ import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { CallbackError } from 'mongoose'
 
-const host = process.env.DEV ?
-  'http://localhost:3000' :
-  'https://studieresan.se'
+const host = process.env.DEV === "false" ?
+  'https://studieresan.se' :
+  'http://localhost:3000'
 
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
