@@ -3,24 +3,12 @@ import {
   UserActionsImpl,
   EventActions,
   EventActionsImpl,
-  CompanyActions,
-  CompanyActionsImpl,
-  CompanyContactActions,
-  CompanyContactActionsImpl,
-  SalesCommentActions,
-  SalesCommentActionsImpl,
-  HappeningActions,
-  HappeningActionsImpl,
   BlogActions,
   BlogActionsImpl,
 } from './../controllers'
 import { UserType } from './GraphQLUser'
 import { UserInfoType, UserInfoInputType, UserRole } from './GraphQLUserInfo'
 import { EventType, EventInputType, EventCreateType } from './GraphQLEvent'
-import { Company, CompanyInput } from './GraphQLCompany'
-import { CompanyContact, CompanyContactInput } from './GraphQLCompanyContact'
-import { SalesComment, SalesCommentInput } from './GraphQLSalesComment'
-import { HappeningType, HappeningInputType } from './GraphQLHappening'
 import { BlogType, BlogInputType } from './GraphQLBlog'
 import {
   GraphQLList,
@@ -36,10 +24,6 @@ import * as User from '../models/User'
 
 const userCtrl: UserActions = new UserActionsImpl()
 const eventCtrl: EventActions = new EventActionsImpl()
-const companyCtrl: CompanyActions = new CompanyActionsImpl()
-const salesCommentCtrl: SalesCommentActions = new SalesCommentActionsImpl()
-const companyContactCtrl: CompanyContactActions = new CompanyContactActionsImpl()
-const happeningCtrl: HappeningActions = new HappeningActionsImpl()
 const blogCtrl: BlogActions = new BlogActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
@@ -54,11 +38,17 @@ function getUserRoles() {
   return [
     User.UserRole.ProjectManager,
     User.UserRole.EventGroup,
+    User.UserRole.EventGroupManager,
     User.UserRole.FinanceGroup,
+    User.UserRole.FinanceGroupManager,
     User.UserRole.InfoGroup,
+    User.UserRole.InfoGroupManager,
     User.UserRole.ItGroup,
+    User.UserRole.ItGroupManager,
     User.UserRole.SalesGroup,
+    User.UserRole.SalesGroupManager,
     User.UserRole.TravelGroup,
+    User.UserRole.TravelGroupManager,
   ]
 }
 
@@ -92,27 +82,6 @@ const schema = new GraphQLSchema({
           )
         },
       },
-      company: {
-        description: 'Get company information specified by an id',
-        type: Company,
-        args: {
-          companyId: { type: GraphQLString },
-        },
-        async resolve(root, { companyId }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyCtrl.getCompany(companyId)
-          )
-        },
-      },
-      companies: {
-        description: 'Get all companies as a list specified by a year',
-        type: new GraphQLList(Company),
-        async resolve(root, b, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyCtrl.getCompanies()
-          )
-        },
-      },
       event: {
         description: 'Get a specific event',
         type: EventType,
@@ -131,15 +100,6 @@ const schema = new GraphQLSchema({
         },
         async resolve(a, { studsYear }, { req, res }) {
           return await eventCtrl.getEvents(req, res, studsYear)
-        },
-      },
-      happenings: {
-        description: 'Get all happenings as a list',
-        type: new GraphQLList(HappeningType),
-        async resolve(a, b, { req, res }) {
-          return await requireAuth(req, res, () =>
-            happeningCtrl.getHappenings()
-          )
         },
       },
       blogPosts: {
@@ -193,12 +153,12 @@ const schema = new GraphQLSchema({
         description: 'Create an event with specified information',
         type: EventType,
         args: {
-            fields: { type: EventCreateType },
+          fields: { type: EventCreateType },
         },
         async resolve(a, { fields }, { req, res }) {
-            return await requireAuth(req, res, () =>
-              eventCtrl.createEvent(req.user, fields)
-            )
+          return await requireAuth(req, res, () =>
+            eventCtrl.createEvent(req.user, fields)
+          )
         },
       },
       eventUpdate: {
@@ -225,153 +185,6 @@ const schema = new GraphQLSchema({
         async resolve(a, { id }, { req, res }) {
           return await requireAuth(req, res, () =>
             eventCtrl.deleteEvent(req.user, id)
-          )
-        },
-      },
-      companyCreate: {
-        description: 'Create company with given name',
-        type: Company,
-        args: {
-            name: { type: GraphQLString },
-        },
-        async resolve(a, { name }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyCtrl.createCompany(name)
-          )
-        },
-      },
-      companyUpdate: {
-        description: 'Update company information of specified ID',
-        type: Company,
-        args: {
-          id: { type: GraphQLString },
-          fields: {
-            type: CompanyInput,
-          },
-        },
-        async resolve(a, { id, fields }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyCtrl.updateCompany(req.user, id, fields)
-          )
-        },
-      },
-      companyDelete: {
-        description: 'Delete a company with given ID',
-        type: GraphQLBoolean,
-        args: {
-          id: { type: GraphQLString },
-        },
-        async resolve(a, { id }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyCtrl.deleteCompany(id)
-          )
-        },
-      },
-      companyContactCreate: {
-        description:
-          'Create new contact for a company specified by the company ID',
-        type: CompanyContact,
-        args: {
-          id: { type: GraphQLID },
-          input: { type: CompanyContactInput },
-        },
-        async resolve(a, { companyId, input }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyContactCtrl.createContact(companyId, input)
-          )
-        },
-      },
-      companyContactUpdate: {
-        description: 'Update the contact with the given ID',
-        type: CompanyContact,
-        args: {
-          id: { type: GraphQLID },
-          input: { type: CompanyContactInput },
-        },
-        async resolve(a, { id, input }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyContactCtrl.updateContact(id, input)
-          )
-        },
-      },
-      companyContactDelete: {
-        description: 'Remove contact with a given contact ID',
-        type: GraphQLBoolean,
-        args: {
-          id: { type: GraphQLString },
-        },
-        async resolve(a, { id }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            companyContactCtrl.removeContact(id)
-          )
-        },
-      },
-      salesCommentCreate: {
-        description: 'Create new comment for a company specified by the company ID',
-        type: SalesComment,
-        args: {
-          input: { type: SalesCommentInput },
-        },
-        async resolve(a, { input }, { req, res }) {
-          salesCommentCtrl.createComment(req.user, input.companyId, input.text)
-        },
-      },
-      salesCommentUpdate: {
-        description: 'Create new comment for a company specified by the company ID',
-        type: SalesComment,
-        args: {
-          input: { type: SalesCommentInput },
-        },
-        async resolve(a, { input }, { req, res }) {
-          salesCommentCtrl.updateComment(req.user, input.companyId, input.text)
-        },
-      },
-      salesCommentDelete: {
-        description: 'Remove comment with a given contact ID',
-        type: GraphQLBoolean,
-        args: {
-          id: { type: GraphQLID },
-        },
-        async resolve(a, { id }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            salesCommentCtrl.removeComment(req.user, id)
-          )
-        },
-      },
-      happeningCreate: {
-        description: 'Create new happening',
-        type: HappeningType,
-        args: {
-          fields: { type: HappeningInputType },
-        },
-        async resolve(a, { fields }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            happeningCtrl.createHappening(fields)
-          )
-        },
-      },
-      happeningUpdate: {
-        description: 'Update happening with provided id',
-        type: HappeningType,
-        args: {
-          id: { type: GraphQLID },
-          fields: { type: HappeningInputType },
-        },
-        async resolve(a, { id, fields }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            happeningCtrl.updateHappening(id, fields)
-          )
-        },
-      },
-      happeningDelete: {
-        description: 'Remove comment with a given contact ID',
-        type: GraphQLBoolean,
-        args: {
-          id: { type: GraphQLID },
-        },
-        async resolve(a, { id }, { req, res }) {
-          return await requireAuth(req, res, () =>
-            happeningCtrl.deleteHappening(id)
           )
         },
       },

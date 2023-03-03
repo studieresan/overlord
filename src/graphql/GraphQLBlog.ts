@@ -1,13 +1,13 @@
 import {
-    GraphQLObjectType,
-    GraphQLList,
-    GraphQLInputObjectType,
-    GraphQLString,
-    GraphQLInt,
-    GraphQLID,
-    GraphQLBoolean,
-    GraphQLNonNull,
-  } from 'graphql'
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLInputObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLID,
+  GraphQLBoolean,
+  GraphQLNonNull,
+} from 'graphql'
 import { GraphQLDateTime } from './GraphQLDateTime'
 import { UserType } from './GraphQLUser'
 
@@ -25,7 +25,7 @@ export const BlogType: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     author: { type: UserType },
     id: { type: GraphQLID },
-    studsYear: {type: GraphQLInt},
+    studsYear: { type: GraphQLInt },
     ...MutableBlogFields,
   }),
 })
@@ -35,7 +35,7 @@ export const BlogInputType = new GraphQLInputObjectType({
   fields: () => ({
     author: { type: GraphQLID },
     id: { type: GraphQLID },
-    studsYear: {type: GraphQLInt},
+    studsYear: { type: GraphQLInt },
     ...MutableBlogFields,
   }),
 })

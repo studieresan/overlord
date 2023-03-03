@@ -48,6 +48,7 @@
     "aws-sdk": "^2.870.0",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.19.0",
+    "certifi": "^14.5.15",
     "compression": "^1.7.4",
     "connect": "^3.7.0",
     "dotenv": "^8.2.0",

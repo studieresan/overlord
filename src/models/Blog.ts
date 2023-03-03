@@ -5,9 +5,9 @@ export interface BlogFields {
     title: string
     description: string
     date: Date
-    frontPicture: string
     studsYear: number
     pictures: string[]
+    frontPicture: string
     published: boolean
 }
 
@@ -16,7 +16,7 @@ export interface Blog extends BlogFields {
 }
 
 export interface CreateBlog extends BlogFields {
-    author: string
+    author_id: string
 }
 
 

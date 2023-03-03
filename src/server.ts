@@ -57,23 +57,23 @@ const options = {
 
 if (process.env.NODE_ENV !== 'test') {
   mongoose.connect(process.env.MONGODB_URI!, options)
-  .catch((e) => console.log(e))
+    .catch((e) => console.log(e))
 
   mongoose.connection.on('error', () => {
     console.log('MongoDB connection error. Please make sure MongoDB is running.')
     process.exit()
   })
 }
-
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   const allowedOrigins = [
-    process.env.FRONTEND_ORIGIN || 'http://localhost:3000',
-    process.env.FRONTEND_ALIAS || 'http://localhost:3000',
+    process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+    process.env.FRONTEND_ALIAS || 'http://localhost:5173',
     process.env.HEROKU_ORIGIN || 'http://localhost:3000',
     process.env.STAGE_ORIGIN || 'http://localhost:3000',
   ]
   const netlifypreview = /https:\/\/[0-9a-z-]+--studs.netlify.app/g
   const origin = req.get('Origin')
+  console.log('origin', origin)
   const foundOrigin = allowedOrigins.find(o => o == origin)
   if (foundOrigin) {
     res.header('Access-Control-Allow-Origin', foundOrigin)
@@ -153,9 +153,9 @@ app.use(errorHandler())
 
 app.use('/graphql', (req, res) =>
   graphqlHTTP({
-     schema: graphQLSchema,
-     context: { req: req, res: res },
-     graphiql: process.env.DEV === 'true',
+    schema: graphQLSchema,
+    context: { req: req, res: res },
+    graphiql: process.env.DEV === 'true',
   })(req, res)
 )
 
