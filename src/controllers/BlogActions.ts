@@ -1,11 +1,12 @@
 import { CreateBlog } from '../models/Blog'
-import { Blog } from '../models'
+import { Blog, User } from '../models'
+
 export interface BlogActions {
-    // Get all blogposts
+    // Get all blog posts
     getBlogPosts(): Promise<Blog[]>
 
     // Create a new blog post
-    createBlogPost(fields: Partial<CreateBlog>): Promise<Blog>
+    createBlogPost(requestUser: User, fields: Partial<CreateBlog>): Promise<Blog>
 
     // Update the blog with given id
     updateBlogPost(id: string, fields: Partial<CreateBlog>): Promise<Blog>

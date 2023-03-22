@@ -2,7 +2,6 @@ import { EventActions } from './EventActions'
 import { Event, User } from '../models'
 import { rejectIfNull, hasEventOrAdminPermissions } from './util'
 import * as eventMongo from '../mongodb/Event'
-import * as companyMongo from '../mongodb/Company'
 import * as passport from 'passport'
 import { ObjectID } from 'mongodb'
 import { CreateEvent } from '../models/Event'
@@ -22,10 +21,10 @@ export class EventActionsImpl implements EventActions {
           if (user) {
             // All fields
             resolve(eventMongo.Event.find(searchFilter)
-            .populate('company')
-            .populate('responsible')
-            .sort([['date', 'descending']])
-            .exec())
+              .populate('company')
+              .populate('responsible')
+              .sort([['date', 'descending']])
+              .exec())
           } else {
             // Public event
             resolve(eventMongo.Event.find(searchFilter,
@@ -40,12 +39,12 @@ export class EventActionsImpl implements EventActions {
                 'studsYear': true,
               }
             ).populate('company')
-             .populate('responsible')
-             .sort([['date', 'descending']])
-             .exec())
+              .populate('responsible')
+              .sort([['date', 'descending']])
+              .exec())
           }
         }
-      )(req, res, () => {})
+      )(req, res, () => { })
     })
   }
 
@@ -57,28 +56,17 @@ export class EventActionsImpl implements EventActions {
       .then(event => event)
   }
 
-  createEvent(requestUser: User, fields: Partial<CreateEvent>):
-    Promise<Event> {
+  createEvent(requestUser: User, fields: Partial<CreateEvent>): Promise<Event> {
     if (!hasEventOrAdminPermissions(requestUser))
       return Promise.reject('Insufficient permissions')
-    if (!fields.companyId)
-      return Promise.reject('No company ID')
 
-    return companyMongo.Company.findById(fields.companyId!)
-      .then(rejectIfNull('No company with ID'))
-      .then(() => {
-        const event = new eventMongo.Event({
-          company: new ObjectID(fields.companyId),
-          responsible: fields.responsibleUserId ? new ObjectID(fields.responsibleUserId)
-            : undefined,
-          ...fields,
-        })
-        return event.save()
-      }).then(event => event
-                      .populate('company')
-                      .populate('responsible')
-                      .execPopulate()
-    )
+    return new eventMongo.Event({
+      ...fields,
+    }).save()
+      .then(book => book
+        .populate('author')
+        .execPopulate()
+      )
   }
 
   updateEvent(requestUser: User, id: string, fields: any): Promise<Event> {
@@ -98,7 +86,7 @@ export class EventActionsImpl implements EventActions {
 
   deleteEvent(requestUser: User, id: string): Promise<boolean> {
     if (!hasEventOrAdminPermissions(requestUser)) {
-      return Promise.reject(new Error ('User not authorized'))
+      return Promise.reject(new Error('User not authorized'))
     }
     return eventMongo.Event.findOneAndRemove({ _id: id })
       .then(event => {
@@ -109,14 +97,14 @@ export class EventActionsImpl implements EventActions {
   getOldEvents(): Promise<Event[]> {
     return new Promise<Event[]>(resolve => {
       resolve(eventMongo.OldEvent.find({},
-          {
-            'id': true,
-            'companyName': true,
-            'publicDescription': true,
-            'date': true,
-            'pictures': true,
-            'published': true,
-          }
+        {
+          'id': true,
+          'companyName': true,
+          'publicDescription': true,
+          'date': true,
+          'pictures': true,
+          'published': true,
+        }
       ).exec())
     })
   }

@@ -1,7 +1,6 @@
 import { CreateEvent } from '../models/Event'
 import { Event, User } from '../models'
 export interface EventActions {
-
   // Get all events
   getEvents(res: any, req: any, studsYear: number): Promise<Event[]>
 

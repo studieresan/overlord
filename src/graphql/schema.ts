@@ -153,7 +153,7 @@ const schema = new GraphQLSchema({
         description: 'Create an event with specified information',
         type: EventType,
         args: {
-          fields: { type: EventCreateType },
+          fields: { type: EventInputType },
         },
         async resolve(a, { fields }, { req, res }) {
           return await requireAuth(req, res, () =>
@@ -196,7 +196,7 @@ const schema = new GraphQLSchema({
         },
         async resolve(a, { fields }, { req, res }) {
           return await requireAuth(req, res, () =>
-            blogCtrl.createBlogPost(fields)
+            blogCtrl.createBlogPost(req.user, fields)
           )
         },
       },

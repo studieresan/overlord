@@ -5,36 +5,10 @@ import {
   GraphQLString,
   GraphQLList,
 } from 'graphql'
-import {
-    CVInputType,
-  CVType,
-} from './GraphQLCV'
 import * as models from '../models'
-import {
-  CVActions,
-  CVActionsImpl,
-} from '../controllers'
-import * as passport from 'passport'
-
-
-
-const cvCtrl: CVActions = new CVActionsImpl()
-
-function getCV(req: any, res: any, requestedUser: any) {
-  return new Promise(resolve => {
-    passport.authenticate('jwt', { session: false },
-      (err: any, user: any, info: any) => {
-        if (err || !user) {
-          resolve(undefined)
-        }
-        resolve(cvCtrl.getCV(requestedUser.id))
-      }
-    )(req, res, () => {})
-  })
-}
 
 export const UserRole = new GraphQLEnumType({
-  name : 'UserRole',
+  name: 'UserRole',
   values: {
     'project_manager': { value: models.UserRole.ProjectManager },
     'it_group': { value: models.UserRole.ItGroup },
@@ -48,40 +22,31 @@ export const UserRole = new GraphQLEnumType({
 
 
 const MutableInfoFields = {
-    email: { type: GraphQLString },
-    phone: { type: GraphQLString },
-    linkedIn: { type: GraphQLString },
-    github: { type: GraphQLString },
-    master: { type: GraphQLString },
-    allergies: { type: GraphQLString },
-    picture: { type: GraphQLString },
+  email: { type: GraphQLString },
+  phone: { type: GraphQLString },
+  linkedIn: { type: GraphQLString },
+  github: { type: GraphQLString },
+  master: { type: GraphQLString },
+  allergies: { type: GraphQLString },
+  picture: { type: GraphQLString },
 }
 
 export const UserInfoType = new GraphQLObjectType({
-  name : 'UserInfo',
-  fields : {
+  name: 'UserInfo',
+  fields: {
     role: { type: GraphQLString },
     ...MutableInfoFields,
     // Should not be moved to MutableInfoFields is because CVType is not an InputObjectType
-    cv: {
-        type: CVType,
-        async resolve(requestedUser, b, { req, res }) {
-            return await getCV(req, res, requestedUser)
-        },
-    },
     permissions: { type: new GraphQLList(GraphQLString) },
   },
 })
 
 // This type represents the fields that a user can change about themselves
 export const UserInfoInputType = new GraphQLInputObjectType({
-  name : 'UserInfoInput',
-  fields : {
-      ...MutableInfoFields,
-      cv: {
-          type: CVInputType,
-      },
-      role: { type: GraphQLString },
-      permissions: { type: new GraphQLList(GraphQLString) },
+  name: 'UserInfoInput',
+  fields: {
+    ...MutableInfoFields,
+    role: { type: GraphQLString },
+    permissions: { type: new GraphQLList(GraphQLString) },
   },
 })
