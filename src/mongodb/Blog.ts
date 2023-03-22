@@ -14,8 +14,8 @@ const BlogSchema: mongoose.Schema = new mongoose.Schema({
   published: {
     type: Boolean,
     default: false,
-},
+  },
 
 }, { timestamps: { createdAt: 'created' } })
 
-export const Blog = mongoose.model<BlogDocument>('Blog', BlogSchema)
+export const Blog = mongoose.model<BlogDocument>('Blog', BlogSchema, 'blogs')
