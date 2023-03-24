@@ -14,6 +14,6 @@ export interface UserActions {
   deleteUser(userId: string, requestUser: User): Promise<User>
 
   // Gets all users with the specified user role and year
-  getUsers(req: any, res: any, type: UserRole, studsYear: number): Promise<User[]>
+  getUsers(req: any, res: any, type: UserRole, studsYear: any): Promise<User[]>
 
 }

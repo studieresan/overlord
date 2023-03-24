@@ -99,7 +99,7 @@ const schema = new GraphQLSchema({
           studsYear: { type: GraphQLInt },
         },
         async resolve(a, { studsYear }, { req, res }) {
-          return await eventCtrl.getEvents(req, res, studsYear)
+          return await eventCtrl.getEvents(studsYear)
         },
       },
       blogPosts: {

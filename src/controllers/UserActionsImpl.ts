@@ -63,7 +63,7 @@ export class UserActionsImpl implements UserActions {
     req: any,
     res: any,
     userRole: UserRole,
-    studsYear: number
+    studsYear: any
   ): Promise<User[]> {
     return new Promise<User[]>((resolve, reject) => {
       passport.authenticate(
@@ -78,14 +78,14 @@ export class UserActionsImpl implements UserActions {
             )
           }
           if (!userRole && !studsYear) {
-            resolve(mongodb.User.find({}).sort({firstName: 1}).exec())
+            resolve(mongodb.User.find({}).sort({ firstName: 1 }).exec())
           } else if (!userRole) {
             // All infos
             resolve(
               mongodb.User.find(
                 { studsYear: studsYear },
                 {}
-              ).sort({firstName: 1}).exec()
+              ).sort({ firstName: 1 }).exec()
             )
           } else {
             resolve(
@@ -95,11 +95,11 @@ export class UserActionsImpl implements UserActions {
                   studsYear: studsYear,
                 },
                 {}
-              ).sort({firstName: 1}).exec()
+              ).sort({ firstName: 1 }).exec()
             )
           }
         }
-      )(req, res, () => {})
+      )(req, res, () => { })
     })
   }
 }

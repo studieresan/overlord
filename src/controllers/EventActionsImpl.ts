@@ -1,57 +1,24 @@
 import { EventActions } from './EventActions'
 import { Event, User } from '../models'
 import { rejectIfNull, hasEventOrAdminPermissions } from './util'
-import * as eventMongo from '../mongodb/Event'
-import * as passport from 'passport'
+import * as mongodb from '../mongodb/Event'
 import { ObjectID } from 'mongodb'
 import { CreateEvent } from '../models/Event'
 
 export class EventActionsImpl implements EventActions {
 
-  getEvents(req: any, res: any, studsYear: number): Promise<Event[]> {
-    return new Promise<Event[]>((resolve, reject) => {
-      passport.authenticate('jwt', { session: false },
-        (err: any, user: any, info: any) => {
-          if (err) {
-            reject(Error(`Error occured when authenticating user: ${err}`))
-          }
+  getEvents(studsYear: Number): Promise<Event[]> {
+    const searchFilter: object = studsYear ? { studsYear: studsYear } : {}
 
-          const searchFilter = studsYear ? { studsYear: studsYear } : {}
-
-          if (user) {
-            // All fields
-            resolve(eventMongo.Event.find(searchFilter)
-              .populate('company')
-              .populate('responsible')
-              .sort([['date', 'descending']])
-              .exec())
-          } else {
-            // Public event
-            resolve(eventMongo.Event.find(searchFilter,
-              {
-                'id': true,
-                'company': true,
-                'responsible': true,
-                'publicDescription': true,
-                'date': true,
-                'pictures': true,
-                'published': true,
-                'studsYear': true,
-              }
-            ).populate('company')
-              .populate('responsible')
-              .sort([['date', 'descending']])
-              .exec())
-          }
-        }
-      )(req, res, () => { })
-    })
+    return mongodb.Event.find(searchFilter)
+      .populate('author')
+      .sort({ date: -1 })
+      .exec()
   }
 
   getEvent(eventId: string): Promise<Event> {
-    return eventMongo.Event.findById(new ObjectID(eventId))
-      .populate('company')
-      .populate('responsible')
+    return mongodb.Event.findById(new ObjectID(eventId))
+      .populate('author')
       .then(rejectIfNull('No event matches id'))
       .then(event => event)
   }
@@ -60,7 +27,7 @@ export class EventActionsImpl implements EventActions {
     if (!hasEventOrAdminPermissions(requestUser))
       return Promise.reject('Insufficient permissions')
 
-    return new eventMongo.Event({
+    return new mongodb.Event({
       ...fields,
     }).save()
       .then(book => book
@@ -72,15 +39,14 @@ export class EventActionsImpl implements EventActions {
   updateEvent(requestUser: User, id: string, fields: any): Promise<Event> {
     if (!hasEventOrAdminPermissions(requestUser))
       return Promise.reject('Insufficient permissions')
-    return eventMongo.Event.findOneAndUpdate(
+    return mongodb.Event.findOneAndUpdate(
       { _id: id },
       {
         responsible: fields.responsibleUserId ? new ObjectID(fields.responsibleUserId) : undefined,
         ...fields,
       },
       { new: true })
-      .populate('company')
-      .populate('responsible')
+      .populate('author')
       .then(rejectIfNull('No event exists for given id'))
   }
 
@@ -88,24 +54,9 @@ export class EventActionsImpl implements EventActions {
     if (!hasEventOrAdminPermissions(requestUser)) {
       return Promise.reject(new Error('User not authorized'))
     }
-    return eventMongo.Event.findOneAndRemove({ _id: id })
+    return mongodb.Event.findOneAndRemove({ _id: id })
       .then(event => {
         return (event !== undefined)
       })
-  }
-
-  getOldEvents(): Promise<Event[]> {
-    return new Promise<Event[]>(resolve => {
-      resolve(eventMongo.OldEvent.find({},
-        {
-          'id': true,
-          'companyName': true,
-          'publicDescription': true,
-          'date': true,
-          'pictures': true,
-          'published': true,
-        }
-      ).exec())
-    })
   }
 }
