@@ -33,7 +33,7 @@ export const BlogType: GraphQLObjectType = new GraphQLObjectType({
 export const BlogInputType = new GraphQLInputObjectType({
   name: 'BlogInput',
   fields: () => ({
-    author_id: { type: GraphQLID },
+    author: { type: GraphQLID },
     id: { type: GraphQLID },
     studsYear: { type: GraphQLInt },
     ...MutableBlogFields,

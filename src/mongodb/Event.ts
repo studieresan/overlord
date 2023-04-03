@@ -15,10 +15,10 @@ const eventSchema: mongoose.Schema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-}, { timestamps: true })
+}, { timestamps: { createdAt: 'created' } })
 
 export const Event =
-  mongoose.model<EventDocument>('Event', eventSchema)
+  mongoose.model<EventDocument>('Event', eventSchema, 'events')
 
 export const OldEvent =
   mongoose.model<EventDocument>('OldEvent', eventSchema)

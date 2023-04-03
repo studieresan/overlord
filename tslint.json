@@ -9,7 +9,10 @@
       true,
       "spaces"
     ],
-    "max-line-length": [ true, 100 ],
+    "max-line-length": [
+      true,
+      100
+    ],
     "trailing-comma": [
       true,
       {
@@ -18,7 +21,6 @@
           "arrays": "always",
           "functions": "never",
           "typeLiterals": "ignore"
-
         },
         "esSpecCompliant": true
       }
@@ -27,16 +29,6 @@
       true,
       "check-open-brace",
       "check-whitespace"
-    ],
-    "quotemark": [
-      true,
-      "single",
-      "avoid-escape"
-    ],
-    "semicolon": [
-      true,
-      "never",
-      "ignore-bound-class-methods"
     ],
     "whitespace": [
       true,

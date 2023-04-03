@@ -10,7 +10,7 @@ import { CallbackError } from 'mongoose'
 
 const host = process.env.DEV === 'false' ?
   'https://studieresan.se' :
-  'http://localhost:3000'
+  'http://localhost:5173'
 
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -53,7 +53,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
         token,
         name: `${user.firstName} ${user.lastName}`,
         phone: user.info.phone || undefined,
-        picture: user.info.picture || undefined,
+        picture: user.info.picture || undefined,
         permissions: user.info.permissions,
       })
       res.end()
@@ -65,7 +65,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
  * Create a new local account.
  */
 // tslint:disable-next-line:max-line-length
-export let postSignup = async(req: Request, res: Response, next: NextFunction) => {
+export let postSignup = async (req: Request, res: Response, next: NextFunction) => {
   req.assert('email', 'Email is not valid').isEmail()
   req.assert('firstName', 'First name is required').notEmpty()
   req.assert('lastName', 'Last name is required').notEmpty()
@@ -73,14 +73,14 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
     'user_role',
     'user_role was invalid'
   ).isIn([
-      UserRole.SalesGroup,
-      UserRole.TravelGroup,
-      UserRole.ProjectManager,
-      UserRole.InfoGroup,
-      UserRole.FinanceGroup,
-      UserRole.ItGroup,
-      UserRole.EventGroup,
-    ])
+    UserRole.SalesGroup,
+    UserRole.TravelGroup,
+    UserRole.ProjectManager,
+    UserRole.InfoGroup,
+    UserRole.FinanceGroup,
+    UserRole.ItGroup,
+    UserRole.EventGroup,
+  ])
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
 
   const errors = req.validationErrors()
@@ -95,10 +95,10 @@ export let postSignup = async(req: Request, res: Response, next: NextFunction) =
     userRole: req.body.user_role,
     studsYear: process.env.STUDS_YEAR,
     info: {
-        role: req.body.user_role,
-        email: req.body.email,
-        password: await generateRandomPassword(),
-        permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
+      role: req.body.user_role,
+      email: req.body.email,
+      password: await generateRandomPassword(),
+      permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
     },
   })
 
@@ -323,7 +323,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
           + `requested the reset of the password for your Studs account.\n\n`
           + `Please click on the following link, or paste it into your browser ` // tslint:disable-line:max-line-length
           + `to complete the process:\n\n`
-          + `${host}/password-reset/${token}\n\n`
+          + `${host}/auth/reset-password/${token}\n\n`
           + `This link is valid for one hour. `
           + `After that you will have to reset again. `
           + `If you did not request a password change, `

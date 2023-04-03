@@ -1,5 +1,5 @@
 import {
-    UserInfoType,
+  UserInfoType,
 } from './GraphQLUserInfo'
 import {
   GraphQLObjectType,
@@ -10,8 +10,8 @@ import {
 
 
 export const UserType = new GraphQLObjectType({
-  name : 'User',
-  fields : {
+  name: 'User',
+  fields: {
     id: { type: GraphQLID },
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },

@@ -14,6 +14,7 @@ import * as errorHandler from 'errorhandler'
 import * as lusca from 'lusca'
 import * as mongoose from 'mongoose'
 import * as passport from 'passport'
+import * as cors from 'cors'
 import { graphqlHTTP } from 'express-graphql'
 import { signedUploadRequest } from './imageUpload'
 import { getPDF } from './aws/pdfDownload'
@@ -31,6 +32,11 @@ import * as userController from './controllers/user'
  * API keys and Passport configuration.
  */
 import * as passportConfig from './config/passport'
+
+function setCacheControl(req, res, next) {
+  res.setHeader('Cache-Control', 'public, max-age=86400')
+  next();
+}
 
 /**
  * Create Express server.
@@ -64,42 +70,40 @@ if (process.env.NODE_ENV !== 'test') {
     process.exit()
   })
 }
-app.use(function (req, res, next) {
-  const allowedOrigins = [
-    process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
-    process.env.FRONTEND_ALIAS || 'http://localhost:5173',
-    process.env.HEROKU_ORIGIN || 'http://localhost:3000',
-    process.env.STAGE_ORIGIN || 'http://localhost:3000',
-  ]
-  const netlifypreview = /https:\/\/[0-9a-z-]+--studs.netlify.app/g
-  const origin = req.get('Origin')
-  console.log('origin', origin)
-  const foundOrigin = allowedOrigins.find(o => o == origin)
-  if (foundOrigin) {
-    res.header('Access-Control-Allow-Origin', foundOrigin)
-    res.header('Access-Control-Allow-Credentials', 'true')
-    res.header(
-      'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    )
-    res.header('Access-Control-Allow-Methods', 'POST, PUT, GET, OPTIONS'
-    )
-  }
-  else if (origin?.match(netlifypreview)) {
-    res.header('Access-Control-Allow-Origin', origin)
-    res.header('Access-Control-Allow-Credentials', 'true')
-    res.header(
-      'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    )
-  }
-  // Allow preflight
-  if (req.method === 'OPTIONS') {
-    return res.end()
-  }
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+      process.env.FRONTEND_ALIAS || 'http://localhost:5173',
+      process.env.HEROKU_ORIGIN || 'http://localhost:3000',
+      process.env.STAGE_ORIGIN || 'http://localhost:3000',
+    ];
+    const netlifypreview = /https:\/\/[0-9a-z-]+--studs.netlify.app/g;
 
-  next()
-})
+    if (!origin) return callback(undefined, true);
+
+    if (allowedOrigins.includes(origin) || origin.match(netlifypreview)) {
+      callback(undefined, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  methods: 'POST, PUT, GET, OPTIONS',
+};
+
+app.use(cors(corsOptions));
+
+function logRequest(req, res, next) {
+  console.log(`[${new Date().toISOString()}] Request: ${req.method} ${req.url} from ${req.headers.origin}`);
+  next();
+}
+app.use(logRequest); // Add this line
+
+app.get('/test', (req, res) => {
+  res.send('Test endpoint');
+});
 
 /**
  * Express configuration.
@@ -151,13 +155,13 @@ app.get('/signed-upload', signedUploadRequest)
  */
 app.use(errorHandler())
 
-app.use('/graphql', (req, res) =>
+app.use('/graphql', setCacheControl, (req, res) =>
   graphqlHTTP({
     schema: graphQLSchema,
     context: { req: req, res: res },
     graphiql: process.env.DEV === 'true',
   })(req, res)
-)
+);
 
 app.get('/brochure.pdf', getPDF)
 app.get('/brochure_eng.pdf', getPDF)

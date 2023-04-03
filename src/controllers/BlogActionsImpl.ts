@@ -1,4 +1,4 @@
-import * as mongodb from '../mongodb/Blog'
+import { Blog as BlogSchema } from '../mongodb/Blog'
 import * as flatten from 'flat'
 import { BlogActions } from './BlogActions'
 import { Blog, User } from '../models'
@@ -12,7 +12,7 @@ export class BlogActionsImpl implements BlogActions {
         if (!hasBlogOrAdminPermissions(requestUser))
             return Promise.reject('Insufficient permissions')
 
-        return new mongodb.Blog({
+        return new BlogSchema({
             ...fields,
         }).save()
             .then(book => book
@@ -24,13 +24,13 @@ export class BlogActionsImpl implements BlogActions {
 
     deleteBlogPost(id: string): Promise<boolean> {
         console.log(JSON.stringify(id))
-        return mongodb.Blog.findOneAndRemove({ _id: id })
+        return BlogSchema.findOneAndRemove({ _id: id })
             .then(post => (post !== undefined))
 
     }
 
     updateBlogPost(id: string, fields: Partial<CreateBlog>): Promise<Blog> {
-        return mongodb.Blog.findOneAndUpdate(
+        return BlogSchema.findOneAndUpdate(
             { _id: id },
             { ...flatten(fields) },
             { new: true })
@@ -41,7 +41,7 @@ export class BlogActionsImpl implements BlogActions {
     }
 
     getBlogPosts(): Promise<Blog[]> {
-        return mongodb.Blog.find()
+        return BlogSchema.find()
             .populate('author')
             .sort({ date: -1 })
             .exec()

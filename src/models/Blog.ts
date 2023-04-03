@@ -16,7 +16,7 @@ export interface Blog extends BlogFields {
 }
 
 export interface CreateBlog extends BlogFields {
-    author_id: string
+    author: string
 }
 
 

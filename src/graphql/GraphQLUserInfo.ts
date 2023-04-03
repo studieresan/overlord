@@ -12,11 +12,17 @@ export const UserRole = new GraphQLEnumType({
   values: {
     'project_manager': { value: models.UserRole.ProjectManager },
     'it_group': { value: models.UserRole.ItGroup },
+    'it_group_manager': { value: models.UserRole.ItGroupManager },
     'sales_group': { value: models.UserRole.SalesGroup },
-    'finance_group': { value: models.UserRole.FinanceGroup },
+    'sales_group_manager': { value: models.UserRole.SalesGroupManager },
     'event_group': { value: models.UserRole.EventGroup },
-    'travel_group': { value: models.UserRole.TravelGroup },
+    'event_group_manager': { value: models.UserRole.EventGroupManager },
     'info_group': { value: models.UserRole.InfoGroup },
+    'info_group_manager': { value: models.UserRole.InfoGroupManager },
+    'finance_group': { value: models.UserRole.FinanceGroup },
+    'finance_group_manager': { value: models.UserRole.FinanceGroupManager },
+    'travel_group': { value: models.UserRole.TravelGroup },
+    'travel_group_manager': { value: models.UserRole.TravelGroupManager },
   },
 })
 
@@ -24,6 +30,7 @@ export const UserRole = new GraphQLEnumType({
 const MutableInfoFields = {
   email: { type: GraphQLString },
   phone: { type: GraphQLString },
+  biography: { type: GraphQLString },
   linkedIn: { type: GraphQLString },
   github: { type: GraphQLString },
   master: { type: GraphQLString },

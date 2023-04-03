@@ -10,7 +10,6 @@ import {
 } from 'graphql'
 import { GraphQLDateTime } from './GraphQLDateTime'
 import { UserType } from './GraphQLUser'
-
 const MutableEventFields = {
   title: { type: GraphQLString },
   description: { type: GraphQLString },
@@ -23,10 +22,10 @@ const MutableEventFields = {
 export const EventType: GraphQLObjectType = new GraphQLObjectType({
   name: 'Event',
   fields: () => ({
-    author: { type: UserType },
     id: { type: GraphQLID },
-    studsYear: { type: GraphQLInt },
     ...MutableEventFields,
+    author: { type: UserType },
+    studsYear: { type: new GraphQLNonNull(GraphQLInt) },
   }),
 })
 
@@ -43,7 +42,7 @@ export const EventCreateType = new GraphQLObjectType({
 export const EventInputType = new GraphQLInputObjectType({
   name: 'EventInput',
   fields: () => ({
-    author_id: { type: GraphQLID },
+    author: { type: GraphQLID },
     id: { type: GraphQLID },
     studsYear: { type: GraphQLInt },
     ...MutableEventFields,
