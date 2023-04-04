@@ -70,30 +70,47 @@ if (process.env.NODE_ENV !== 'test') {
     process.exit()
   })
 }
-const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
-      process.env.FRONTEND_ALIAS || 'http://localhost:5173',
-      process.env.HEROKU_ORIGIN || 'http://localhost:3000',
-      process.env.STAGE_ORIGIN || 'http://localhost:3000',
-    ];
-    const netlifypreview = /https:\/\/[0-9a-z-]+--studs.netlify.app/g;
+app.use(function (req, res, next) {
+  console.log('origin: ', req.get('Origin'));
+  console.log('process.env.FRONTEND_ORIGIN: ', process.env.FRONTEND_ORIGIN);
+  console.log('process.env.FRONTEND_ALIAS: ', process.env.FRONTEND_ALIAS);
+  console.log('process.env.HEROKU_ORIGIN: ', process.env.HEROKU_ORIGIN);
+  console.log('process.env.STAGE_ORIGIN: ', process.env.STAGE_ORIGIN);
 
-    if (!origin) return callback(undefined, true);
+  const allowedOrigins = [
+    process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+    process.env.FRONTEND_ALIAS || 'http://localhost:5173',
+    process.env.HEROKU_ORIGIN || 'http://localhost:5173',
+    process.env.STAGE_ORIGIN || 'http://localhost:5173',
+  ]
+  const netlifypreview = /https:\/\/[0-9a-z-]+--studs.netlify.app/g
+  const origin = req.get('Origin')
+  const foundOrigin = allowedOrigins.find(o => o == origin)
+  if (foundOrigin) {
+    res.header('Access-Control-Allow-Origin', foundOrigin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    )
+    res.header('Access-Control-Allow-Methods', 'POST, PUT, GET, OPTIONS'
+    )
+  }
+  else if (origin?.match(netlifypreview)) {
+    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    )
+  }
+  // Allow preflight
+  if (req.method === 'OPTIONS') {
+    return res.end()
+  }
 
-    if (allowedOrigins.includes(origin) || origin.match(netlifypreview)) {
-      callback(undefined, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-  methods: 'POST, PUT, GET, OPTIONS',
-};
-
-app.use(cors(corsOptions));
+  next()
+})
 
 function logRequest(req, res, next) {
   console.log(`[${new Date().toISOString()}] Request: ${req.method} ${req.url} from ${req.headers.origin}`);
