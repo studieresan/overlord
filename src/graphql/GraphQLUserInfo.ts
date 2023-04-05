@@ -4,6 +4,7 @@ import {
   GraphQLEnumType,
   GraphQLString,
   GraphQLList,
+  GraphQLInt,
 } from 'graphql'
 import * as models from '../models'
 
@@ -27,7 +28,7 @@ export const UserRole = new GraphQLEnumType({
 })
 
 
-const MutableInfoFields = {
+const InfoFields = {
   email: { type: GraphQLString },
   phone: { type: GraphQLString },
   biography: { type: GraphQLString },
@@ -36,24 +37,31 @@ const MutableInfoFields = {
   master: { type: GraphQLString },
   allergies: { type: GraphQLString },
   picture: { type: GraphQLString },
-}
+  role: { type: GraphQLString },
+  permissions: { type: new GraphQLList(GraphQLString) },
+};
 
 export const UserInfoType = new GraphQLObjectType({
   name: 'UserInfo',
   fields: {
-    role: { type: GraphQLString },
-    ...MutableInfoFields,
-    // Should not be moved to MutableInfoFields is because CVType is not an InputObjectType
-    permissions: { type: new GraphQLList(GraphQLString) },
+    ...InfoFields,
   },
-})
+});
 
-// This type represents the fields that a user can change about themselves
-export const UserInfoInputType = new GraphQLInputObjectType({
+const UserInfoInputType = new GraphQLInputObjectType({
   name: 'UserInfoInput',
   fields: {
-    ...MutableInfoFields,
-    role: { type: GraphQLString },
-    permissions: { type: new GraphQLList(GraphQLString) },
+    ...InfoFields,
   },
-})
+});
+
+export const UserTypeInput = new GraphQLInputObjectType({
+  name: 'UserTypeInput',
+  fields: () => ({
+    id: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
+    studsYear: { type: GraphQLInt },
+    info: { type: UserInfoInputType },
+  }),
+});

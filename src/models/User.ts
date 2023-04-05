@@ -11,7 +11,7 @@ export interface User {
 export type UserInfo = StudsInfo
 
 export interface StudsInfo {
-  readonly role: UserRole
+  role: UserRole
   readonly email: string
   readonly biography?: string
   readonly linkedIn?: string
@@ -20,7 +20,7 @@ export interface StudsInfo {
   readonly picture?: string
   readonly allergies?: string
   readonly master?: string,
-  readonly permissions: Permission[]
+  permissions: Permission[]
 }
 
 export enum UserRole {

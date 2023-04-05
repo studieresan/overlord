@@ -7,7 +7,7 @@ import {
   BlogActionsImpl,
 } from './../controllers'
 import { UserType } from './GraphQLUser'
-import { UserInfoType, UserInfoInputType, UserRole } from './GraphQLUserInfo'
+import { UserInfoType, UserRole, UserTypeInput } from './GraphQLUserInfo'
 import { EventType, EventInputType, EventCreateType } from './GraphQLEvent'
 import { BlogType, BlogInputType } from './GraphQLBlog'
 import {
@@ -106,6 +106,8 @@ const schema = new GraphQLSchema({
         description: 'Get all blog posts as a list',
         type: new GraphQLList(BlogType),
         async resolve(a, b, { req, res }) {
+          const blogPosts = await blogCtrl.getBlogPosts()
+          console.log(blogPosts.slice(0, 3))
           return await blogCtrl.getBlogPosts()
         },
       },
@@ -122,19 +124,16 @@ const schema = new GraphQLSchema({
     name: 'RootMutationType',
     fields: {
       userUpdate: {
-        description:
-          'Update user information of user with ID or logged in user',
-        type: UserInfoType,
+        description: 'Update user information of user with ID or logged in user',
+        type: UserType,
         args: {
           id: { type: GraphQLString },
-          info: {
-            type: UserInfoInputType,
-          },
+          user: { type: UserTypeInput },
         },
-        async resolve(a, { id, info }, { req, res }) {
+        async resolve(a, { id, user }, { req, res }) {
           return await requireAuth(req, res, () =>
-            userCtrl.updateUserInfo(id, req.user, info)
-          )
+            userCtrl.updateUserInfo(id, req.user, user)
+          );
         },
       },
       userDelete: {

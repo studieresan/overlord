@@ -6,7 +6,7 @@ export interface UserActions {
 
   // Update the specified fields of a user info,
   // returning the modified info
-  updateUserInfo(userId: string, requestUser: User, fields: Partial<UserInfo>):
+  updateUserInfo(userId: string, requestUser: User, user: Partial<User>):
     Promise<UserInfo>
 
   // Deletes the user info of a user from the database.

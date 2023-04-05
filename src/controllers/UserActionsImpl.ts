@@ -33,31 +33,33 @@ export class UserActionsImpl implements UserActions {
   updateUserInfo(
     userId: string,
     requestUser: User,
-    newFields: Partial<UserInfo>
+    user: Partial<User>
   ): Promise<UserInfo> {
     return new Promise<UserInfo>((resolve, reject) => {
-      // If the user tries to edit other user, must have admin permission
       if (!userId) {
-        userId = requestUser.id
-      } else if (
-        userId !== requestUser.id &&
-        !hasAdminPermission(requestUser)
-      ) {
-        return reject(Error('User not authorized to edit other user'))
+        userId = requestUser.id;
+      } else if (userId !== requestUser.id && !hasAdminPermission(requestUser)) {
+        return reject(Error('User not authorized to edit other user'));
       }
       return mongodb.User.findById(userId)
         .then(rejectIfNull('No user matches id'))
-        .then((user) => {
-          for (const k in newFields) {
-            user.info[k] = newFields[k]
+        .then((existingUser) => {
+          for (const k in user) {
+            if (k === 'info') {
+              for (const infoKey in user.info) {
+                existingUser.info[infoKey] = user.info[infoKey];
+              }
+            } else {
+              existingUser[k] = user[k];
+            }
           }
-          return user
+          return existingUser
             .save()
             .then((user) => user.info)
-            .then((info) => resolve(info))
-        })
-    })
-  }
+            .then((info) => resolve(info));
+        });
+    });
+  };
 
   getUsers(
     req: any,
