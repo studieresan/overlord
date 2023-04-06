@@ -61,25 +61,68 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
 }
 
 /**
+ * PUT /account/password
+ * Update current password.
+ */
+export const postDelete = (req: Request, res: Response, next: NextFunction) => {
+  req.assert('toDeleteId', 'Id is required').notEmpty()
+  const errors = req.validationErrors()
+
+  if (errors) {
+    res.status(400)
+    return res.json(errors).end()
+  }
+  User.findById((req?.user as UserType)?.id, (err, user: UserDocument) => {
+
+    if (err) { return next(err) }
+    if (!user.info.permissions.includes(Permission.Admin)) {
+      res.status(401)
+      return res.json({ error: 'Unauthorized' }).end()
+    }
+    User.findById(req.body.toDeleteId, (err, userToDelete: UserDocument) => {
+      if (err) { return next(err) }
+      if (!userToDelete) {
+        res.status(404)
+        return res.json({ error: 'User not found' }).end()
+      }
+      userToDelete.remove({}, (err) => {
+        if (err) {
+          return next(err);
+        }
+        res.status(200).json({ message: 'User deleted successfully' }).end();
+      })
+    })
+  })
+}
+
+/**
  * POST /signup
  * Create a new local account.
  */
 // tslint:disable-next-line:max-line-length
 export let postSignup = async (req: Request, res: Response, next: NextFunction) => {
-  req.assert('email', 'Email is not valid').isEmail()
-  req.assert('firstName', 'First name is required').notEmpty()
-  req.assert('lastName', 'Last name is required').notEmpty()
+  console.log('postSignup');
+
+  req.assert('info.email', 'Email is not valid').isEmail();
+  req.assert('firstName', 'First name is required').notEmpty();
+  req.assert('lastName', 'Last name is required').notEmpty();
   req.assert(
-    'user_role',
-    'user_role was invalid'
+    'info.role',
+    'Role was invalid'
   ).isIn([
     UserRole.SalesGroup,
+    UserRole.SalesGroupManager,
     UserRole.TravelGroup,
+    UserRole.TravelGroupManager,
     UserRole.ProjectManager,
     UserRole.InfoGroup,
+    UserRole.InfoGroupManager,
     UserRole.FinanceGroup,
+    UserRole.FinanceGroupManager,
     UserRole.ItGroup,
+    UserRole.ItGroupManager,
     UserRole.EventGroup,
+    UserRole.EventGroupManager,
   ])
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
 
@@ -92,17 +135,14 @@ export let postSignup = async (req: Request, res: Response, next: NextFunction) 
   const user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    userRole: req.body.user_role,
-    studsYear: process.env.STUDS_YEAR,
+    studsYear: req.body.studsYear,
     info: {
-      role: req.body.user_role,
-      email: req.body.email,
+      ...req.body.info,
       password: await generateRandomPassword(),
-      permissions: req.body.user_role === UserRole.EventGroup ? [Permission.Events] : [],
     },
   })
 
-  User.findOne({ 'info.email': req.body.email }, (err, existingUser) => {
+  User.findOne({ 'info.email': req.body.info.email }, (err, existingUser) => {
     if (err) { return next(err) }
     if (existingUser) {
       res.status(400)
@@ -162,7 +202,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
           // tslint:disable-next-line:max-line-length
           `You are receiving this email because you've been given an account at Studieresan. ` +
           // tslint:disable-next-line:max-line-length
-          `Please proceed to the following link to complete the process: ${host}/password-reset/${token}\n\n` +
+          `Please proceed to the following link to complete the process: ${host}/auth/reset-password/${token}\n\n` +
           // tslint:disable-next-line:max-line-length
           `The link is valid for 72 hours. After that you will have to manually reset your password at ${host}/user/forgot-password.\n\n` +
           `Your username is ${user.info.email}.\n\n` +

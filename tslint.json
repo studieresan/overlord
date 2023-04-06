@@ -9,10 +9,6 @@
       true,
       "spaces"
     ],
-    "max-line-length": [
-      true,
-      100
-    ],
     "trailing-comma": [
       true,
       {

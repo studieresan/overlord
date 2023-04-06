@@ -154,7 +154,7 @@ app.post('/signup', (req, res, next) => {
     res.end()
   }
 })
-
+app.post('/delete', passportConfig.authenticate, userController.postDelete)
 app.put(
   '/account/password',
   passportConfig.authenticate,
