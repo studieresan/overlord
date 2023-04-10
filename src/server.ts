@@ -57,8 +57,6 @@ const options = {
   promiseLibrary: global.Promise,
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
 }
 
 if (process.env.NODE_ENV !== 'test') {

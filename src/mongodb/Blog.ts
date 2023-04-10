@@ -9,7 +9,7 @@ const BlogSchema: mongoose.Schema = new mongoose.Schema({
   date: Date,
   studsYear: Number,
   frontPicture: String,
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  author: String,
   pictures: [String],
   published: {
     type: Boolean,

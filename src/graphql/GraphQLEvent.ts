@@ -24,7 +24,7 @@ export const EventType: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     ...MutableEventFields,
-    author: { type: UserType },
+    author: { type: GraphQLString },
     studsYear: { type: new GraphQLNonNull(GraphQLInt) },
   }),
 })
@@ -32,7 +32,7 @@ export const EventType: GraphQLObjectType = new GraphQLObjectType({
 export const EventCreateType = new GraphQLObjectType({
   name: 'EventCreateType',
   fields: () => ({
-    author: { type: UserType },
+    author: { type: GraphQLString },
     id: { type: GraphQLID },
     studsYear: { type: new GraphQLNonNull(GraphQLInt) },
     ...MutableEventFields,
@@ -42,7 +42,7 @@ export const EventCreateType = new GraphQLObjectType({
 export const EventInputType = new GraphQLInputObjectType({
   name: 'EventInput',
   fields: () => ({
-    author: { type: GraphQLID },
+    author: { type: GraphQLString },
     id: { type: GraphQLID },
     studsYear: { type: GraphQLInt },
     ...MutableEventFields,

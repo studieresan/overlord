@@ -12,7 +12,7 @@ interface EventFields {
 }
 
 export interface Event extends EventFields {
-  author: User
+  author: string
 }
 
 export interface CreateEvent extends EventFields {

@@ -9,7 +9,6 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 import { GraphQLDateTime } from './GraphQLDateTime'
-import { UserType } from './GraphQLUser'
 
 const MutableBlogFields = {
   title: { type: GraphQLString },
@@ -23,7 +22,7 @@ const MutableBlogFields = {
 export const BlogType: GraphQLObjectType = new GraphQLObjectType({
   name: 'Blog',
   fields: () => ({
-    author: { type: UserType },
+    author: { type: GraphQLString },
     id: { type: GraphQLID },
     studsYear: { type: new GraphQLNonNull(GraphQLInt) },
     ...MutableBlogFields,
@@ -33,7 +32,7 @@ export const BlogType: GraphQLObjectType = new GraphQLObjectType({
 export const BlogInputType = new GraphQLInputObjectType({
   name: 'BlogInput',
   fields: () => ({
-    author: { type: GraphQLID },
+    author: { type: GraphQLString },
     id: { type: GraphQLID },
     studsYear: { type: GraphQLInt },
     ...MutableBlogFields,

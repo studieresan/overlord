@@ -9,7 +9,7 @@ import { LocalStrategyInfo } from 'passport-local'
 import { CallbackError } from 'mongoose'
 
 const host = process.env.DEV === 'false' ?
-  'https://studieresan.se' :
+  `https://${process.env.FRONTEND_ORIGIN}` :
   'http://localhost:5173'
 
 const sgMail = require('@sendgrid/mail')

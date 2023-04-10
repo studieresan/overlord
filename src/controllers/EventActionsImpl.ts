@@ -12,11 +12,7 @@ export class EventActionsImpl implements EventActions {
 
     return new EventSchema({
       ...fields,
-    }).save()
-      .then(book => book
-        .populate('author')
-        .execPopulate()
-      )
+    }).save();
   }
 
   deleteEvent(requestUser: User, id: string): Promise<boolean> {
@@ -39,21 +35,18 @@ export class EventActionsImpl implements EventActions {
         ...fields,
       },
       { new: true })
-      .populate('author')
       .then(rejectIfNull('No event exists for given id'))
   }
 
   getEvents(studsYear: Number): Promise<Event[]> {
     const searchFilter: object = studsYear ? { studsYear: studsYear } : {}
     return EventSchema.find(searchFilter)
-      .populate('author')
       .sort({ date: -1 })
       .exec()
   }
 
   getEvent(eventId: string): Promise<Event> {
     return EventSchema.findById(new ObjectID(eventId))
-      .populate('author')
       .then(rejectIfNull('No event matches id'))
       .then(event => event)
   }

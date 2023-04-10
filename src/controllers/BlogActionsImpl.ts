@@ -14,12 +14,7 @@ export class BlogActionsImpl implements BlogActions {
 
         return new BlogSchema({
             ...fields,
-        }).save()
-            .then(book => book
-                .populate('author')
-                .execPopulate()
-            )
-
+        }).save();
     }
 
     deleteBlogPost(id: string): Promise<boolean> {
@@ -34,7 +29,6 @@ export class BlogActionsImpl implements BlogActions {
             { _id: id },
             { ...flatten(fields) },
             { new: true })
-            .populate('author')
             .exec()
             .then(rejectIfNull('Blog Post does not exist'))
 

@@ -42,7 +42,7 @@ const addUsers = async () => {
             email: 'johndoe@test.se',
             password: 'password123',
         },
-        
+
     }).save()
 }
 
@@ -161,14 +161,12 @@ const mockDatabase = async () => {
         promiseLibrary: global.Promise,
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: false,
-        useCreateIndex: true,
     }
     let uri = await mongoServer.getUri()
     await mongoose.disconnect(() => mongoose.connect(uri, options, (err) => {
-        if(err) console.log(err)
+        if (err) console.log(err)
     }))
-    
+
     await addUsers()
     await addCompanySalesStatuses()
     await addCompanies()
@@ -184,6 +182,6 @@ const closeDatabase = async () => {
     await mongoServer.stop();
 }
 export {
-    mockDatabase, 
+    mockDatabase,
     closeDatabase
 }
