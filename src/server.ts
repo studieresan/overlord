@@ -124,6 +124,8 @@ app.get('/test', (req, res) => {
  * Express configuration.
  */
 app.set('port', process.env.PORT || 5040)
+console.log('process.env.PORT: ', process.env.PORT);
+
 app.use(compression())
 app.use(logger('dev'))
 app.use(bodyParser.json())
