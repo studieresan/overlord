@@ -3,15 +3,15 @@ import * as mongoose from 'mongoose'
 import * as models from '../models'
 
 export type UserDocument = mongoose.Document & models.User & {
-    info: {
-        email: string,
-        password: string,
-        passwordResetToken: string | undefined,
-        passwordResetExpires: number | undefined,
-    }
+  info: {
+    email: string,
+    password: string,
+    passwordResetToken: string | undefined,
+    passwordResetExpires: number | undefined,
+  }
 
   comparePassword:
-    (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void,
+  (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void,
 }
 
 const userSchema: mongoose.Schema<UserDocument> = new mongoose.Schema({
@@ -26,6 +26,7 @@ const userSchema: mongoose.Schema<UserDocument> = new mongoose.Schema({
     email: String,
     position: String,
     linkedIn: String,
+    biography: String,
     github: String,
     phone: String,
     picture: String,
@@ -49,10 +50,10 @@ userSchema.pre('save', function save(this: UserDocument, next) {
       salt,
       undefined!,
       (err: mongoose.Error, hash: any) => {
-      if (err) { return next(err) }
-      user.info.password = hash
-      next()
-    })
+        if (err) { return next(err) }
+        user.info.password = hash
+        next()
+      })
   })
 })
 
@@ -63,7 +64,7 @@ userSchema.methods.comparePassword =
       this.info.password,
       (err: mongoose.Error, isMatch: boolean) => {
         cb(err, isMatch)
-    })
+      })
   }
 
 export const User = mongoose.model<UserDocument>('User', userSchema)
