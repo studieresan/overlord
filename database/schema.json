@@ -311,6 +311,10 @@
 			"type": "Object",
 			"required": true
 		},
+		"eventDate": {
+			"type": "Date",
+			"required": false
+		},
 		"createdAt": {
 			"type": "Date",
 			"required": true

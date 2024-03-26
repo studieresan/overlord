@@ -1,24 +1,30 @@
-import * as mongoose from 'mongoose'
-import * as models from '../models'
+import * as mongoose from "mongoose";
+import * as models from "../models";
 
-export type EventDocument = mongoose.Document & models.Event
+export type EventDocument = mongoose.Document & models.Event;
 
-const eventSchema: mongoose.Schema = new mongoose.Schema({
-  title: String,
-  description: String,
-  date: Date,
-  studsYear: Number,
-  frontPicture: String,
-  author: String,
-  pictures: [String],
-  published: {
-    type: Boolean,
-    default: false,
+const eventSchema: mongoose.Schema = new mongoose.Schema(
+  {
+    title: String,
+    description: String,
+    date: Date,
+    studsYear: Number,
+    frontPicture: String,
+    author: String,
+    pictures: [String],
+    published: {
+      type: Boolean,
+      default: false,
+    },
+    eventDate: Date,
   },
-}, { timestamps: { createdAt: 'created' } })
+  { timestamps: { createdAt: "created" } }
+);
 
-export const Event =
-  mongoose.model<EventDocument>('Event', eventSchema, 'events')
+export const Event = mongoose.model<EventDocument>(
+  "Event",
+  eventSchema,
+  "events"
+);
 
-export const OldEvent =
-  mongoose.model<EventDocument>('OldEvent', eventSchema)
+export const OldEvent = mongoose.model<EventDocument>("OldEvent", eventSchema);
