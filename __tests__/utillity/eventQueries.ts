@@ -18,9 +18,10 @@ export const getEventByIdQuery = `{
             id, 
             name 
         }
+        eventDate
         studsYear
     }
-}`
+}`;
 
 export const validPublicQuery = `
 {
@@ -35,7 +36,7 @@ export const validPublicQuery = `
             name 
         }
     }
-}`
+}`;
 
 export const invalidPublicQuery = `
 {
@@ -52,7 +53,7 @@ export const invalidPublicQuery = `
             name
         }
     }
-}`
+}`;
 
 export const publicQuery2021 = `
 {
@@ -60,7 +61,7 @@ export const publicQuery2021 = `
         id
         studsYear
     }
-}`
+}`;
 
 export const badEventQuery = `
 {
@@ -78,7 +79,7 @@ export const badEventQuery = `
             name
         }
     }
-}`
+}`;
 
 export const badEventsQuery = `
 {
@@ -96,8 +97,7 @@ export const badEventsQuery = `
             name
         }
     }
-}`
-
+}`;
 
 export const eventCreateValid = `
 mutation {
@@ -113,6 +113,7 @@ mutation {
         afterSurvey: "linkto/newAfterSurvey"
         pictures: ["linkto/picture-5"]
         published: false
+        eventDate: "2001-02-03"
     }) {
         id
         date
@@ -132,13 +133,14 @@ mutation {
             id, 
             name 
         }
+        eventDate
         studsYear
     }
-}`
+}`;
 
 export const eventDeleteValid = `
 mutation {
     eventDelete(id: "200000000000000000000001") {
         location
     }
-}`
+}`;
