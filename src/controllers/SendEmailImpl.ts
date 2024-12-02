@@ -11,7 +11,7 @@ export class SendEmailImpl implements SendEmail {
             console.log(`Sending email to ${to} with subject ${subject} and body ${body}`)
             return Promise.resolve();
         }
-
+        console.log("sending email to spam")
         return fetch(process.env.SPAM_URL!, {
             method: 'POST',
             headers: {
