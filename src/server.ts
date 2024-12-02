@@ -160,7 +160,6 @@ app.put(
   passportConfig.authenticate,
   userController.putUpdatePassword
 )
-
 /**
  * Return a signed S3 url that a client will be able to
  * upload files to

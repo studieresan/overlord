@@ -7,13 +7,11 @@ import { UserRole, Permission, User as UserType } from '../models'
 import { Request, Response, NextFunction } from 'express'
 import { LocalStrategyInfo } from 'passport-local'
 import { CallbackError } from 'mongoose'
-
+import { Email } from './SendEmail'
+import { SendEmailImpl } from './SendEmailImpl'
 const host = process.env.DEV === 'false' ?
   `${process.env.FRONTEND_ORIGIN}` :
   'http://localhost:5173'
-
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const generateRandomPassword = async () => {
   const buf = await crypto.randomBytes(16)
@@ -141,7 +139,7 @@ export let postSignup = async (req: Request, res: Response, next: NextFunction) 
       password: await generateRandomPassword(),
     },
   })
-
+  
   User.findOne({ 'info.email': req.body.info.email }, (err, existingUser) => {
     if (err) { return next(err) }
     if (existingUser) {
@@ -197,7 +195,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
         to: user.info.email,
         from: 'it@studs.se',
         subject: 'Welcome to Studieresan!',
-        text:
+        body:
           `Hi ${user.firstName}!\n\n` +
           // tslint:disable-next-line:max-line-length
           `You are receiving this email because you've been given an account at Studieresan. ` +
@@ -209,7 +207,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
           `Thank you!\n` +
           `Studieresan\n`,
       }
-      sgMail.send(mailOptions)
+      new SendEmailImpl().sendEmail(mailOptions)  
     },
   ])
 }
@@ -293,15 +291,16 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
         })
     },
     function sendResetPasswordEmail(user: UserDocument, done: Function) {
-      const mailOptions = {
+      
+      const mailOptions: Email = {
         to: user.info.email,
         from: 'it@studs.se',
         subject: 'Your password has been changed',
-        text: `Hello,`
+        body: `Hello,`
           + `\n\nThis is a confirmation that the password for your `
           + `account ${user.info.email} has just been changed.\n`,
       }
-      sgMail.send(mailOptions).then(() => done()).catch(done)
+      new SendEmailImpl().sendEmail(mailOptions)
     },
   ], (err) => {
     if (err) {
@@ -358,7 +357,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         to: user.info.email,
         from: 'it@studs.se',
         subject: 'Reset your password on Studieresan.se',
-        text:
+        body:
           `You are receiving this email because you have `
           + `requested the reset of the password for your Studs account.\n\n`
           + `Please click on the following link, or paste it into your browser ` // tslint:disable-line:max-line-length
@@ -370,7 +369,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
           + `please ignore this email and your `
           + `password will remain unchanged.\n`,
       }
-      sgMail.send(mailOptions).then(() => done()).catch(done)
+      new SendEmailImpl().sendEmail(mailOptions)
     },
   ], (err) => {
     if (err) {
