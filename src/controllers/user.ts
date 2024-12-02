@@ -139,7 +139,7 @@ export let postSignup = async (req: Request, res: Response, next: NextFunction) 
       password: await generateRandomPassword(),
     },
   })
-  
+
   User.findOne({ 'info.email': req.body.info.email }, (err, existingUser) => {
     if (err) { return next(err) }
     if (existingUser) {
@@ -207,7 +207,7 @@ const createAndSaveUser = (req: Request, res: Response, user: UserDocument, next
           `Thank you!\n` +
           `Studieresan\n`,
       }
-      new SendEmailImpl().sendEmail(mailOptions)  
+      new SendEmailImpl().sendEmail(mailOptions)
     },
   ])
 }
@@ -291,7 +291,6 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
         })
     },
     function sendResetPasswordEmail(user: UserDocument, done: Function) {
-      
       const mailOptions: Email = {
         to: user.info.email,
         from: 'it@studs.se',
