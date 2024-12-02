@@ -58,7 +58,7 @@ const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }
-
+console.log('MongoDB URI:', process.env.MONGODB_URI);
 if (process.env.NODE_ENV !== 'test') {
   mongoose.connect(process.env.MONGODB_URI!, options)
     .catch((e) => console.log(e))
@@ -85,6 +85,7 @@ app.use(function (req, res, next) {
   const origin = req.get('Origin')
   const foundOrigin = allowedOrigins.find(o => o == origin)
   if (foundOrigin) {
+    console.log("Found origin")
     res.header('Access-Control-Allow-Origin', foundOrigin)
     res.header('Access-Control-Allow-Credentials', 'true')
     res.header(
@@ -95,6 +96,7 @@ app.use(function (req, res, next) {
     )
   }
   else if (origin?.match(netlifypreview)) {
+    console.log("netlify-preview")
     res.header('Access-Control-Allow-Origin', origin)
     res.header('Access-Control-Allow-Credentials', 'true')
     res.header(
@@ -186,7 +188,7 @@ app.get('/brochure_eng.pdf', getPDF)
  * Start Express server.
  */
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(app.get('port'), () => {
+  app.listen(app.get('port'), '127.0.0.0', () => {
     console.log(
       ('  App is running at http://localhost:%d in %s mode'),
       app.get('port'),
