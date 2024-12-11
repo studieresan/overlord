@@ -26,6 +26,7 @@ passport.deserializeUser((id, done) => {
  */
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+  console.log("\n Running USE \n")
   User.findOne({ 'info.email': email.toLowerCase() }, (err, user: any) => {
     if (err) { return done(err) }
     if (!user) {
@@ -50,7 +51,8 @@ passport.use(new JWTStrategy({
     passReqToCallback: true,
   },
   (req: any, jwtPayload: any, done: any) => {
-    User.findOne({ 'info.email': jwtPayload }, (err, user: any) => {
+    console.log("\n Use JWT strat \n")
+	  User.findOne({ 'info.email': jwtPayload }, (err, user: any) => {
       if (err) {
         return done(err)
       }
@@ -74,6 +76,7 @@ export let authenticate = passport.authenticate('jwt', { session: false })
  */
 export let isAuthorized = (req: Request, res: Response, next: NextFunction) => {
   const provider = req.path.split('/').slice(-1)[0]
+  console.log("\n Running Middleware\n")
   if ((req?.user as UserModel)?.tokens.find((t: any) => t.kind === provider)) {
     next()
   } else {
