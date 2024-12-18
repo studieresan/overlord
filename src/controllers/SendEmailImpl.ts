@@ -1,4 +1,8 @@
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '../.env' })
+
 import { SendEmail, Email } from "./SendEmail";
+
 
 export class SendEmailImpl implements SendEmail {
     sendEmail({
@@ -7,11 +11,11 @@ export class SendEmailImpl implements SendEmail {
         subject,
         body,
     }: Email): Promise<void> {
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.DEV === 'true') {
             console.log(`Sending email to ${to} with subject ${subject} and body ${body}`)
             return Promise.resolve();
         }
-        console.log("sending email to spam")
+        console.log("sending email to spam", process.env.SPAM_URL, process.env.SPAM_KEY)
         return fetch(process.env.SPAM_URL!, {
             method: 'POST',
             headers: {
@@ -19,8 +23,9 @@ export class SendEmailImpl implements SendEmail {
             },
             body: JSON.stringify({
                 key: process.env.SPAM_KEY,
-                from: from,
+                from: 'no-reply@datasektionen.se',
                 to: to,
+                replyTo: from,
                 subject: subject,
                 html: body,
             }),

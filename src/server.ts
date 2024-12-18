@@ -4,7 +4,15 @@ import * as Sentry from '@sentry/node'
  * Load environment variables from .env file, where API
  * keys and passwords are configured.
  */
-dotenv.config()
+dotenv.config({ path: '../.env' })
+console.log("process.env.JWT_SECRET: ", process.env.JWT_SECRET)
+console.log("process.env.MONGODB_URI: ", process.env.MONGODB_URI)
+console.log("process.env.NODE_ENV: ", process.env.NODE_ENV)
+console.log("process.env.PORT: ", process.env.PORT)
+console.log("process.env.FRONTEND_ORIGIN: ", process.env.FRONTEND_ORIGIN)
+console.log("process.env.FRONTEND_ALIAS: ", process.env.FRONTEND_ALIAS)
+console.log("process.env.HEROKU_ORIGIN: ", process.env.HEROKU_ORIGIN)
+console.log("process.env.STAGE_ORIGIN: ", process.env.STAGE_ORIGIN)
 
 import * as express from 'express'
 import * as compression from 'compression'  // compresses requests
@@ -46,9 +54,9 @@ const app = express()
 /**
  * Activate Sentry
  */
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-})
+// Sentry.init({
+//  dsn: process.env.SENTRY_DSN,
+// })
 
 /**
  * Connect to MongoDB.

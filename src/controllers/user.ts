@@ -10,7 +10,7 @@ import { CallbackError } from 'mongoose'
 import { Email } from './SendEmail'
 import { SendEmailImpl } from './SendEmailImpl'
 const host = process.env.DEV === 'false' ?
-  `${process.env.FRONTEND_ORIGIN}` :
+  `https://studs.se` :
   'http://localhost:5173'
 
 const generateRandomPassword = async () => {

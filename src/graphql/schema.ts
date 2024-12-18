@@ -19,7 +19,7 @@ import {
   GraphQLInt,
   GraphQLBoolean,
 } from 'graphql'
-import * as passportConfig from '../config/passport'
+import { authenticate } from '../config/passport'
 import * as User from '../models/User'
 
 const userCtrl: UserActions = new UserActionsImpl()
@@ -28,7 +28,7 @@ const blogCtrl: BlogActions = new BlogActionsImpl()
 
 function requireAuth<A>(req: any, res: any, body: () => A) {
   return new Promise((resolve) => {
-    passportConfig.authenticate(req, res, () => {
+    authenticate(req, res, () => {
       resolve(body())
     })
   })

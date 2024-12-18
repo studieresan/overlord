@@ -2,6 +2,9 @@ import * as passport from 'passport'
 import * as passportLocal from 'passport-local'
 import * as passportJWT from 'passport-jwt'
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { User } from '../mongodb/User'
 import { Request, Response, NextFunction } from 'express'
 
@@ -52,7 +55,7 @@ passport.use(new JWTStrategy({
   },
   (req: any, jwtPayload: any, done: any) => {
     console.log("\n Use JWT strat \n")
-	  User.findOne({ 'info.email': jwtPayload }, (err, user: any) => {
+    User.findOne({ 'info.email': jwtPayload }, (err, user: any) => {
       if (err) {
         return done(err)
       }
@@ -69,7 +72,10 @@ passport.use(new JWTStrategy({
   }
 ))
 
-export let authenticate = passport.authenticate('jwt', { session: false })
+export let authenticate = (req: Request, res: Response, next: NextFunction) => {
+    console.log("\n Running authenticate \n")
+    passport.authenticate('jwt', { session: false })(req, res, next)
+  }
 
 /**
  * Authorization Required middleware.
