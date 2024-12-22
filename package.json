@@ -19,6 +19,7 @@
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "lint-fix": "tslint -p tsconfig.json -c tslint.json --fix",
     "debug": "npm run build && npm run watch-debug",
     "serve-debug": "nodemon --inspect dist/server.js",
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,blue.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
@@ -81,6 +82,7 @@
     "supertest": "^6.1.3",
     "ts-jest": "^26.5.4",
     "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.2.3"
   }
 }

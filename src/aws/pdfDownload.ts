@@ -2,7 +2,7 @@ import { S3 } from '@aws-sdk/client-s3';
 
 export const getPDF = async (req: any, res: any) => {
     const s3 = new S3({
-        region: process.env.AWS_REGION
+        region: process.env.AWS_REGION,
     });
 
     const getParams = {
